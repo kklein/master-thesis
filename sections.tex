@@ -1,23 +1,72 @@
-\chapter{Example Chapter}
 
-Dummy text.
+\chapter{Background}
 
-\section{Example Section}
+\section{Chernoff's 2-player game}
+Tbd whether relevant.
 
-Dummy text.
+\section{Bandits}
+What is the scenario?
+What are typical problems in this scenario?
+Why is the scenario and its problems relevant?
 
-\subsection{Example Subsection}
+\section{Thompson Sampling}
+How does it work?
+Why is it useful?
+What is it used for?
 
-Dummy text.
+\section{Best Arm Identification: Top-1}
+\subsection{Problem formulation}
+What is the problem?
+Why is it relevant?
+How is performance evaluated?
+\subsection{Optimal allocation}
+What is the overall goal?
+How is this achieved? (Talk about optimization over hyper-parameters)
+\subsection{A Constrained Optimal Allocation}
+What are properties of the constrained optimal allocation?
+How can they be interpreted?
+\subsection{TTTS algorithm}
+What is the algorithm?
+Refer to empirical section for details on distribution updates.
+\subsection{Alternative approaches}
+What are alternative approaches to Russo's?
+How do they compare against Russo's?
 
-\subsubsection{Example Subsubsection}
+\section{Top-m Arm Identification}
+What is the problem?
+Why is it relevant compared to Top-1?
+\subsection{Current approaches: LUCB}
+How are those methods evaluated?
+What are possible qualitative shortcomings of those methods?
+What are possible quantitative shortcomings of those methods?
 
-Dummy text.
+\subsubsection{Confidence estimation #1}
+\subsubsection{Confidence estimation #2}
+\subsubsection{Confidence estimation #3}
 
-\paragraph{Example Paragraph}
 
-Dummy text.
+\chapter{Charactarizing the Optimal Allocation}
+\section{Problem formulation}
+What does it mean to be optimal?
 
-\subparagraph{Example Subparagraph}
+\section{A Constrained Optimal Allocation}
+\subsection{Statements}
+How can C be interpreted?
+How does this tie in with Chernoff's statements?
+How does this compare to the top-1 case?
+What's an example of an optimal allocation?
+How would those statements look like without the constraint?
 
-Dummy text.
+\subsection{Proofs}
+
+\chapter{Algorithm}
+\section{Analysis/Properties}
+\section{Empirical behaviour}
+What true distributions are assumed?
+What prior and posterior distributions are assumed?
+How is C computed?
+How is alpha computed, as it is defined via a huge integral?
+How is psi computed, as there is no closed form?
+\section{Proofs}
+
+\chapter{Conclusion}
