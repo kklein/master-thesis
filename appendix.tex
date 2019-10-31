@@ -1,4 +1,29 @@
-\chapter{Dummy Appendix}
+\chapter{Appendix}
 
-You can defer lengthy calculations that would otherwise only interrupt
-the flow of your thesis to an appendix.
+\section{Computing $C_{j, i}$ for Bernoulli means}\label{section:bernoulli_c}
+
+We assume that every arm $l$ follows a Bernoulli distribution with parameter $\theta_l$. The option space for rewards being $\{0, 1\}$, they are discretely distributed. Let us reiterate the definition of the KL divergence for discrtete distributions:
+\[d(p || q) = \sum_{y \in Y}p(y) \log(\frac{p(y)}{q(y)})\]
+where $Y$ corresponds the option space for the outcome.
+Instantiating this definition with our scenario, we observe that $Y=\{0, 1\}$, $p(y=1)=\theta_l$  as well as $p(y=0)=1-\theta_l$, for a given arm $l$.
+
+This yields:
+\begin{align}
+  d(\theta_l||x) = \theta_l \log(\frac{\theta_l}{x}) + (1-\theta_l) \log(\frac{1-\theta_l}{1-x}) \label{eq:bernoulli_kl}
+\end{align}
+Recall that for computing $C_{j, i}$, we seek to minimize the expression from \eqref{eq:C} $x \in \mathbb{R}$. Hence we are interested in the derivative of \eqref{eq:bernoulli_kl} with respect to $x$.
+\begin{align}
+  \diff{(d(\theta_l||x)}{x} &= - \frac{\theta_l}{x} + \frac{(1-\theta_l)}{1-x}
+\end{align}
+Drawing from the minimization problem of $C_{j,i}$ for given $j$, $i$, $\psi_j$ and $\psi_i$, we define $f(x) = \psi_j d(\theta^*_{j} || x) + \psi_i d(\theta_{i}^* ||x)$. We proceed by deriving $f$ with respect to $x$ and setting it to 0.
+\begin{align}
+  \diff{f(x)}{x} &= \psi_j(\frac{\theta_j}{x} + \frac{(1-\theta_j)}{1-x}) + \psi_i( \frac{\theta_i}{x} + \frac{(1-\theta_i)}{1-x}) \\
+  &= -\frac{1}{x}(\psi_j\theta_j + \psi_i\theta_i) + \frac{1}{1-x}(\psi_j(1 - \theta_j) + \psi_i(1 - \theta_i)) \\
+  \diff{f(x)}{x} = 0 &\Rightarrow (1-x_0)(\psi_j\theta_j + \psi_i\theta_i) = x_0(\psi_j(1 - \theta_j) + \psi_i(1 - \theta_i))\\
+  &\Rightarrow x_0((\psi_j\theta_j + \psi_i\theta_i) + (\psi_j(1 - \theta_j) + \psi_i(1 - \theta_i)))\\
+  = (\psi_j\theta_j + \psi_i\theta_i)\\
+  &\Rightarrow x_0 = \frac{\psi_j\theta_j + \psi_i\theta_i}{(\psi_j\theta_j + \psi_i\theta_i) + (\psi_j(1 - \theta_j) + \psi_i(1 - \theta_i))} \\
+  &\Rightarrow x_0 = \frac{\psi_j\theta_j + \psi_i\theta_i}{\psi_j + \psi_i}
+\end{align}
+
+Hence we have a very intuitive analytical solution for $x$: it is an average of the means of $j$ and $j$, weighted by their respective measurement allocation.
