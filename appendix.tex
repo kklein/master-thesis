@@ -20,10 +20,26 @@ Drawing from the minimization problem of $C_{j,i}$ for given $j$, $i$, $\psi_j$ 
   \diff{f(x)}{x} &= \psi_j(\frac{\theta_j}{x} + \frac{(1-\theta_j)}{1-x}) + \psi_i( \frac{\theta_i}{x} + \frac{(1-\theta_i)}{1-x}) \\
   &= -\frac{1}{x}(\psi_j\theta_j + \psi_i\theta_i) + \frac{1}{1-x}(\psi_j(1 - \theta_j) + \psi_i(1 - \theta_i)) \\
   \diff{f(x)}{x} = 0 &\Rightarrow (1-x_0)(\psi_j\theta_j + \psi_i\theta_i) = x_0(\psi_j(1 - \theta_j) + \psi_i(1 - \theta_i))\\
-  &\Rightarrow x_0((\psi_j\theta_j + \psi_i\theta_i) + (\psi_j(1 - \theta_j) + \psi_i(1 - \theta_i)))\\
-  = (\psi_j\theta_j + \psi_i\theta_i)\\
+  &\Rightarrow x_0((\psi_j\theta_j + \psi_i\theta_i) + (\psi_j(1 - \theta_j) + \psi_i(1 - \theta_i))) = (\psi_j\theta_j + \psi_i\theta_i)\\
   &\Rightarrow x_0 = \frac{\psi_j\theta_j + \psi_i\theta_i}{(\psi_j\theta_j + \psi_i\theta_i) + (\psi_j(1 - \theta_j) + \psi_i(1 - \theta_i))} \\
   &\Rightarrow x_0 = \frac{\psi_j\theta_j + \psi_i\theta_i}{\psi_j + \psi_i}
 \end{align}
-
 Hence we have a very intuitive analytical solution for $x$: it is an average of the means of $j$ and $j$, weighted by their respective measurement allocation.
+
+\section{Facts about the exponential family}
+%TODO:Explain what A, A' and theta represent.
+%TODO:Doublecheck correctness of A' via wikipedia
+Russo presents the following insight about the exponential family of probability distributions.
+\begin{itemize}
+  \item Its log-partition-function $A(\theta)$ is strictly convex and differentiable.
+  \item Its mean equals $A'(\theta) = \int T(y)p(y|\theta)d\nu(y)$.
+  \item The KL divergence equals:
+    \begin{align}
+        d(\theta||\theta') = (\theta - \theta')A'(\theta) - A(\theta) + A(\theta')\label{eq:exponential_kl}
+    \end{align}
+  \item The KL divergence satisfies:
+    \begin{align}
+      &\theta'' > \theta' \geq \theta \Rightarrow d(\theta||\theta'') > d(\theta||\theta') \label{eq:kl_monotonicity}\\
+      &\theta'' < \theta' \leq \theta \Rightarrow d(\theta||\theta'') < d(\theta||\theta')
+    \end{align}
+\end{itemize}

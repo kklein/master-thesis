@@ -36,6 +36,8 @@ Intuitively, this is very appealing for the cummulative reward scenario as it cr
 % Insert algorithm from overview paper?
 
 \section{Notation}
+%TODO: Talk about deq.
+
 We assume $k$ arms to choose from and denote the set of possible arms as $[k]$. Subsets $S \subset [k]$ are assumed to be of size $m < k$.
 
 A possible set of means for the arms is denoted as the $k$-dimensional vector $\theta$, where every mean can lie between 0 and 1. We also refer to such a $\theta$ as parameter.
@@ -222,6 +224,11 @@ In \Cref{section:optimal_statements} we first introduce some of Russo's results 
 
 Overall we hope to convince the reader that the chracterization results portrayed in this chapter make for a natrual generalization of Russo's top-1 case. The guiding theme will be that instead of comparing the best arm $l^*$ to a suboptimal arm that is the hardest to distinguish from it, we will compare the a pair of an optimal and a suboptimal arm are hardest to distinguish from another. Note that again, distinction revolves around two factors: the frequency with which an arm has been sampled, i.e. quantity, as well as the proximity of its true mean, i.e. quality.
 
+Throughout this whole chapter we will assume that every true mean is unique, i.e.
+\begin{align}
+  \forall l_1, l_2 \in [k]: l_1 \neq l_2 \Rightarrow \theta^*_{l_1} \neq \theta^*_{l_2}
+\end{align}
+
 %%%%%%
 % Statements
 %How can C be interpreted?
@@ -230,6 +237,9 @@ Overall we hope to convince the reader that the chracterization results portraye
 %What's an example of an optimal allocation?
 %How would those statements look like without the constraint?
 %%%%%
+
+%TODO:How would the results look like without the relaxation from theta_i to bar_theta_i?
+%TODO:Could everything be done with j instead of i?
 
 \section{Statements}\label{section:optimal_statements}
 Russo proves a proposition about the posterior convergence rate about general parameter sets $\tilde{\Theta}$.
@@ -247,7 +257,7 @@ Instead of analyzing $\Pi_n(\Theta_{m, S^*}^c)$ directly, we express it with via
 \end{align}
 Observe that we have $\bar{\Theta}_i \supsetneq \Theta_i$. Moreover we present a useful relationship between $\Theta_{m, S^*}^c$ and $\bar{\Theta}_i$:
 \begin{lemma}\label{lemma:set_relation_S*_i}
-  \[\Theta_{m, S^*}^c = \bigcup_{i \notin S^*} \bar{\Theta}_i\]
+  \[\Theta_{m, S^*}^c = \bigcup_{i \notin S^*} \bar{\Theta}_i = \Theta - \bigcap_{j \in S^*} \Theta_j\]
 \end{lemma}
 Leveraging this relationship of the sets allows us to bridge the gap between the posterior of $\Theta_{m, S^*}^c$ and the posterior of individual sets $\bar{\Theta}_i$. Note the transition from a union of sets to a minimum over sets permitted by the usage of the $\deq$ equality, as shown in \Cref{lemma:posterior_S*_i}.
 \begin{lemma}\label{lemma:posterior_S*_i} If $\alpha_{n, S^*} \rightarrow 1$, then
@@ -312,7 +322,7 @@ Hence we have established the optimal constrained rate of convergence $\Gamma^{\
   Given a $j \in S^*$, the solution to the minimization problem \eqref{eq:C} in $x$ is $\bar{\theta} \in \mathbb{R}$, satisfying:
   \[A'(\bar{\theta}) = \frac{\psi_j A'(\theta_j^*) + \psi_i A'(\theta_i^*)}{\psi_j + \psi_i}\]
   where $A'(\theta)$ is the mean observation under $\theta$. Therefore
-  \[\min_{j \in S^*} C_{j, i}(\psi_j, \psi_i) = \min_{j \in S^*} \psi_j d(\theta^*_j || \bar{\theta}) + \psi_i d(\theta^*_i || \bar{\theta})\]
+  \[C_{j, i}(\psi_j, \psi_i) = \psi_j d(\theta^*_j || \bar{\theta}) + \psi_i d(\theta^*_i || \bar{\theta})\]
 \end{lemma}
 
 \begin{proposition}\label{proposition:characterization}
@@ -350,32 +360,49 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
 
 \section{Proofs}\label{section:optimal_proofs}
 \begin{proof}[\Cref{lemma:set_relation_S*_i}]
+  We first show the relationship between $\Theta_{S^*}^c$ and sets $\bar{\Theta}_i$ and then show the relationship between $\Theta_{S^*}^c$ and $\Theta_j$.
   \begin{align}
     \Theta_{m, S^*}^c &= \{\theta \in \Theta | \min_{j \in S^*} \theta_j > \max_{i \notin S^*} \theta_i \}^c \\
     &= \{\theta \in \Theta | \max_{i \notin S^*} \theta_i \geq \min_{j \in S^*} \theta_j\} \\
     &= \{\theta \in \Theta | \exists i \notin S^*: \theta_i \geq \min_{j \in S^*} \theta_j\} \\
     &= \{\theta \in \Theta | \exists i \notin S^*: \text{top-}m(\theta, S^* \cup \{i\}) \neq S^*\} \\
     &= \bigcup_{i \notin S^*} \{\theta \in \Theta | \text{top-}m(\theta, S^* \cup \{i\}) \neq S^*\} \\
-    &= \bigcup_{i \notin S^*} \bar{\Theta}_i
+    &= \bigcup_{i \notin S^*} \bar{\Theta}_i \\
+    \Theta_{m, S^*} &= \{\theta \in \Theta | \min_{j \in S^*} \theta_j > \max_{j \in S^*} \theta_j\} \\
+    &= \{\theta \in \Theta | \bigwedge_{j \in S^*} \theta_j > \max_{j \in S^*} \theta_j\} \\
+    &= \bigcap_{j \in S^*} \{\theta \in \Theta | \theta_j > \max_{j \in S^*} \theta_j\} \\
+    &= \bigcap_{j \in S^*} \{\theta \in \Theta | j \in \text{top-}m(\theta, [k])\} \\
+    &= \bigcap_{j \in S^*} \Theta_j \\
+    \Theta_{m, S^*}^c &= \Theta - \Theta_{m, S^*}\\
+    \Theta_{m, S^*}^c &= \Theta - \bigcap_{j \in S^*} \Theta_j
   \end{align}
 \end{proof}
 
 \begin{proof}[\Cref{lemma:posterior_S*_i}]
+  First, we prove the equality for $i \notin S^*$, followed by the equality for $j \in S^*$.
+
+  The union from \Cref{lemma:set_relation_S*_i} has an additive effect with respect to the probability distribution $\Pi_n$. There are $k-m$ possible $i$s and each single one leads to a set, whose density is bounded by the maximal density of all such sets. This gives us:
   \begin{align}
     \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i) \leq \Pi_n(\Theta_{m, S^*}^c) \leq (k-m) \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)
   \end{align}
-  This equation follows from \Cref{lemma:set_relation_S*_i} and the fact that the union has an additive effect with respect to the density $\Pi_n$. There are $k-m$ possible $i$s and each single one leads to a set, whose density is bounded by the maximal density of all such sets.
-  Asymptotically this gives
+  We use the definition of $\deq$ to check whether lower bound and upper bound are equal.
+  \begin{align}
+    \lim_{n \rightarrow \infty} \frac{1}{n} \log{\frac{\max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)}{(k-m)\max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)}}
+    = \lim_{n \rightarrow \infty} \frac{1}{n} \log{\frac{1}{k-m}} \rightarrow 0
+  \end{align}
+  Thanks to the lower and upper bound being equal in the $\deq$ sense, we can apply the squeeze theorem. We obtain the desired result:
   \begin{align}
     \Pi_n(\Theta_{m, S^*}^c) \deq \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)
   \end{align}
-  For $S^*$, we have:
+  For $j \in S^*$, we follow a very similary path by first leveraging the set equality from \Cref{lemma:set_relation_S*_i}. Instead of a union, as was the case for $i \in S^*$, we are now confronted with an intersection. This implies a mulitplicative effect on the distribution $\Pi_n$ instead of an additive one.
   \begin{align}
-    &\Theta_{m, S^*}^c = \Theta - \bigcap_{j \in S^*} \Theta_j \\
     &1 - \min_{j \in S^*} \Pi(\Theta_j) \leq \Pi(\Theta_{m, S^*}^c) \leq 1 - \min_{j \in S^*} (\Pi(\Theta_j))^m \\
+  \end{align}
+  Again, we will check whether upper and lower bound equal in the $\deq$ sense.
+  \begin{align}
     &\lim_{n \rightarrow \infty} \frac{1}{n} \log(\frac{\min_{j \in S^*} \Pi(\Theta_j)}{\min_{j \in S^*} (\Pi(\Theta_j))^m}) = \lim_{n \rightarrow \infty} \frac{-(m - 1)}{n} \log(\min_{j \in S^*} \Pi(\Theta_j))
   \end{align}
-  Observe that $\min_{j \in S^*} \Pi(\Theta_j) \geq \alpha_{n, S^*} \rightarrow 1$. Hence the limit of the fraction goes to 0 and we have $\min_{j \in S^*} \Pi(\Theta_j) \deq \min_{j \in S^*} (\Pi(\Theta_j))^m$. Again, by the Squeeze theorem it follows that
+  Observe that $1 \geq \min_{j \in S^*} \Pi(\Theta_j) \geq \alpha_{n, S^*} \rightarrow 1$. Hence the limit of the fraction goes to 0 and we have $\min_{j \in S^*} \Pi(\Theta_j) \deq \min_{j \in S^*} (\Pi(\Theta_j))^m$. Applying, by the Squeeze theorem it follows that
   \begin{align}
     \Pi_n(\Theta_{m, S^*}^c) \deq 1 - \min_{j \in S^*} \Pi_n(\Theta_j)
   \end{align}
@@ -391,21 +418,21 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
     &= \min_{j\in S^*} \min_{x \in \mathbb{R}} \psi_{j}d(\theta^*_{j} || x) + \psi_{i}d(\theta_{i}^* ||x) \label{eq: l2_4}\\
     &= \min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)
   \end{align}
-  \eqref{eq: l2_1} follows from noting that for any feasible $\theta$, we can define an alternative $\theta'$ s.t. $\theta'_i = \theta_i$, $\theta'_j = \theta_j$ for all $j \in S^*$ and $\theta'_j = \theta^*_j$ for all $j \notin S^* \cup \{i\}$. For such a $\theta'$, all terms with $j \notin S^* \cup \{i\}$ are zero while all others terms remain unchanged. Hence the minimum occurs with such a $\theta'$. Importantly, $\theta'$ remains feasible according to current definitions of $\bar{\Theta}_i$, i.e. $\theta' \in \bar{\Theta}_i$.
+  \eqref{eq: l2_1} follows from the fact that for any feasible $\theta$, we can define an alternative $\theta'$ s.t. $\theta'_i = \theta_i$, $\theta'_j = \theta_j$ for all $j \in S^*$ and $\theta'_{i_x} = \theta^*_{i_x}$ for all $i_x \notin S^* \cup \{i\}$. For such a $\theta'$, all terms involving $i_x \notin S^* \cup \{i\}$ are zero by the definition of the KL divergence while all others terms remain unchanged. Hence the minimum occurs with such a $\theta'$. Importantly, $\theta'$ remains feasible according to current definitions of $\bar{\Theta}_i$, i.e. $\theta' \in \bar{\Theta}_i$.
 
   \eqref{eq: l2_2} follows from a similar observation: only a single arm from $S^*$ needs to be inferior to arm $i$ under $\theta$. Recall that the terms of the individual arms do not influence each other. This implies that the minimization will gravitate towards setting all but one arm from $S^*$ in $\theta$ to the their true value - as the KL divergence is minimized for those values. Hence the terms of all but one arm from $S^*$ will be cancelled out by the minimization. As $i$ remains superior to one arm in $S^*$, we have top-$m(\theta, S^* \cup \{i\}) \neq S^*$. Thereby such a $\theta$ is feasible according to $\bar{\Theta}_i$.
 
-  \eqref{eq: l2_3} follows from the same argument Russo employs. The monotonicity of the KL divergence combined with the possibility of $\theta_i = \theta_j$ tells us that the minimum will be reached in the case of equality.
+  \eqref{eq: l2_3} follows from monotonicity of the KL divergence, as displayed in \Cref{eq:kl_monotonicity}, combined with the possibility of $\theta_i = \theta_j$ tells us that the minimum will be reached in the case of equality.
 
   \eqref{eq: l2_4} follows from observing that our minimization over $\theta$ has reduced to a minimization over $\theta_j$. The latter is a one-dimensional real.
 \end{proof}
 
 \begin{proof}[\Cref{lemma:C_concave}]
-  By Russo's Lemma 2 (c) we know that $g(x, (\psi_{S^*}, \psi_i)) = \min_{x \in \mathbb{R}} \psi_{j}d(\theta^*_{j} || x) + \psi_{i}d(\theta_{i}^* ||x)$ is concave in $(x, (\psi_{S^*}, \psi_i))$. As $S^*$ is a concave, non-empty set (note that we can always permute arm indices such that it becomes concave) and $g(x, (\psi_{S^*}, \psi_j)) \geq 0 > -\infty$, Boyd and Vandenberghe's \cite{Boyd:2004:CO:993483} (3.2.5) condition for conservation of concavity are met.
+  For the sake of clarity, let us define $f(x, (\psi_j, \psi_i)) = \psi_j d(\theta_i^*||x) + \psi_i d(\theta_i^* || x)$. Note that $C_{j, i}(\psi_j, \psi_i) = min_{x \in \mathbb{R}} f(x,(\psi_j, \psi_i))$. Clearly, $f$ is linear in $(\psi_j, \psi_i)$. According to Boyd and Vandenberghe (3.2.5) \cite{Boyd:2004:CO:993483}, the minimum over a family of linear functions is concave.
 \end{proof}
 
 \begin{proof}[\Cref{lemma:C_unique_solution}]
-  Russo's equation (16) in Section D tells us that:
+  By \Cref{eq:exponential_kl} we know that for the exponential family of probability distributions it holds that:
   \[d(\theta||\theta') = (\theta - \theta')A'(\theta) - A(\theta) + A(\theta')\]
   Appyling this identity to \eqref{eq: l2_4} for a given $j$ gives us:
   \begin{align}
@@ -413,34 +440,80 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
     &=\psi_j ((\theta_j^* - x)A'(\theta_j^*) - A(\theta_j^*) + A(x)) + \psi_i((\theta_i^* - x)A'(\theta_i^*) - A(\theta_i^*) + A(x))\\
     &= -x(\psi_j A'(\theta_j^*) + \psi_i A'(\theta_i^*)) + A(x)(\psi_j + \psi_i) + c
   \end{align}
-  Where $c$ is independent of $x$. As we seeks to minimize this quantity wrt. $x$, we take the derivative of it wrt $x$ and set it to 0. This gives us:
+  Where $c$ is independent of $x$. As we seeks to minimize this quantity with respect to $x$, we differentiate it with respect to $x$ and set it to 0. This yields:
   \[A'(x) = \frac{\psi_j A'(\theta_j^*) + \psi_i A'(\theta_i^*)}{\psi_j + \psi_i}\]
 \end{proof}
 
 \begin{proof}[\Cref{proposition:characterization}]
-
-  We prove in the following order: \eqref{itm:p7_i} \eqref{eq:condition_C} must hold for an optimal allocation,  and \eqref{itm:p7_ii} an optimal allocation is unique.
+  We prove in the following order: \eqref{itm:p7_i} \eqref{eq:condition_C} must hold for an optimal allocation, \eqref{itm:p7_ii} an optimal allocation is unique, \eqref{itm:p7_iii} what the convergence rate of the optimal allocation is and \eqref{itm:p7_iv} that none can do better.
   \begin{enumerate}[(i)]
-    \item \label{itm:p7_i} Suppose that $\psi^*$ is optimal but does not satisfy \eqref{eq:condition_C}. Hence for some $i_1, i_2 \notin S^*, j_1, j_2 \in S^*$:
-    \[C_{j, i}(\psi^*_{j_1}, \psi^*_{i_1}) > C_{j, i}(\psi^*_{j_2}, \psi^*_{i_2})\]
+    \item \label{itm:p7_i} Suppose that $\psi^*$ is optimal but does not satisfy \eqref{eq:condition_C}. Hence for some $i_1, i_2 \notin S^*, j_1, j_2 \in S^*$ with $(j_1, i_1) \neq (j_2, i_2)$:
+    \[C_{j_1, i_1}(\psi^*_{j_1}, \psi^*_{i_1}) > C_{j_2, i_2}(\psi^*_{j_2}, \psi^*_{i_2})\]
     This implies:
-    \[C_{j, i}(\psi^*_{j_1}, \psi^*_{i_1}) > \min_{i \notin S^*, j \in S^*}C_{j, i}(\psi^*_j, \psi^*_i) \]
+    \[C_{j_1, i_1}(\psi^*_{j_1}, \psi^*_{i_1}) > \min_{i \notin S^*} \min_{j \in S^*}C_{j, i}(\psi^*_j, \psi^*_i) \]
     Consider the the measurement plan $\psi^\epsilon$ with
     \begin{itemize}
       \item $\psi^\epsilon_{i_1} = \psi^*_{i_1} - \epsilon$
       \item $\psi^\epsilon_{j_1} = \psi^*_{j_1} - \epsilon$
-      \item $\forall \gamma \notin \{i_1, j_1\}: \psi^\epsilon_\gamma = \psi^*_\gamma + \frac{2 \epsilon}{k-2}$
+      \item $\forall l\notin \{i_1, j_1\}: \psi^\epsilon_l = \psi^*_\gamma + \frac{2 \epsilon}{k-2}$
     \end{itemize}
-    For sufficiently small $\epsilon$, we get:
-    \[C_{j, i}(\psi^\epsilon_{j_1}, \psi^\epsilon_{i_1}) > \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\psi^\epsilon_{j}, \psi^\epsilon_i) > \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\psi^*_j, \psi^*_i)\]
-    Hence $\psi^\epsilon$ obtains more evidence than $\psi^*$ and thereby achieves a better convergence rate \eqref{eq:constrained_optimal_gamma}. In other words, $\psi^*$ is not optimal, which is a contradiction.
+    We can choose $\epsilon$ sufficiently small such that we preserve the inequality
+    \begin{align}
+      C_{j_1, i_1}(\psi^\epsilon_{j_1}, \psi^\epsilon_{i_1}) > C_{j_2, i_2}(\psi^\epsilon_{j_2}, \psi^\epsilon_{i_2})
+    \end{align}
+    while shifting enough measurement to all other arms such that
+    \begin{align}
+      \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\psi^\epsilon_{j}, \psi^\epsilon_i) > \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\psi^*_j, \psi^*_i)
+    \end{align}
+    Hence $\psi^\epsilon$ obtains more evidence on the worst possible pair than $\psi^*$ and thereby achieves a better convergence rate \eqref{eq:constrained_optimal_gamma}. In other words, $\psi^*$ is not optimal, which is a contradiction.
 
-    \item \label{itm:p7_ii} Suppose that there are optimal $\psi^1$, $\psi^2$, therefore satisfying \eqref{eq:condition_C}. It follows that there is at least one $\gamma$ s.t. $\psi^1_{\gamma} \neq \psi^2_{\gamma}$. W.l.o.g. assume $\psi^1_{\gamma} > \psi^2_{\gamma}$.
+    \item \label{itm:p7_ii} Suppose that there are optimal $\psi^1$, $\psi^2$, therefore both satisfying \eqref{eq:condition_C} with the exact same value $C^*$. It follows that there is at least one $l$ s.t. $\psi^1_{l} \neq \psi^2_{l}$. W.l.o.g. assume $l = i_x \notin S^*$ and $\psi^1_{i_x} > \psi^2_{i_x}$.
 
-    $\gamma$ is either inside or outside of $S^*$. As both cases are analogous, let's assume $\gamma \in S^*$. Combining the knowledge of \eqref{eq:condition_C} and $C$ being stictly increasing in the first argument leads to $C_{j, i}(\psi^1_\gamma, \psi^1_i) > C_{j, i}(\psi^2_\gamma, \psi^2_i)$ for all $i \notin S^*$. Hence $\psi^2$ is not optimal, which is a contradiction.
+    We proceed by case distinction and show that each leads to a contradiction.
+    \begin{itemize}
+      \item Only one arm is disinct.
+
+      For some $\epsilon > 0$ and any $j \in S^*$ have
+      \begin{align}
+        C_{j, i_x}(\psi^2_j, \psi^2_{i_x} + \epsilon) &= C_{j, i_x}(\psi^1_j, \psi^2_{i_x} + \epsilon) \\
+        &= C_{j, i_x}(\psi^1_j, \psi^1_{i_x}) \\
+        &= C^* \\
+        &= C_{j, i_x}(\psi^2_j, \psi^2_{i_x})
+      \end{align}
+      Which is a contradiction as $\epsilon$ is positive $C_{j, i_x}$ monotonically increasing.
+      \item More that one arm is distinct, but they all belong to either $S^*$ or $S^{*c}$.
+
+      As our distinct value so far comes from $S^{*c}$, let's also assume, w.l.o.g., $i_y \notin S^*$ with $i_y \neq i_x$.
+
+      Note that indepdently of whether $\psi^1_{i_y} \geq \psi^2_{i_y}$ or $\psi^1_{i_y} < \psi^2_{i_y}$ holds, the previous argument can be applied for any $j \in S^*$.
+
+      \item At least one arm is distinct in both $S^*$ and $S^{*c}$.
+
+      Let's assume first that the distinctive optimal arm is $j_x \in S^*$. Observe that $\psi^1_{j_x} < \psi^2_{j_x}$ has to hold, otherwise both $i_x$ and $j_x$ were allocated more weight in $\psi^1$ than in $\psi^2$. By the monotonicity of $C_{j_x, i_x}$, this would imply greater evidence for $\psi^1$ than for $\psi^2$, a contradiction to the assumption that both are optimal.
+
+      Recall our constraint $\frac{1}{2} = \sum_{j \in S^*} \psi_l = \sum_{i \notin S^*} \psi_i$, which has to hold for both $\psi^1$ and $\psi^2$.
+      Hence for $psi^1$'s over-allocation on $i_x$, there has to be an $i_y \notin S^*$ for which $\psi^1$ under-allocates, compared to $psi^2$.
+      Summarizing, we have:
+      \begin{itemize}
+        \item $\psi^1_{i_x} = \psi^2_{i_x} + \epsilon$
+        \item $\psi^1_{j_x} = \psi^2_{j_x} - \epsilon'$
+        \item $\psi^1_{i_y} = \psi^2_{i_y} - \epsilon''$
+      \end{itemize}
+      Combining this with the fact that all $C$ values from both $\psi^1$ and $\psi^2$ have to equal one another, we obtain:
+      \begin{align}
+        C_{j_x, i_y}(\psi^2_{j_x} - \epsilon', \psi^2_{i_y} - \epsilon'') &= C_{j_x, i_y}(\psi^1_{j_x}, \psi^1_{i_y}) \\
+        &= C^* \\
+        C_{j_x, i_y}(\psi^2_{j_x}, \psi^2_{i_y})
+      \end{align}
+      which, again, is a contradiction by the monotonicity of the KL divergence.
+    \end{itemize}
+
+    $l$ is either inside or outside of $S^*$. As both cases are analogous, let's assume $l = j_x \in S^*$. Combining the knowledge of \eqref{eq:condition_C} and $C_{j, i}$ being stictly increasing in the first argument leads to $C_{j_x, i}(\psi^1_{j_x}, \psi^1_i) > C_{j_x, i}(\psi^2_{j_x}, \psi^2_i)$ for all $i \notin S^*$. Hence $\psi^2$ is not optimal, which is a contradiction.
+
+  \item \label{itm:p7_iii}
+  \item \label{itm:p7_iv}
   \end{enumerate}
 
-  Just as in Russo's case, the remaining claims follow directly from Proposition 5 and Lemma 2.
 \end{proof}
 
 \chapter{Algorithm}
