@@ -33,11 +33,9 @@ Thompson sampling is a sampling strategy often employed for choosing arms in the
 With many repetitions, this leads to each arm being sampled proportionally to its likelihood of maximizing the metric of desire according to current belief.
 Intuitively, this is very appealing for the cummulative reward scenario as it creates a natural balance between exploration and exploitation.
 
-% Insert algorithm from overview paper?
+TODO: Insert algorithm from overview paper?
 
 \section{Notation}
-%TODO: Talk about deq.
-
 We assume $k$ arms to choose from and denote the set of possible arms as $[k]$. Subsets $S \subset [k]$ are assumed to be of size $m < k$.
 
 A possible set of means for the arms is denoted as the $k$-dimensional vector $\theta$, where every mean can lie between 0 and 1. We also refer to such a $\theta$ as parameter.
@@ -72,6 +70,12 @@ The $n$-th sampled arm is denoted as $l_n$. For adaptive strategies, the allocat
 \end{align}
 We use the notation $d(\theta_1||\theta_2)$ to represent the Kullback-Leibler divergence between $\theta_1$ and $\theta_2$.
 
+We employ Russo's notation $a_n \deq b_n$ if the the following relationship holds:
+\begin{align}
+  \lim_{n \rightarrow \infty}\frac{1}{n}\log{\frac{a_n}{b_n}}
+\end{align}
+Hence $\deq$ can be vaguely thought of as asymptotic equality discounting for logarithmic factors.
+
 \section{Best Arm Identification}
 \subsection{Model}\label{ss:top-1_model}
 %What is the problem?
@@ -93,7 +97,7 @@ Real-world applications of Best Arm identification include:
 "ML: drive generation of own data instead of" -> it is about acquisition
 
 \subsection{Optimal allocation}\label{subsection:optimal_allocation}
-% TODO: explain limiting assumptions made by Russo
+TODO: explain limiting assumptions made by Russo
 
 % What is the overall goal?
 % How is this achieved? (Talk about optimization over hyper-parameters)
@@ -148,7 +152,7 @@ Russo proposes different algorithms that satisfy aforementioned theoretical resu
 
 The main idea behind TTTS \ref{alg:TTTS} is to repeat drawing with Thompson sampling from the prior until two different candidates are obtained. This illustrates how Thompson sampling, usually only truly useful for exploit-explore settings can be used for pure-exploit: some of its focus is shifted towards inferior-looking candidates. Among those two candidates, the former is picked with probability $\beta$, explaining the provenance of the hyperparameter.
 
-% TODO: Pi prior or posterior?
+TODO: Pi prior or posterior?
 \begin{algorithm}[H]
     \caption{Given a prior $\Pi_n$ at step $n$}
     \label{alg:TTTS}
@@ -215,8 +219,10 @@ Kalyanakrishnan et al. \cite{DBLP:conf/icml/KalyanakrishnanTAS12} propose a conc
 
 \chapter{Charactarizing the Constrained Optimal Top-$m$ Allocation}
 
-%TODO: Talk about prior vs posterior.
-%TODO Talk about limitations on distributions.
+TODO: Talk about prior vs posterior.
+
+TODO Talk about limitations on distributions.
+
 %What does it mean to be optimal?
 Analogously to \ref{subsection:optimal_allocation}, we define the optimal top-$m$ allocation by its convergence rate of the posterior mass put on parameters reflecting the true top-$m$ arms $\Pi_n(\Theta_{m, S^*})$. Moreover, just as in Russo's top-1 case, the algorithm we will propose introduces a constraint. We will also put the optimal allocation under that constraint with the idea being that this is but a hyperparameter that can be optimized over.
 
@@ -238,8 +244,9 @@ Throughout this whole chapter we will assume that every true mean is unique, i.e
 %How would those statements look like without the constraint?
 %%%%%
 
-%TODO:How would the results look like without the relaxation from theta_i to bar_theta_i?
-%TODO:Could everything be done with j instead of i?
+TODO:How would the results look like without the relaxation from $theta_i$ to $bar_theta_i$?
+
+TODO:Could everything be done with j instead of i?
 
 \section{Statements}\label{section:optimal_statements}
 Russo proves a proposition about the posterior convergence rate about general parameter sets $\tilde{\Theta}$.
@@ -270,7 +277,8 @@ Plugging $\bar{\Theta}_i$ into \ref{proposition:prop5} leaves us with a sum of K
 \begin{align}
   C_{j, i}(\psi_j,\psi_i) &=  \min_{x \in \mathbb{R}} \psi_j d(\theta^*_{j} || x) + \psi_i d(\theta_{i}^* ||x) \label{eq:C}
 \end{align}
-% TODO: Talk about player scenario?
+TODO: Talk about player scenario?
+
 In particular, $C_{j, i}$ can be thought of as evidence that $j$ is distinct from $i$. Quite naturally, we want this evidence as large as possible for every pair $(j, i) \in S^* \times {S^*}^c$.
 
 \begin{lemma}\label{lemma:kl_to_C}
@@ -305,7 +313,7 @@ For the sake of convenience we define the optimal exponent:
 
 \paragraph{An Optimal Constrained Allocation}
 
-%TODO: Talk about being able to do with j what we did through \theta_i.
+TODO: Talk about being able to do with j what we did through $\theta_i$.
 
 Our proposed algorithm will always allocate $\frac{1}{2}$ of its samples to arms in $S^*$ in the long run. As a consequence it may not attain the overall optimal exponent without hyperparameter tuning. Hence we consider a modified, constrained setting under which the algorithm performs optimally. By adapting \eqref{eq:psi^*} and \eqref{eq:gamma^*} we obtain:
 \begin{align}
@@ -323,6 +331,10 @@ Hence we have established the optimal constrained rate of convergence $\Gamma^{\
   \[A'(\bar{\theta}) = \frac{\psi_j A'(\theta_j^*) + \psi_i A'(\theta_i^*)}{\psi_j + \psi_i}\]
   where $A'(\theta)$ is the mean observation under $\theta$. Therefore
   \[C_{j, i}(\psi_j, \psi_i) = \psi_j d(\theta^*_j || \bar{\theta}) + \psi_i d(\theta^*_i || \bar{\theta})\]
+\end{lemma}
+
+\begin{lemma}\label{lemma:C_strictly_increasing}
+  For fixed $i \notin S^*$ and $j \in S^*$, $C_{j, i}$ is strictly increasing in both of its arguments.
 \end{lemma}
 
 \begin{proposition}\label{proposition:characterization}
@@ -444,8 +456,30 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
   \[A'(x) = \frac{\psi_j A'(\theta_j^*) + \psi_i A'(\theta_i^*)}{\psi_j + \psi_i}\]
 \end{proof}
 
+\begin{proof}[\Cref{lemma:C_strictly_increasing}]
+  We will proceed to show for fixed $j \in S^*$ and $i \notin S^*$, $C_{j, i}$ is increasing in its first argument $\psi_j$ as its second argument $\psi_i$ follows by symmetry.
+
+  Let us define $f(\psi, x) = \alpha d(\theta_i^*||x) + \psi_jd(\theta_j^*||x)$ which implies that $C_{j, i}(\alpha, \psi_j) = \min_{x \in \mathbb{R}} f(x, \psi_j)$. As the KL divergence is non-negative we have:
+  \begin{align}
+    f(x, \psi_j + \epsilon) &= \alpha d(\theta_i^*||x) + \psi_j d(\theta_j^*||x) + \epsilon d(\theta_j^*||x) \\
+    &> \alpha d(\theta_i^*||x) + \psi_j d(\theta_j^*||x)\\
+    &= f(x, \psi_j)
+  \end{align}
+  And therefore $f$ is stricly increasing in $\psi_j$.
+
+  We fix two reals $\psi_{j1} < \psi_{j2}$ from $[0, 1]$ as well as their counterparts $x_1 = \argmin_{x \in \mathbb{R}} f(x, \psi_{j1})$ and $x_2 = \argmin_{x \in \mathbb{R}} f(x, \psi_{j2})$. Hence our goal is to show that $f(x_1, \psi_{j1}) < f(x_1, \psi_{j2})$ for minimizing $x_1$. By \Cref{lemma:C_unique_solution} both $x_1$ and $x_2$ are unique. As $x_1$ is unique, we have
+  \begin{align}
+    f(x_1, \psi_{j1}) &< f(x_2, \psi_{j1}) \\
+    f(x_2, \psi_{j2}) &< f(x_1, \psi_{j2})
+  \end{align}
+  As $f$ is strictly increasing in its second argument, it holds that $f(x_2, \psi_{j1}) < f(x_2, \psi_{j2})$. Chaining those inequalities together we obtain:
+  \begin{align}
+    f(x_1, \psi_{j1}) < f(x_2, \psi_{j1})  < f(x_2, \psi_{j2}) < f(x_1, \psi_{j2})
+  \end{align}
+\end{proof}
+
 \begin{proof}[\Cref{proposition:characterization}]
-  We prove in the following order: \eqref{itm:p7_i} \eqref{eq:condition_C} must hold for an optimal allocation, \eqref{itm:p7_ii} an optimal allocation is unique, \eqref{itm:p7_iii} what the convergence rate of the optimal allocation is and \eqref{itm:p7_iv} that none can do better.
+  We prove in the following order: \eqref{itm:p7_i} \eqref{eq:condition_C} must hold for an optimal allocation, \eqref{itm:p7_ii} an optimal allocation is unique. After this, the remaining claim, namely that no other constrained allocation can be better, follows directly.
   \begin{enumerate}[(i)]
     \item \label{itm:p7_i} Suppose that $\psi^*$ is optimal but does not satisfy \eqref{eq:condition_C}. Hence for some $i_1, i_2 \notin S^*, j_1, j_2 \in S^*$ with $(j_1, i_1) \neq (j_2, i_2)$:
     \[C_{j_1, i_1}(\psi^*_{j_1}, \psi^*_{i_1}) > C_{j_2, i_2}(\psi^*_{j_2}, \psi^*_{i_2})\]
@@ -480,7 +514,7 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
         &= C^* \\
         &= C_{j, i_x}(\psi^2_j, \psi^2_{i_x})
       \end{align}
-      Which is a contradiction as $\epsilon$ is positive $C_{j, i_x}$ monotonically increasing.
+      Which is a contradiction as $\epsilon$ is positive $C_{j, i_x}$ strictly increasing by \Cref{lemma:C_strictly_increasing}.
       \item More that one arm is distinct, but they all belong to either $S^*$ or $S^{*c}$.
 
       As our distinct value so far comes from $S^{*c}$, let's also assume, w.l.o.g., $i_y \notin S^*$ with $i_y \neq i_x$.
@@ -489,7 +523,7 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
 
       \item At least one arm is distinct in both $S^*$ and $S^{*c}$.
 
-      Let's assume first that the distinctive optimal arm is $j_x \in S^*$. Observe that $\psi^1_{j_x} < \psi^2_{j_x}$ has to hold, otherwise both $i_x$ and $j_x$ were allocated more weight in $\psi^1$ than in $\psi^2$. By the monotonicity of $C_{j_x, i_x}$, this would imply greater evidence for $\psi^1$ than for $\psi^2$, a contradiction to the assumption that both are optimal.
+      Let's assume first that the distinctive optimal arm is $j_x \in S^*$. Observe that $\psi^1_{j_x} < \psi^2_{j_x}$ has to hold, otherwise both $i_x$ and $j_x$ were allocated more weight in $\psi^1$ than in $\psi^2$. By \Cref{lemma:C_strictly_increasing} we recall the increase of $C_{j_x, i_x}$ in both of its arguments. This implies greater evidence for $\psi^1$ than for $\psi^2$, a contradiction to the assumption that both are optimal.
 
       Recall our constraint $\frac{1}{2} = \sum_{j \in S^*} \psi_l = \sum_{i \notin S^*} \psi_i$, which has to hold for both $\psi^1$ and $\psi^2$.
       Hence for $psi^1$'s over-allocation on $i_x$, there has to be an $i_y \notin S^*$ for which $\psi^1$ under-allocates, compared to $psi^2$.
@@ -503,16 +537,13 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
       \begin{align}
         C_{j_x, i_y}(\psi^2_{j_x} - \epsilon', \psi^2_{i_y} - \epsilon'') &= C_{j_x, i_y}(\psi^1_{j_x}, \psi^1_{i_y}) \\
         &= C^* \\
-        C_{j_x, i_y}(\psi^2_{j_x}, \psi^2_{i_y})
+        &= C_{j_x, i_y}(\psi^2_{j_x}, \psi^2_{i_y})
       \end{align}
-      which, again, is a contradiction by the monotonicity of the KL divergence.
+      which, again, is a contradiction by the strictly increaseing nature of $C_{j_x, i_y}$.
     \end{itemize}
-
-    $l$ is either inside or outside of $S^*$. As both cases are analogous, let's assume $l = j_x \in S^*$. Combining the knowledge of \eqref{eq:condition_C} and $C_{j, i}$ being stictly increasing in the first argument leads to $C_{j_x, i}(\psi^1_{j_x}, \psi^1_i) > C_{j_x, i}(\psi^2_{j_x}, \psi^2_i)$ for all $i \notin S^*$. Hence $\psi^2$ is not optimal, which is a contradiction.
-
-  \item \label{itm:p7_iii}
-  \item \label{itm:p7_iv}
   \end{enumerate}
+
+TODO: Make sure $\psi^*$ is constrained.
 
 \end{proof}
 
