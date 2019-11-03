@@ -5,18 +5,18 @@ Tbd whether relevant.
 
 \section{Bandits}
 %What is the scenario/model?
-The so-called stochastic multi-armed bandits is a general model to simulate decision-making in uncertain environments.
-In particular, one assumes a set of options or arms to choose from, each choice leading to an outcome, also referred to as reward. In general, one assumes many sequential selections among the set of arms. It is typically assumed that the outcome of the selection of an individual arm follows a fixed but unknown probability distribution.
+The so-called stochastic multi-armed bandit is a general model to simulate decision-making in uncertain environments.
+In particular, one assumes a set of options or arms to choose from, each choice leading to an outcome, also referred to as reward. In general, one assumes many sequential selections among the set of arms. The outcome of the selection of an individual arm typically follows a fixed but unknown probability distribution.
 
 %What problems are typically tackled by this scenario?
 Within the bandits model, the concern revolves around which arm to choose next. Allocation strategies tackling this question address either of two problems: explore-exploit or pure-explore.
 
-The former concerns itself with maximizing the \emph{cummulative reward}. This means that one attempts to maximize the \emph{sum of the rewards obtained} through all arm selections. Naturally, starting off without any knowledge about the underlying distributions, this involves both exploration of arm qualities as well as exploitation of gathered knowledge.
+The former concerns itself with maximizing the \emph{cummulative reward}. This means that one attempts to maximize the \emph{sum of the rewards obtained} through all arm selections. Naturally, starting off without any knowledge about the underlying distributions, this involves both exploration of arm qualities as well as exploitation of knowledge obtained so far.
 
-The latter revolves around \emph{simple reward}. This problem consists of seeking to maximize the reward one obtains if one leverages the current knowledge for \emph{another} draw. This implies that the focus lies on \emph{identification} of high-quality candidates, where quality is usually assessed by high means. Hence it is part of the task to make estimated best and true best equal as well as obtaining a high \emph{confidence} on this statement.
+The latter revolves around \emph{simple reward}. This problem consists of seeking to maximize the reward one obtains if one leverages the current knowledge for \emph{another} draw. This implies that the focus lies on \emph{identification} of high-quality candidates, quality usually being assessed by high means. It is therefore it is part of the task to align estimation of the best arm with the underlying truth as well as reaching a high \emph{confidence} in this alignment.
 
 %Why is model and its problems relevant?
-The bandits model can be used for all processes involving sequential decision making. Yet, an important simplification is the assumption of the distributions being fixed over time. This assumption might be more or less representative of the true, to-be-modelled processes.
+The bandits model can be used for all processes involving sequential decision making. Yet, an important simplification is the assumption of the distributions being fixed over time. In how far this simplification is representative of the to-be-modelled process varies.
 
 The explore-exploit problem is applied in Recommender Systems, ad campaigns, in the context of Reinforcement Learning and Robotics.
 
@@ -24,18 +24,7 @@ For real-world applications of the pure-exploration bandit please refer to \ref{
 
 There exist many specialized versions of the Bandits model, such as contextual bandits or adversarial bandits.
 
-\section{Thompson Sampling}
-%How does it work?
-%Why is it useful?
-%What is it used for?
-
-Thompson sampling is a sampling strategy often employed for choosing arms in the bandits scenario. By default, it particularly lends itself to the cummulative reward setting. The technique is based on having and updating prior distributions over all arms. In contrast to greedily selecting the arm that empirically maximizes the metric of desire, Thompson sampling suggests to randomly draw beliefs on arms from the prior distributions. Subsequently, it selects the arm which maximizes the metric of desire on the sampled belief.
-With many repetitions, this leads to each arm being sampled proportionally to its likelihood of maximizing the metric of desire according to current belief.
-Intuitively, this is very appealing for the cummulative reward scenario as it creates a natural balance between exploration and exploitation.
-
-TODO: Insert algorithm from overview paper?
-
-\section{Notation}
+\section{Notation}\label{section:notation}
 We assume $k$ arms to choose from and denote the set of possible arms as $[k]$. Subsets $S \subset [k]$ are assumed to be of size $m < k$.
 
 A possible set of means for the arms is denoted as the $k$-dimensional vector $\theta$, where every mean can lie between 0 and 1. We also refer to such a $\theta$ as parameter.
@@ -62,9 +51,9 @@ Clearly, it holds that $\Pi_n(\Theta) = 1$. As a shorthand for the top-$m$ case,
   \alpha_{n, l} &:= \Pi_n(\Theta_{m, l}) \\
   \alpha_{n, S} &:= \Pi_n(\Theta_{m, S})
 \end{align}
-We are mostly interested in strategies that allocate measurement effort over the arms in a randomized fashion, i.e. according to a probability distribution. We refer to such an allocation or distribution as $\psi$, defining the probability of each arm being sampled. Naturally, it holds that $\sum_{l \in [k]} \psi_l = 1$.
+We are mostly interested in strategies that allocate measurement effort over the arms in a randomized fashion, i.e. according to a probability distribution. We refer to such an allocation or distribution as $\psi$, defining the probability of each arm being sampled. Naturally, it holds that $\sum_{l \in [k]} \psi_l = 1$. We also define the allocation property of a set by the sum of its arms: $\psi_S = \sum_{l \in S} \psi_l$.
 
-The $n$-th sampled arm is denoted as $l_n$. For adaptive strategies, the allocation can change after every sample. After $n$ sample we refer to the allocation s as $\psi_{n}$ and therefore after $n$ samples we have $\psi_{n, l} = \Pr[l_n = l]$ for arm $l$. We also define the allocation property of a set by the sum of its arms: $\psi_S = \sum_{l \in S} \psi_l$. In the case of adaptive strategies, we might as well be interested in average allocation up to a certain sample $n$. We write:
+The $n$-th sampled arm is denoted as $l_n$. For adaptive strategies, the allocation can change after every sample. After $n$ samples we refer to the allocation as $\psi_{n}$ and therefore we have $\psi_{n, l} = \Pr[l_n = l]$ for arm $l$. We might as well be interested in the average allocation up to a certain sample $n$. We write:
 \begin{align}
   \bar{\psi}_{n, l} &:= \frac{\sum_{n' = 1}^{n} \psi_{n', l}}{n}
 \end{align}
@@ -72,9 +61,38 @@ We use the notation $d(\theta_1||\theta_2)$ to represent the Kullback-Leibler di
 
 We employ Russo's notation $a_n \deq b_n$ if the the following relationship holds:
 \begin{align}
-  \lim_{n \rightarrow \infty}\frac{1}{n}\log{\frac{a_n}{b_n}}
+  \lim_{n \rightarrow \infty}\frac{1}{n}\log{\frac{a_n}{b_n}} \rightarrow 0
 \end{align}
-Hence $\deq$ can be vaguely thought of as asymptotic equality discounting for logarithmic factors.
+Hence $\deq$ can be vaguely thought of as asymptotic relationship discounting for logarithmic factors. Note the asymmetry of the relationship: it rather represents an inequality than an equality.
+
+\section{Thompson Sampling for Bandits}
+%How does it work?
+%Why is it useful?
+%What is it used for?
+
+Thompson sampling is a sampling strategy often employed for selecting arms in the bandits scenario. By default, it particularly lends itself to the cummulative reward setting. In the following, we will discuss Thompson sampling in the context of bandits.
+
+The foundation of Thompson sampling is a Bayesian approach: instead of 'only' possessing estimates on the means/distributions of arms, it entails a distribution \emph{over} arms, indicating the likelihood of a random variable over the arms. In the bandits scenario said random variable tends to be the mean of an arm. Hence, instead point estimate of the means, Thompson sampling requires have distributions over the means per arm.
+
+Naturally, this distribution over the arms should also leverage the knowledge aquired throughout the sampling process. Hence, per round, we can talk about \emph{prior} and \emph{posterior} distributions. This posterior distribution of a step $n$ answers the question: 'How likely are the arms $1, 2, 3$ to have means $[.193, .254, .1]$ after having observed samples 1 to $n$. As this is an iterative process, the posterior after observing sample $n$ will serve as the prior for selecting sample $n+1$. Hence the posterior can be thought of as the the prior 'updated' with the knowledge acquired of a specific round. Thanks to this duality we will continue to only talk about posteriors.
+
+The attentive reader might wonder how exactly posteriors are updated. The update procedure is dependent of the type of utilized class of distribution for prior and posteriors. An example of this can be found in \ref{section:empirical_behaviour}.
+
+In contrast to greedily selecting the arm that empirically maximizes the metric of desire, e.g. the mean, Thompson sampling suggests to randomly draw beliefs on arms weighted by the posterior distribution. Note that said posterior distribution is itself a function of the empirical means. Subsequently, it selects the arm which maximizes the metric of desire on the sampled belief. With many repetitions, this leads to each arm being sampled proportionally to its likelihood of maximizing the metric of desire according to current belief. \Cref{alg:thompson_sampling} illustrates this process more explicitly.
+
+\begin{algorithm}[H]
+    \caption{Given a posterior $\Pi_n$ at step $n+1$}
+    \label{alg:thompson_sampling}
+  \begin{algorithmic}
+    \State $\hat{\theta} \sim \Pi_n$
+    \State $l_{n+1} = \argmax_{l \in [k]}\hat{\theta}_l$
+    \State Play $l_{n+1}$
+    \State Observe reward $r_{n+1}$
+    \State $\Pi_{n + 1} = update(\Pi_n, l_{n+1}, r_{n+1})$
+  \end{algorithmic}
+\end{algorithm}
+
+Intuitively, this is very appealing for the cummulative reward scenario as it creates a natural balance between exploration and exploitation.
 
 \section{Best Arm Identification}
 \subsection{Model}\label{ss:top-1_model}
@@ -82,31 +100,29 @@ Hence $\deq$ can be vaguely thought of as asymptotic equality discounting for lo
 %Why is it relevant?
 %How is performance evaluated? What is 'confidence'?
 
-Best Arm identification implies disregarding the sum of the rewards encountered while sampling. Rather, the goal is to efficiently gather information maximizing the confidence of the suggestion made \emph{after} the sampling phase. In other words, there is a purely explorative phase, also referred to as 'experiment' which is then typically followed by a purely exploitative phase, having committed to an option. For this reason, Best Arm Identification is also known as 'Experiment Design'.
+Best Arm identification implies disregarding the sum of the rewards encountered while sampling. Rather, the goal is to efficiently gather information maximizing the confidence of the suggestion made \emph{after} the sampling phase. In other words, there is a purely explorative phase, also referred to as 'experiment' which is then typically followed by a purely exploitative phase, having committed to an option. For this reason, Best Arm Identification is a kind of 'Experiment Design'.
 
-Quite naturally, all other aspects being controlled for, requiring fewer samples is preferable. Hence one can formulate the goal in two ways: maximize confidence for a fix amount of samples or minimize amount of samples for a fixed confidence.
+Quite naturally, all other aspects being controlled for, requiring fewer samples is preferable. Hence one can formulate the goal in two ways: maximize confidence for a given amount of samples or minimize amount of samples for a given confidence level.
 
 Confidence can mean and be evaluated in different ways. For Bayesian algorithms, it is possible to quantify the confidence the model has in the currently most favourable looking candidate. This quantity corresponds to the mass a posterior puts on parameters favouring said candidate. Another approach to measure confidence stems from the realm of Probably approximately correct learning, or PAC in short. In the PAC context, one desires to make a statement of the sort $\Pr[\text{output of algoritm is $\epsilon$-correct}] \geq 1 - \delta$, where $\epsilon$-correctness requires an explicit definition. In this case, under the toleration of $\epsilon$, $1 - \delta$ can be thought of as confidence.
 
 Real-world applications of Best Arm identification include:
 \begin{itemize}
-  \item Physical simulations: Given a collection of designs, e.g. the bodywork of a car, determine e.g. aerodynamic properties of the cars. Elaborate simulations can come with significant resource demands, such as compute power and direct and indirect costs of losing time. Coming to the same conclusion, consisting of the superiority of one of the designs, with fewer simulations can be crucial.
+  \item Physical simulations: Given a collection of designs, e.g. the bodywork of a car, determine aerodynamic properties of the designs. Elaborate simulations can come with significant resource demands, such as compute power as well as the direct and indirect costs of time. Arriving at the same conclusion of the superiority of a certain designs, with fewer simulations can be extremely valuable.
   \item Crop selection: Experimenting different crop types in a given growing environment measuring yields, generate a recommendation for that same growing environment.
 \end{itemize}
 
 "ML: drive generation of own data instead of" -> it is about acquisition
 
 \subsection{Optimal allocation}\label{subsection:optimal_allocation}
-TODO: explain limiting assumptions made by Russo
-
 % What is the overall goal?
 % How is this achieved? (Talk about optimization over hyper-parameters)
 
-We start off by describing what it means for an allocation to be optimal and by enumerating some of its properties. We do not present a constructive allocation, rather we assume knowledge about the underlying truth to provide a best possible bound. Intuitively it is not possible to match the performance of that optimal allocation without the knowledge of the underlying truth. Hence the desired statement is to say that a concrete adative allocation \emph{converges} to the optimal allocation.
+We start off by describing what it means for an allocation to be optimal and by enumerating some of its properties. We do not present a constructive allocation, rather we assume knowledge about the underlying truth to provide a tight bound on the best possible allocation. Intuitively it is not possible to match the performance of that optimal allocation without the knowledge of the underlying truth. Hence a very desirable statement to show that a proposed, constructive adaptive allocation \emph{converges} to the optimal allocation.
 
 As mentioned in \ref{ss:top-1_model}, the goal consists of maximizing confidence, i.e. the mass the posterior lays onto the true best arm. Oberve that for any allocation sampling each arm infinitely many times, this quantity will tend towards 1. What makes the optimal allocation optimal is the rate at which the posterior of the true arm convergence towards 1.
 
-Note that the optimal allocation assumes knowledge about the underlying true value and therefore does not need to be adaptive. It can be framed as the following thought experiment: Assume you know the true underlying means. Yet your adversary doesn't trust your 'knowledge'. He only trusts the sample rewards that he can observe for himself. Now it is your task to leverage your knowledge about the true means to sample most the arms in a way that convinces the adversary as quickly as possible.
+Note that the optimal allocation assumes knowledge about the underlying true value and therefore does not need to be adaptive. It can be framed as the following thought experiment: Assume you know the true underlying means. Yet your adversary doesn't trust your 'knowledge'. He only trusts the sample rewards that he can observe for himself. Now it is your task to leverage your knowledge about the true means to sample arms in a fashion convincing the adversary as quickly as possible.
 
 \subsubsection{Rate of convergence}
 Russo \cite{DBLP:journals/corr/Russo16} shows that the rate at which the posterior $\Pi_n$ of the set parameters under which the true best arm $l^*$ is optimal $\Theta^*$ cannot be faster than the following:
@@ -119,15 +135,17 @@ where $n$ corresponds to the number of samples acquired.
 The allocation $\psi$ maximizing this quantity is what we refer to as optimal allocation.
 
 \subsubsection{Defining properties}
-Russo's underlying idea is that the optimal allocation gathers equal \emph{evidence}, e.g. compared to having equal effort for a uniform distribution. This notion of evidence relies on the comparison between the true best against all other arms. It takes both their respective true means as well as sampling frequencies into consideration. For an allocation $\psi$, he defines
+Russo's underlying idea is that the optimal allocation gathers equal \emph{evidence}, e.g. compared to having equal effort, as  for a uniform distribution. This notion of evidence relies on the comparison between the true best against all other arms. It takes both their respective true means as well as sampling frequencies into consideration. For an allocation $\psi$, he defines
 \begin{align}
   C_i(\psi_{l^*}, \psi_i) := \min_{x \in \mathbb{R}} \psi_{l^*} d(\theta_{l^*}^*||x) + \psi_i d(\theta_{i}^*||x)
 \end{align}
-and goes on to show that the optimal allocation $\psi^*$ is identified by fulfilling the condition
+and goes on to show that the optimal allocation $\psi^{\frac{1}{2}*}$ is identified by fulfilling the condition
 \begin{align}
   \forall i_1, i_2 \neq l^*: C_{i_1}(\psi_{l^*}, \psi_{i_1}) = C_{i_2}(\psi_{l^*}, \psi_{i_2})
 \end{align}
-Moreover, he shows that the optimal allocation is unique.
+Intuitively, this expresses that for every suboptimal arm, an equal amount of evidence of suboptimality has been gathered.
+
+Moreover, Russo goes on to show the uniqueness of the optimal allocation.
 
 \subsection{A Constrained Optimal Allocation}
 %What are properties of the constrained optimal allocation?
@@ -150,11 +168,10 @@ The optimal convergence exponent under said constraint becomes:
 
 Russo proposes different algorithms that satisfy aforementioned theoretical results, yet suggests that one of them outperfoms the other empirically: Top-Two Thompson Sampling (TTTS) algorithm.
 
-The main idea behind TTTS \ref{alg:TTTS} is to repeat drawing with Thompson sampling from the prior until two different candidates are obtained. This illustrates how Thompson sampling, usually only truly useful for exploit-explore settings can be used for pure-exploit: some of its focus is shifted towards inferior-looking candidates. Among those two candidates, the former is picked with probability $\beta$, explaining the provenance of the hyperparameter.
+The main idea behind TTTS is to repeat obtaining candidates through Thompson sampling until two different candidates have been proposed. This illustrates how Thompson sampling, usually only truly useful for exploit-explore settings can be used for pure-exploit: some of its focus is shifted towards inferior-looking candidates. Among those two candidates, the former is picked with probability $\beta$, explaining the provenance of the hyperparameter. Note the difference between \Cref{alg:thompson_sampling} and \Cref{alg:TTTS}: an additional level of 'randomization'.
 
-TODO: Pi prior or posterior?
 \begin{algorithm}[H]
-    \caption{Given a prior $\Pi_n$ at step $n$}
+    \caption{Given a posterior $\Pi_n$ at step $n + 1$}
     \label{alg:TTTS}
   \begin{algorithmic}
     \State $\hat{\theta} \sim \Pi_n$
@@ -165,15 +182,15 @@ TODO: Pi prior or posterior?
     \Until{$l_1 \neq l_2$}
     \State $B \sim Bernoulli(\beta)$
     \If{$B=1$}
-      \State $l_n := l_1$
+      \State $l_{n+1} := l_1$
     \Else
-      \State $l_n := l_2$
+      \State $l_{n+1} := l_2$
     \EndIf
-    \State Play $l_n$, observe reward and update priors
+    \State Play $l_{n+1}$, observe reward and update priors
   \end{algorithmic}
 \end{algorithm}
 
-The attentive reader might wonder how exactly prior/posteriors are updated. This is addressed in the empirical section \ref{section:empirical_behaviour}.
+Russo's formal treatment of this algorithm relies on the assumption that observations follow 1-dimensional distributions belogning to the family of exponential distributions. Moreover, he allows priors that are non-conjugate to the posteriors.
 
 \subsection{Alternative approaches}
 What are alternative approaches to Russo's?
@@ -185,14 +202,14 @@ How do they compare against Russo's?
 
 Top-$m$ Arm Identification is a generalization of Best Arm Identification. The objective is to identify the set of arms, with cardinality $m$, which contains the $m$ best arms.
 
-Applications of top-$m$ arm identification are similary to those mentioned in \ref{ss:top-1_model}. Natural explications for desiring the identification $m$ instead of 1 high-quality option can be diversification or regulation.
+Applications of top-$m$ arm identification are similar to those mentioned in \ref{ss:top-1_model}. Natural explications for desiring the identification $m$ instead of a single high-quality option can be diversification or regulation.
 
 \subsection{Current approaches: LUCB}
 How are those methods evaluated?
 What are possible qualitative shortcomings of those methods?
 What are possible quantitative shortcomings of those methods?
 
-The general LUCB algorihm can be seen in \ref{alg:LUCB1}. For every arm $l$, an empirical mean $\hat{\mu}_l^t$ is kept and updated after each sample. The overall idea is to compute a confidence bound for every arm, in every step. Per round, arms are separated into two sets: the arms with the $m$ best empirical means, $Top(t)$ and the rest, $Bottom(t)$. The arm with the lowest lower confidence bound from $Top(t)$ and the arm with the hightest upper confidence bound from $Bottom(t)$ are sampled and all information updated.
+The general LUCB algorihm can be seen in \Cref{alg:LUCB1}. For every arm $l$, an empirical mean $\hat{\mu}_l^t$ is kept and updated after each sample. The overall idea is to compute a confidence bound for every arm, in every step. Per round, arms are separated into two sets: the arms with the $m$ best empirical means, $Top(t)$ and the rest, $Bottom(t)$. The arm with the lowest lower confidence bound from $Top(t)$ and the arm with the hightest upper confidence bound from $Bottom(t)$ are sampled and all information updated.
 The algorithm stops once its stopping criterion is met. The confidence bound of an arm $l$ equals $(\hat{\mu}_l^t - \beta(l), \hat{\mu}_l^t + \beta(l))$.
 Kalyanakrishnan et al. \cite{DBLP:conf/icml/KalyanakrishnanTAS12} propose a concrete instantiation:
 \[\beta(l) = \]
@@ -219,16 +236,14 @@ Kalyanakrishnan et al. \cite{DBLP:conf/icml/KalyanakrishnanTAS12} propose a conc
 
 \chapter{Charactarizing the Constrained Optimal Top-$m$ Allocation}
 
-TODO: Talk about prior vs posterior.
-
 TODO Talk about limitations on distributions.
 
 %What does it mean to be optimal?
 Analogously to \ref{subsection:optimal_allocation}, we define the optimal top-$m$ allocation by its convergence rate of the posterior mass put on parameters reflecting the true top-$m$ arms $\Pi_n(\Theta_{m, S^*})$. Moreover, just as in Russo's top-1 case, the algorithm we will propose introduces a constraint. We will also put the optimal allocation under that constraint with the idea being that this is but a hyperparameter that can be optimized over.
 
-In \Cref{section:optimal_statements} we first introduce some of Russo's results that also apply in our scenario. Then we will introduce some general properties, followed by a complete characterization of the optimal allocation. Proofs of the statements are provided in \Cref{section:optimal_proofs}. Moreover, we will show an example of a concrete optimal allocation in \Cref{section:conrete_optimal_allocation}.
+In \Cref{section:optimal_statements} we first introduce some of Russo's results that also apply in our scenario. Then we will introduce some general properties, followed by a complete characterization of the optimal allocation. Moreover, we will show an example of a concrete optimal allocation in \Cref{section:conrete_optimal_allocation}. Proofs of the statements are from \Cref{section:optimal_statements} are provided in \Cref{section:optimal_proofs}.
 
-Overall we hope to convince the reader that the chracterization results portrayed in this chapter make for a natrual generalization of Russo's top-1 case. The guiding theme will be that instead of comparing the best arm $l^*$ to a suboptimal arm that is the hardest to distinguish from it, we will compare the a pair of an optimal and a suboptimal arm are hardest to distinguish from another. Note that again, distinction revolves around two factors: the frequency with which an arm has been sampled, i.e. quantity, as well as the proximity of its true mean, i.e. quality.
+Overall we hope to convince the reader that the characterization results portrayed in this chapter make for a natrual generalization of Russo's top-1 case. The guiding theme will be that instead of comparing the best arm $l^*$ to a suboptimal arm in order to identify the one it is hardest to distinguish from it, we will compare the a pairs of optimal and suboptimal arms in order to find to the pair that is the hardest to distinguish. Note that again, distinction revolves around two factors: the frequency with which an arm has been sampled, $\bar{\psi}_{n, l}$, as well as the proximity of its true mean, i.e. comparing $\theta^*_l$.
 
 Throughout this whole chapter we will assume that every true mean is unique, i.e.
 \begin{align}
@@ -244,21 +259,22 @@ Throughout this whole chapter we will assume that every true mean is unique, i.e
 %How would those statements look like without the constraint?
 %%%%%
 
-TODO:How would the results look like without the relaxation from $theta_i$ to $bar_theta_i$?
-
-TODO:Could everything be done with j instead of i?
+TODO: How would the results look like without the relaxation from $theta_i$ to $bar_theta_i$?
+TODO: Could everything be done with j instead of i?
 
 \section{Statements}\label{section:optimal_statements}
-Russo proves a proposition about the posterior convergence rate about general parameter sets $\tilde{\Theta}$.
+Russo proves a proposition about the posterior convergence rate of general parameter sets $\tilde{\Theta}$.
 
 \begin{proposition}[Russo: Proposition 5]\label{proposition:prop5}
   For any open set $\tilde{\Theta} \subset \Theta$ and average allocation $\bar{\psi}_n$
   \[\Pi_n(\tilde{\Theta}) \deq \exp\{-n \inf_{\theta \in \tilde{\Theta}} \sum_{l \in [k]} \bar{\psi}_{n, l} d(\theta^*_l || \theta_l)\}\]
 \end{proposition}
 
-As mentioned before, we seek to analyze how fast $\Theta_{S^*}$ converges to 1. Clearly we have $\Theta_{S^*} = 1 - \Theta_{S^*}^c$. Hence instead of analyzing the rate of convergence of $\Pi_n(\Theta_{S^*})$ to 1, we can analyze the rate of convergence of $\Pi(\Theta_{S^*}^c)$ to 0.
+This proposition already sets the tone by expressing that the posterior of a set depends on a property of a single contained element $\theta$. The property in question is how hard it is to distinguish $\theta$ from the truth $\theta^*$.
 
-Instead of analyzing $\Pi_n(\Theta_{m, S^*}^c)$ directly, we express it with via $\Theta_{m, l}$ and its relaxation $\tilde{\Theta}_i$. Intuitively, $\bar{\Theta}_i$ is the set of parameters under which $i$ proves that $S^*$ is not optimal.
+As mentioned before, we seek to analyze how fast $\Theta_{S^*}$ converges to 1. Clearly we have $\Theta_{S^*} = \Theta - \Theta_{S^*}^c$. Hence instead of analyzing the rate of convergence of $\Pi_n(\Theta_{S^*})$ to 1, we can analyze the rate of convergence of $\Pi(\Theta_{S^*}^c)$ to 0.
+
+Instead of analyzing $\Pi_n(\Theta_{m, S^*}^c)$ directly, we express it with via $\Theta_{m, l}$ and its relaxation $\bar{\Theta}_i$. Intuitively, $\bar{\Theta}_i$ is the set of parameters under which $i$ proves that $S^*$ is not optimal.
 \begin{align}
     \bar{\Theta}_i &= \{ \theta \in \Theta | \text{top-}m(\theta, S^* \cup \{i\}) \neq S^*\}
 \end{align}
@@ -266,20 +282,20 @@ Observe that we have $\bar{\Theta}_i \supsetneq \Theta_i$. Moreover we present a
 \begin{lemma}\label{lemma:set_relation_S*_i}
   \[\Theta_{m, S^*}^c = \bigcup_{i \notin S^*} \bar{\Theta}_i = \Theta - \bigcap_{j \in S^*} \Theta_j\]
 \end{lemma}
-Leveraging this relationship of the sets allows us to bridge the gap between the posterior of $\Theta_{m, S^*}^c$ and the posterior of individual sets $\bar{\Theta}_i$. Note the transition from a union of sets to a minimum over sets permitted by the usage of the $\deq$ equality, as shown in \Cref{lemma:posterior_S*_i}.
+Leveraging this relationship of the sets allows us to bridge the gap between the posterior of $\Theta_{m, S^*}^c$ and the posterior of individual sets $\bar{\Theta}_i$. Note the transition from a union of sets to a minimum over sets permitted by the usage of the $\deq$ relation, as shown in \Cref{lemma:posterior_S*_i}.
 \begin{lemma}\label{lemma:posterior_S*_i} If $\alpha_{n, S^*} \rightarrow 1$, then
   \begin{align}
     \Pi_n(\Theta_{m, S^*}^c) \deq \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i) \deq 1 - \min_{j \in S^*} \Pi_n(\Theta_j)
   \end{align}
 \end{lemma}
 
-Plugging $\bar{\Theta}_i$ into \ref{proposition:prop5} leaves us with a sum of KL divergences. We seek to simplify this sum to individual terms just after defining:
+Plugging $\bar{\Theta}_i$ into \Cref{proposition:prop5} leaves us with a sum of KL divergences. We seek to simplify this sum to individual terms just after defining:
 \begin{align}
   C_{j, i}(\psi_j,\psi_i) &=  \min_{x \in \mathbb{R}} \psi_j d(\theta^*_{j} || x) + \psi_i d(\theta_{i}^* ||x) \label{eq:C}
 \end{align}
 TODO: Talk about player scenario?
 
-In particular, $C_{j, i}$ can be thought of as evidence that $j$ is distinct from $i$. Quite naturally, we want this evidence as large as possible for every pair $(j, i) \in S^* \times {S^*}^c$.
+In particular, $C_{j, i}$ can be thought of as evidence that $j$ is distinct from $i$. Quite naturally, we want this evidence to be as large as possible for every pair $(j, i) \in S^* \times {S^*}^c$.
 
 \begin{lemma}\label{lemma:kl_to_C}
   For any $i \notin S^*$ and any allocation $\psi$,
@@ -288,22 +304,22 @@ In particular, $C_{j, i}$ can be thought of as evidence that $j$ is distinct fro
   \end{align}
 \end{lemma}
 
-Intuitively, this lemma tells us that the weighted sum of KL divergences can be reduced to looking at only two arms for parameters in $\Bar{\Theta}_i$. One of those arms will be $i$. The other has arm to stem from the true set of arms $S^*$ in order to satisfy $\Bar{\Theta}_i$'s requirement of 'disproving' $S^*$. This arm $j \in S^*$ is chosen as to seem the 'least distinctive' from i. Distinction is made up of two aspects, as seen in the definition of $C_{j, i}$ in \eqref{eq:C}: how much this arm $j$ is sampled, i.e. $\psi_j$, and how different its true mean is from the true mean of j, captured by the KL divergence between both arms and an $x$ inbetween, individually.
+Intuitively, this lemma tells us that for parameters in $\Bar{\Theta}_i$ the weighted sum of KL divergences can be by simplified to only two arms. One of those arms will be $i$. The other has arm to stem from the true set of arms $S^*$ in order to satisfy $\Bar{\Theta}_i$'s requirement of 'disproving' $S^*$. This arm $j \in S^*$ is chosen as to seem the 'least distinctive' from $i$. Distinction is made up of two aspects, as seen in the definition of $C_{j, i}$ in \eqref{eq:C}: how much this arm $j$ is sampled, i.e. $\psi_j$, and how different its true mean $\theta^*_j$ is from the true mean $\theta^*_i$ of $i$. The latter difference is captured by the KL divergence between both arms and a minimal $x$, individually.
 
-We can apply those statements to the quantity we care about: the mass the posterior puts on the complement of parameters reflecting the true top-$m$ arms $\Theta_{S^*}^c$.
+We can apply those statements to the quantity we care about: the mass the posterior puts on the complement of parameters reflecting the true top-$m$ arms, $\Theta_{S^*}^c$.
 
 For a given allocation $\psi$, we have:
 \begin{align}
-  \Pi_n(\Theta_{S^*}^c) &\deq \max_{i \notin S^*}\Pi_n(\hat{\Theta}_i) \text{ (\Cref{lemma:posterior_S*_i})}\\
-    &\deq \max_{i \notin S^*} \exp\{-n\inf_{\theta \in \hat{\Theta}_i} \sum_{l \in [k]} \bar{\psi}_{n, l} d(\theta^*_l || \theta_l)\} \text{ (\Cref{proposition:prop5})} \\
+  \Pi_n(\Theta_{S^*}^c) &\deq \max_{i \notin S^*}\Pi_n(\bar{\Theta}_i) \text{ (\Cref{lemma:posterior_S*_i})}\\
+    &\deq \max_{i \notin S^*} \exp\{-n\inf_{\theta \in \bar{\Theta}_i} \sum_{l \in [k]} \bar{\psi}_{n, l} d(\theta^*_l || \theta_l)\} \text{ (\Cref{proposition:prop5})} \\
     &= \max_{i \notin S^*} \exp\{-n \min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)\} \text{ (\Cref{lemma:kl_to_C})} \\
     &= \exp\{-n \min_{i \notin S^*}\min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)\} \label{eq:posterior}
 \end{align}
 In other words, the rate at which the posterior converges to the truth with increasing number of samples is defined by the pair of optimal and suboptimal arms for which the least evidence exists.
 
-As we've described, the optimal allocation $\psi^*$ is the one which makes the quantity from \eqref{eq:posterior} as small as possible. We have:
+As we've described, the optimal allocation $\psi^{\frac{1}{2}*}$ is the one which makes the quantity from \Cref{eq:posterior} as small as possible. We have:
 \begin{align}
-  \psi^* &= \argmin_{\psi} \exp\{-n \min_{i \notin S^*}\min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)\} \\
+  \psi^{\frac{1}{2}*} &= \argmin_{\psi} \exp\{-n \min_{i \notin S^*}\min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)\} \\
     &= \argmax_{\psi} \min_{i \notin S^*}\min_{j \in S^*} C_{j, i}(\psi_j, \psi_i) \label{eq:psi^*}
 \end{align}
 For the sake of convenience we define the optimal exponent:
@@ -313,14 +329,12 @@ For the sake of convenience we define the optimal exponent:
 
 \paragraph{An Optimal Constrained Allocation}
 
-TODO: Talk about being able to do with j what we did through $\theta_i$.
-
 Our proposed algorithm will always allocate $\frac{1}{2}$ of its samples to arms in $S^*$ in the long run. As a consequence it may not attain the overall optimal exponent without hyperparameter tuning. Hence we consider a modified, constrained setting under which the algorithm performs optimally. By adapting \eqref{eq:psi^*} and \eqref{eq:gamma^*} we obtain:
 \begin{align}
   \psi^{\frac{1}{2}*} &= \argmax_{\psi: \psi_{S^*}=\frac{1}{2}} \min_{i \notin S^*}\min_{j \in S^*} C_{j, i}(\psi_j, \psi_i) \label{eq:constrained_optimal_psi}\\
   \Gamma^{\frac{1}{2}*} &= \max_{\psi, \psi_{S^*} = \frac{1}{2}} \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\psi_j, \psi_i) \label{eq:constrained_optimal_gamma}
 \end{align}
-Hence we have established the optimal constrained rate of convergence $\Gamma^{\frac{1}{2}*}$ of the optimal constrained allocation $\psi^{\frac{1}{2}*}$ by making a link to the minimization over $C_{j, i}$ . We seek to further characterize $\psi^{\frac{1}{2}*}$ by relying on the same maxim as in Russo's scenario: we expect the measurement plan to collect \emph{equal evidence}, not \emph{equal measurement} for every arm. Hence in \Cref{proposition:characterization} we will show that the optimal measurement plan will fulfill \eqref{eq:condition_C}. Before doing so, we set the stage by enounciating two properties of $C_{j, i}$.
+Hence we have established the optimal constrained rate of convergence $\Gamma^{\frac{1}{2}*}$ of the optimal constrained allocation $\psi^{\frac{1}{2}*}$ by making a link to the minimization over $C_{j, i}$ . We seek to further characterize $\psi^{\frac{1}{2}*}$ by relying on the same maxim as in Russo's scenario: we expect the measurement plan to collect \emph{equal evidence}, not \emph{equal measurement} for every arm. Hence in \Cref{proposition:characterization} we will show that the optimal measurement plan will fulfill \Cref{eq:condition_C}. Before doing so, we set the stage by enounciating two properties of $C_{j, i}$.
 
 \begin{lemma}\label{lemma:C_concave}
   Each $\min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)$ is a concave function.
@@ -340,9 +354,9 @@ Hence we have established the optimal constrained rate of convergence $\Gamma^{\
 \begin{proposition}\label{proposition:characterization}
   The solution to the optimzation problem \ref{eq:constrained_optimal_psi} is the allocation $\psi^{\frac{1}{2}*}$, which is unique and satisfies
   \begin{align}
-    \forall j_1, j_2 \in S^*, \forall i_1, i_2 \notin S^*: C_{j, i}(\psi^*_{j_1}, \psi^*_{i_1}) = C_{j, i}(\psi^*_{j_2}, \psi^*_{i_2})\label{eq:condition_C}
+    \forall j_1, j_2 \in S^*, \forall i_1, i_2 \notin S^*: C_{j, i}(\psi^{\frac{1}{2}*}_{j_1}, \psi^{\frac{1}{2}*}_{i_1}) = C_{j, i}(\psi^{\frac{1}{2}*}_{j_2}, \psi^{\frac{1}{2}*}_{i_2})\label{eq:condition_C}
   \end{align}
-  If $\psi_n = \psi^*$ for all $n$, then
+  If $\psi_n = \psi^{\frac{1}{2}*}$ for all $n$, then
   \[\Pi_n(\Theta_{S^*}^c) \deq \exp \{-n\Gamma^*_{\frac{1}{2}}\}.\]
   Moreover, under any other adaptive allocation rule, if $\bar{\psi}_{n, S^*} \rightarrow \frac{1}{2}$ then
   \[\lim_{n \rightarrow \infty} \sup - \frac{1}{n} \log \Pi_n(\Theta^c_{S^*}) \leq \Gamma^*_{\frac{1}{2}}\]
@@ -351,15 +365,15 @@ Hence we have established the optimal constrained rate of convergence $\Gamma^{\
 
 \section{A Concrete Optimal Allocation}\label{section:conrete_optimal_allocation}
 For the sake of concreteness, we present numeric values of optimal allocations, both constrained and unconstrained for two top-$m$ identification scenarios.
-Hence given, the true means $\theta^*$, we seek to determine $\psi^*$ and $\psi^{\frac{1}{2}*}$. Relying on \eqref{eq:condition_C}, we have a massively over-determined system of equations. The latter can be approximately solved by numerical methods, in our case least squares minimization.
+Hence given, the true means $\theta^*$, we seek to determine $\psi^{\frac{1}{2}*}$ and $\psi^{\frac{1}{2}*}$. Relying on \eqref{eq:condition_C}, we have a massively over-determined system of equations. The latter can be approximately solved by numerical methods, in our case least squares minimization.
 
-For this concrete example, we assume arm rewards to follow Bernoulli distributions with means $\theta_1$ and $\theta_2$ respetively. Thanks to this assumption, the KL divergences can be minimized analytically with great convenience, we refer to the appendix, \Cref{section:bernoulli_c} for details. \Cref{fig:optimal_allocation} indicates the probaility mass put onto each arm for each scenario. The results were produced with for a top-4 scenario with
+For this concrete example, we assume arm rewards to follow Bernoulli distributions with means $\theta_1$ and $\theta_2$ respetively. Thanks to this assumption, the KL divergences can be minimized analytically with great convenience. We refer to \Cref{section:bernoulli_c} for greater details. \Cref{fig:optimal_allocation} indicates the probability mass put onto each arm for each scenario. The results were produced for a top-4 scenario with
 \begin{itemize}
   \item $\theta_1 = [.1,\ .2,\ .3,\ .4,\ .5,\ \underbrace{.6,\ .7,\ .8,\ .9}_\text{$S^*$}]$
   \item $\theta_2 = [.4,\ .425,\ .45,\ .475,\ .5,\ \underbrace{.525,\ .55,\ .575,\ .6}_\text{$S^*$}]$
 \end{itemize}
 
-Fur further details we refer to the simulation code in our repository \footnote{\url{https://github.com/kkleindev/ttts/compute_optimal_allocation.py}}.
+For further details regrading the simulation implementation we refer to the code in our repository \footnote{\url{https://github.com/kkleindev/ttts/compute_optimal_allocation.py}}.
 
 \begin{figure}[h]
   \centering
@@ -397,12 +411,12 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
   \begin{align}
     \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i) \leq \Pi_n(\Theta_{m, S^*}^c) \leq (k-m) \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)
   \end{align}
-  We use the definition of $\deq$ to check whether lower bound and upper bound are equal.
+  We use the definition of $\deq$ to compare lower bound and upper bound.
   \begin{align}
     \lim_{n \rightarrow \infty} \frac{1}{n} \log{\frac{\max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)}{(k-m)\max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)}}
     = \lim_{n \rightarrow \infty} \frac{1}{n} \log{\frac{1}{k-m}} \rightarrow 0
   \end{align}
-  Thanks to the lower and upper bound being equal in the $\deq$ sense, we can apply the squeeze theorem. We obtain the desired result:
+  Thanks to the lower and upper bound being 'equal' in the $\deq$ sense, we can apply the squeeze theorem. We obtain the desired result:
   \begin{align}
     \Pi_n(\Theta_{m, S^*}^c) \deq \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)
   \end{align}
@@ -410,7 +424,7 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
   \begin{align}
     &1 - \min_{j \in S^*} \Pi(\Theta_j) \leq \Pi(\Theta_{m, S^*}^c) \leq 1 - \min_{j \in S^*} (\Pi(\Theta_j))^m \\
   \end{align}
-  Again, we will check whether upper and lower bound equal in the $\deq$ sense.
+  Again, we will compare upper and lower bound in the $\deq$ sense.
   \begin{align}
     &\lim_{n \rightarrow \infty} \frac{1}{n} \log(\frac{\min_{j \in S^*} \Pi(\Theta_j)}{\min_{j \in S^*} (\Pi(\Theta_j))^m}) = \lim_{n \rightarrow \infty} \frac{-(m - 1)}{n} \log(\min_{j \in S^*} \Pi(\Theta_j))
   \end{align}
@@ -432,7 +446,7 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
   \end{align}
   \eqref{eq: l2_1} follows from the fact that for any feasible $\theta$, we can define an alternative $\theta'$ s.t. $\theta'_i = \theta_i$, $\theta'_j = \theta_j$ for all $j \in S^*$ and $\theta'_{i_x} = \theta^*_{i_x}$ for all $i_x \notin S^* \cup \{i\}$. For such a $\theta'$, all terms involving $i_x \notin S^* \cup \{i\}$ are zero by the definition of the KL divergence while all others terms remain unchanged. Hence the minimum occurs with such a $\theta'$. Importantly, $\theta'$ remains feasible according to current definitions of $\bar{\Theta}_i$, i.e. $\theta' \in \bar{\Theta}_i$.
 
-  \eqref{eq: l2_2} follows from a similar observation: only a single arm from $S^*$ needs to be inferior to arm $i$ under $\theta$. Recall that the terms of the individual arms do not influence each other. This implies that the minimization will gravitate towards setting all but one arm from $S^*$ in $\theta$ to the their true value - as the KL divergence is minimized for those values. Hence the terms of all but one arm from $S^*$ will be cancelled out by the minimization. As $i$ remains superior to one arm in $S^*$, we have top-$m(\theta, S^* \cup \{i\}) \neq S^*$. Thereby such a $\theta$ is feasible according to $\bar{\Theta}_i$.
+  \eqref{eq: l2_2} follows from a similar observation: only a single arm from $S^*$ needs to be inferior to arm $i$ under $\theta$. Recall that the terms of the individual arms do not influence each other. This implies that the minimization will gravitate towards setting all but one arm from $S^*$ in $\theta$ to the their true value - as the KL divergence is minimized for the true values. Hence the terms of all but one arm from $S^*$ will be cancelled out by the minimization. As $i$ remains superior to one arm in $S^*$, we have top-$m(\theta, S^* \cup \{i\}) \neq S^*$. Thereby such a $\theta$ is feasible according to $\bar{\Theta}_i$.
 
   \eqref{eq: l2_3} follows from monotonicity of the KL divergence, as displayed in \Cref{eq:kl_monotonicity}, combined with the possibility of $\theta_i = \theta_j$ tells us that the minimum will be reached in the case of equality.
 
@@ -440,7 +454,11 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
 \end{proof}
 
 \begin{proof}[\Cref{lemma:C_concave}]
-  For the sake of clarity, let us define $f(x, (\psi_j, \psi_i)) = \psi_j d(\theta_i^*||x) + \psi_i d(\theta_i^* || x)$. Note that $C_{j, i}(\psi_j, \psi_i) = min_{x \in \mathbb{R}} f(x,(\psi_j, \psi_i))$. Clearly, $f$ is linear in $(\psi_j, \psi_i)$. According to Boyd and Vandenberghe (3.2.5) \cite{Boyd:2004:CO:993483}, the minimum over a family of linear functions is concave.
+  For the sake of clarity, let us define
+  \begin{align}
+    f(x, (\psi_j, \psi_i)) = \psi_j d(\theta_i^*||x) + \psi_i d(\theta_i^* || x)
+  \end{align}
+  Note that $C_{j, i}(\psi_j, \psi_i) = min_{x \in \mathbb{R}} f(x,(\psi_j, \psi_i))$. Clearly, $f$ is linear in $(\psi_j, \psi_i)$. According to Boyd and Vandenberghe (3.2.5) \cite{Boyd:2004:CO:993483}, the minimum over a family of linear functions is concave.
 \end{proof}
 
 \begin{proof}[\Cref{lemma:C_unique_solution}]
@@ -459,7 +477,7 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
 \begin{proof}[\Cref{lemma:C_strictly_increasing}]
   We will proceed to show for fixed $j \in S^*$ and $i \notin S^*$, $C_{j, i}$ is increasing in its first argument $\psi_j$ as its second argument $\psi_i$ follows by symmetry.
 
-  Let us define $f(\psi, x) = \alpha d(\theta_i^*||x) + \psi_jd(\theta_j^*||x)$ which implies that $C_{j, i}(\alpha, \psi_j) = \min_{x \in \mathbb{R}} f(x, \psi_j)$. As the KL divergence is non-negative we have:
+  Let us define $f(x, \psi_j) = \alpha d(\theta_i^*||x) + \psi_j d(\theta_j^*||x) + $ which implies that $C_{j, i}(\psi_j, \alpha) = \min_{x \in \mathbb{R}} f(x, \psi_j)$. As the KL divergence is non-negative we have:
   \begin{align}
     f(x, \psi_j + \epsilon) &= \alpha d(\theta_i^*||x) + \psi_j d(\theta_j^*||x) + \epsilon d(\theta_j^*||x) \\
     &> \alpha d(\theta_i^*||x) + \psi_j d(\theta_j^*||x)\\
@@ -467,7 +485,12 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
   \end{align}
   And therefore $f$ is stricly increasing in $\psi_j$.
 
-  We fix two reals $\psi_{j1} < \psi_{j2}$ from $[0, 1]$ as well as their counterparts $x_1 = \argmin_{x \in \mathbb{R}} f(x, \psi_{j1})$ and $x_2 = \argmin_{x \in \mathbb{R}} f(x, \psi_{j2})$. Hence our goal is to show that $f(x_1, \psi_{j1}) < f(x_1, \psi_{j2})$ for minimizing $x_1$. By \Cref{lemma:C_unique_solution} both $x_1$ and $x_2$ are unique. As $x_1$ is unique, we have
+  We fix two reals $\psi_{j1} < \psi_{j2}$ from $[0, 1]$ as well as their counterparts
+  \begin{align}
+    &x_1 = \argmin_{x \in \mathbb{R}} f(x, \psi_{j1})
+    &x_2 = \argmin_{x \in \mathbb{R}} f(x, \psi_{j2})
+  \end{align}
+  Hence our goal is to show that $f(x_1, \psi_{j1}) < f(x_1, \psi_{j2})$ for minimizing $x_1$. By \Cref{lemma:C_unique_solution} both $x_1$ and $x_2$ are unique. As $x_1$ is unique, we have
   \begin{align}
     f(x_1, \psi_{j1}) &< f(x_2, \psi_{j1}) \\
     f(x_2, \psi_{j2}) &< f(x_1, \psi_{j2})
@@ -481,15 +504,15 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
 \begin{proof}[\Cref{proposition:characterization}]
   We prove in the following order: \eqref{itm:p7_i} \eqref{eq:condition_C} must hold for an optimal allocation, \eqref{itm:p7_ii} an optimal allocation is unique. After this, the remaining claim, namely that no other constrained allocation can be better, follows directly.
   \begin{enumerate}[(i)]
-    \item \label{itm:p7_i} Suppose that $\psi^*$ is optimal but does not satisfy \eqref{eq:condition_C}. Hence for some $i_1, i_2 \notin S^*, j_1, j_2 \in S^*$ with $(j_1, i_1) \neq (j_2, i_2)$:
-    \[C_{j_1, i_1}(\psi^*_{j_1}, \psi^*_{i_1}) > C_{j_2, i_2}(\psi^*_{j_2}, \psi^*_{i_2})\]
+    \item \label{itm:p7_i} Suppose that $\psi^{\frac{1}{2}*}$ is optimal but does not satisfy \eqref{eq:condition_C}. Hence for some $i_1, i_2 \notin S^*, j_1, j_2 \in S^*$ with $(j_1, i_1) \neq (j_2, i_2)$:
+    \[C_{j_1, i_1}(\psi^{\frac{1}{2}*}_{j_1}, \psi^{\frac{1}{2}*}_{i_1}) > C_{j_2, i_2}(\psi^{\frac{1}{2}*}_{j_2}, \psi^{\frac{1}{2}*}_{i_2})\]
     This implies:
-    \[C_{j_1, i_1}(\psi^*_{j_1}, \psi^*_{i_1}) > \min_{i \notin S^*} \min_{j \in S^*}C_{j, i}(\psi^*_j, \psi^*_i) \]
+    \[C_{j_1, i_1}(\psi^{\frac{1}{2}*}_{j_1}, \psi^{\frac{1}{2}*}_{i_1}) > \min_{i \notin S^*} \min_{j \in S^*}C_{j, i}(\psi^{\frac{1}{2}*}_j, \psi^{\frac{1}{2}*}_i) \]
     Consider the the measurement plan $\psi^\epsilon$ with
     \begin{itemize}
-      \item $\psi^\epsilon_{i_1} = \psi^*_{i_1} - \epsilon$
-      \item $\psi^\epsilon_{j_1} = \psi^*_{j_1} - \epsilon$
-      \item $\forall l\notin \{i_1, j_1\}: \psi^\epsilon_l = \psi^*_\gamma + \frac{2 \epsilon}{k-2}$
+      \item $\psi^\epsilon_{i_1} = \psi^{\frac{1}{2}*}_{i_1} - \epsilon$
+      \item $\psi^\epsilon_{j_1} = \psi^{\frac{1}{2}*}_{j_1} - \epsilon$
+      \item $\forall l\notin \{i_1, j_1\}: \psi^\epsilon_l = \psi^{\frac{1}{2}*}_\gamma + \frac{2 \epsilon}{k-2}$
     \end{itemize}
     We can choose $\epsilon$ sufficiently small such that we preserve the inequality
     \begin{align}
@@ -497,9 +520,9 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
     \end{align}
     while shifting enough measurement to all other arms such that
     \begin{align}
-      \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\psi^\epsilon_{j}, \psi^\epsilon_i) > \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\psi^*_j, \psi^*_i)
+      \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\psi^\epsilon_{j}, \psi^\epsilon_i) > \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\psi^{\frac{1}{2}*}_j, \psi^{\frac{1}{2}*}_i)
     \end{align}
-    Hence $\psi^\epsilon$ obtains more evidence on the worst possible pair than $\psi^*$ and thereby achieves a better convergence rate \eqref{eq:constrained_optimal_gamma}. In other words, $\psi^*$ is not optimal, which is a contradiction.
+    Hence $\psi^\epsilon$ obtains more evidence on the worst possible pair than $\psi^{\frac{1}{2}*}$ and thereby achieves a better convergence rate \eqref{eq:constrained_optimal_gamma}. In other words, $\psi^{\frac{1}{2}*}$ is not optimal, which is a contradiction.
 
     \item \label{itm:p7_ii} Suppose that there are optimal $\psi^1$, $\psi^2$, therefore both satisfying \eqref{eq:condition_C} with the exact same value $C^*$. It follows that there is at least one $l$ s.t. $\psi^1_{l} \neq \psi^2_{l}$. W.l.o.g. assume $l = i_x \notin S^*$ and $\psi^1_{i_x} > \psi^2_{i_x}$.
 
@@ -542,9 +565,6 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
       which, again, is a contradiction by the strictly increaseing nature of $C_{j_x, i_y}$.
     \end{itemize}
   \end{enumerate}
-
-TODO: Make sure $\psi^*$ is constrained.
-
 \end{proof}
 
 \chapter{Algorithm}
