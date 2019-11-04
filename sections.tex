@@ -81,7 +81,7 @@ The attentive reader might wonder how exactly posteriors are updated. The update
 In contrast to greedily selecting the arm that empirically maximizes the metric of desire, e.g. the mean, Thompson sampling suggests to randomly draw beliefs on arms weighted by the posterior distribution. Note that said posterior distribution is itself a function of the empirical means. Subsequently, it selects the arm which maximizes the metric of desire on the sampled belief. With many repetitions, this leads to each arm being sampled proportionally to its likelihood of maximizing the metric of desire according to current belief. \Cref{alg:thompson_sampling} illustrates this process more explicitly.
 
 \begin{algorithm}[H]
-    \caption{Given a posterior $\Pi_n$ at step $n+1$}
+    \caption{Given a posterior $\Pi_n$ in step $n+1$}
     \label{alg:thompson_sampling}
   \begin{algorithmic}
     \State $\hat{\theta} \sim \Pi_n$
@@ -171,7 +171,7 @@ Russo proposes different algorithms that satisfy aforementioned theoretical resu
 The main idea behind TTTS is to repeat obtaining candidates through Thompson sampling until two different candidates have been proposed. This illustrates how Thompson sampling, usually only truly useful for exploit-explore settings can be used for pure-exploit: some of its focus is shifted towards inferior-looking candidates. Among those two candidates, the former is picked with probability $\beta$, explaining the provenance of the hyperparameter. Note the difference between \Cref{alg:thompson_sampling} and \Cref{alg:TTTS}: an additional level of 'randomization'.
 
 \begin{algorithm}[H]
-    \caption{Given a posterior $\Pi_n$ at step $n + 1$}
+    \caption{Given a posterior $\Pi_n$ in step $n + 1$}
     \label{alg:TTTS}
   \begin{algorithmic}
     \State $\hat{\theta} \sim \Pi_n$
@@ -215,7 +215,7 @@ Kalyanakrishnan et al. \cite{DBLP:conf/icml/KalyanakrishnanTAS12} propose a conc
 \[\beta(l) = \]
 
 \begin{algorithm}[H]
-    \caption{Given a prior $\Pi_n$ at step $n$}
+    \caption{Given a prior $\Pi_n$ in step $n$}
     \label{alg:LUCB1}
   \begin{algorithmic}
     \State Play $l_n$, observe reward and update priors
@@ -567,14 +567,49 @@ TODO: Propose an intuition why the concentration is so high in unconstrained sce
   \end{enumerate}
 \end{proof}
 
-\chapter{Algorithm}
-\section{Analysis/Properties}
+\chapter{Top-2m XOR Thompson Sampling}
+
+In this chapter we will both present and analyze our suggested generalization of Russo's Top-Two Thompson sampling: Top-2m XOR Thompson sampling. The underlying idea still revolves around repeatedly apllying Thompson sampling until two different candidates are obtained.
+
+\Cref{section:algorithm} introduces the algorithm and provides some explanations with regards to generalization decisions. It also introduces the constraint $\psi_{S^*} = \frac{1}{2}$. Subsequently, \Cref{section:analysis} analyzes properties of the algorithm. In particular it presents bounds on the measurement plan, states general consequences of finite measurement and discusses implications of under- and over-allocation. We firmly believe that all of those are very useful to show that this algorithm's measurement plan converges to the optimal constrained measurement plan $\psi^{\frac{1}{2}*}$. Proofs for those statements are provided in \Cref{section:txts_proofs}. Additionaly, we provide some empirial results in \Cref{section:empirical_behaviour}.
+
+\section{Algorithm}\label{section:algorithm}
+As a generalization of Russo's Top-Two, the main differences lie in the fact that candidates are sets. Hence Thompson sampling is repeated until set inequality is reached. A greater difference is due to fact that we can only ever sample individual arms. Hence in this set-scenario, we still need a mechanism to select a single arm from a set. Therefore, when generalizing Russo's approach, the central and unavoidable question arises: 'How to select a single arm from two unequal set candidates?'
+
+According to a suggestion Russo gives in his outlook, we decided to tackle this question by splitting up in two steps.
+
+First, given candidates $S_1$ and $S_2$ with $S_1 \neq S_2$, we compute the set of elements which are contained in exactly one of both sets, short the XOR of both sets. Naturally, this restricted set is of cardinality at least 2. Intuitively it points us towards arms which are 'uncertain'. Observe that arms which are clearly suboptimal are very unlikely to appear in either $S_1$ or $S_2$ through Thompson sampling. At the same time, arms that are clearly optimal are very likely to appear in both $S_1$ and $S_2$ through Thompson sampling. Hence arms that only appear in either of them, are neither clearly optimal nor clearly suboptimal.
+
+As mentioned before, the XOR of $S_1$ and $S_2$ will a priori not be a singleton. Hence we need to define an approach on how to select from the XOR. According to both Russo's suggestion as well as Occam's razor, we opted for uniform selection.
+
+We believe that the XOR approach is essential for the correctness of the algorithm, whereas
+
+We present the appraoch to sample an arm in step $n + 1$ in \Cref{alg:TXTS}. This appraoch can be repeated either for a fixed amount of samples or until a specific confidence level is reached. Note that the confidence level can be approximated in every step. The confidence level is equal to $\Pi_n(\Theta_S)$ where $S = \argmax_{S'} \Pi_n(\Theta_S')$. Concretely, this quantity can be estimated by drawing samples from $\Pi_n$ and identifying for which set $S$ the fraction $\frac{\text{\# samples in which $S$ is optimal}}{\#samples}$ is largest. The fraction of this $S$ approximates the confidence level.
+
+\begin{algorithm}[H]
+  \caption{Given a posterior $\Pi_n$ in step $n+1$}
+  \label{alg:TXTS}
+  \begin{algorithmic}
+    \State $\hat{\theta} \sim \Pi_n$
+    \State $S_1 =$ top-$m(\theta)$
+    \Repeat
+      \State $\hat{\theta} \sim \Pi_n$
+      \State $S_2 = $ top-$m(\hat{\theta})$
+    \Until{$S_1 \neq S_2$}
+    \State $I_{n+1} \sim \mathcal{U}(S_1 \oplus S_2)$
+    \State Play $I_{n+1}$, observe reward and update posterior
+  \end{algorithmic}
+\end{algorithm}
+
+We expect this algorithm to induce a measurement plan $\psi$ such that $\psi_{S^*} = \frac{1}{2}$. This expectation gives rise to the constrained optimization from the previous chapter. Note that this constraint is a consequence of the design decision of which operation to apply to candidates $S_1$ and $S_2$. For instance, substituing the uniform distribution by another distribution should alter the hyperparamter $\beta = \psi_{S^*}$.
+
+\section{Analysis}\label{section:analysis}
 \section{Empirical behaviour}\label{section:empirical_behaviour}
 What true distributions are assumed?
 What prior and posterior distributions are assumed?
 How is C computed?
 How is alpha computed, as it is defined via a huge integral?
 How is psi computed, as there is no closed form?
-\section{Proofs}
+\section{Proofs}\label{section:txts_proofs}
 
 \chapter{Conclusion}

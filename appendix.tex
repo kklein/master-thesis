@@ -43,3 +43,22 @@ Russo presents the following insight about the exponential family of probability
       &\theta'' < \theta' \leq \theta \Rightarrow d(\theta||\theta'') < d(\theta||\theta')
     \end{align}
 \end{itemize}
+
+\section{Useful technical statements}\label{section:technical_proofs}
+  \begin{lemma}\label{lemma_lim_sup}
+  \[ \limsup_{n \rightarrow \infty} f(n) \leq \Gamma \Rightarrow \exists \epsilon_n > 0, s.t. \epsilon_n \rightarrow 0, \forall n\ f(n) \leq \Gamma + \epsilon_n\]
+  \end{lemma}
+  \begin{proof}
+    Given the assumption, we can do a case distinction:
+    \begin{itemize}
+    \item $g(n) = \Gamma$ and $\sup f(n)$ intersect in $n_0$ \\
+    For $n < n_0$, we have $\sup f(n) > \Gamma$. As $\sup f(n)$ is a decreasing function, there are positive, decreasing $\epsilon_n$ such that $\sup f(n) \leq \Gamma + \epsilon_n$. \\
+    For $n \geq n_0$, we have $\sup f(n) \leq \Gamma$. Hence for such n, $\epsilon_n = 0$ would already satisfies the constraint. Hence any $\epsilon_n \rightarrow 0$, fulfills the inequality.
+
+    Consequently, there is a positive $\epsilon_n \rightarrow 0$, s.t. $\forall n: f(n) \leq \sup f(n) \leq \Gamma + \epsilon_n$.
+
+    \item $g(n) = \Gamma$ and $\sup f(n)$ do not intersect \\
+    By our assumption we have $\forall n\ \sup f(n) \leq \Gamma$.
+    Hence, by setting $\epsilon_n$ to equal 0 for all $n$, we have a positive $\epsilon_n \rightarrow 0$, such that $f(n) \leq \sup f(n) \leq \Gamma + \epsilon_n$.
+    \end{itemize}
+  \end{proof}
