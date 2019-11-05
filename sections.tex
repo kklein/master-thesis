@@ -690,11 +690,42 @@ Moreover, once we know that $\alpha_{n, S^*} \rightarrow 1$, we can simplify the
 \end{lemma}
 
 \section{Empirical behaviour}\label{section:empirical_behaviour}
-What true distributions are assumed?
-What prior and posterior distributions are assumed?
-How is C computed?
-How is alpha computed, as it is defined via a huge integral?
-How is psi computed, as there is no closed form?
+%What true distributions are assumed?
+%What prior and posterior distributions are assumed?
+%How is C computed?
+%How is alpha computed, as it is defined via a huge integral?
+%How is psi computed, as there is no closed form?
+
+TODO: Talk about updates of priors.
+
+For the follwoing empirical results we assumed the rewards of arms to follow Bernoulli distributions with means $\theta^* = [.1, .2, .3, .4, .5, .6, .7, .8, .9]$. We defined priors/posteriors to be Beta distributed with initial parameters $\alpha = \beta = 1$, mimicking a uniform prior on the set of arms.
+
+The posterior mass put on certain events, in particular the confidence, were computed as described in \Cref{section:algorithm}. \Cref{fig:confidences} indicates the confidence for a given number of steps of our method compared to the the uniform allocation and Thompson sampling.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.5\textwidth]{190723-confidences.png}
+  \caption{Unconstrained and constrained optimal allocation for $\theta_1$ and $\theta_2$, top-4}
+  \label{fig:confidences}
+\end{figure}
+
+As we don't have a closed form for the average measurement plan $\bar{psi}_{n,l}$ at our disposal, we approximate it with the empirical sampling frequencies. \Cref{fig:measurement_plan} indicates said empirical sampling frequencies. Note that $\bar{psi}_{S^*}$ can nicely be read to equal $\frac{1}{2}$.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{190723-selections_2.png}
+  \caption{Unconstrained and constrained optimal allocation for $\theta_1$ and $\theta_2$, top-4}
+  \label{fig:measurement_plan}
+\end{figure}
+
+As we know from \Cref{section:optimal_statements}, the optimal allocation gathers equal evidence for all pairs from $S^* \times S^{*c}$. We used the empirical sampling frequencies to approximate those coefficients. A qualitative comparison of the individual coefficients can be found in \Cref{fig:algorithm_coefficients}. The individual $C_{j, i}$ were computed just as described in \Cref{section:conrete_optimal_allocation}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{190909-coefficients_2000.png}
+  \caption{Unconstrained and constrained optimal allocation for $\theta_1$ and $\theta_2$, top-4}
+  \label{fig:algorithm_coefficients}
+\end{figure}
 
 \section{Further results}
 
