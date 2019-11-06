@@ -11,12 +11,12 @@ In particular, one assumes a set of options or arms to choose from, each choice 
 %What problems are typically tackled by this scenario?
 Within the bandits model, the concern revolves around which arm to choose next. Allocation strategies tackling this question address either of two problems: explore-exploit or pure-explore.
 
-The former concerns itself with maximizing the \emph{cummulative reward}. This means that one attempts to maximize the \emph{sum of the rewards obtained} through all arm selections. Naturally, starting off without any knowledge about the underlying distributions, this involves both exploration of arm qualities as well as exploitation of knowledge obtained so far.
+The former concerns itself with maximizing the \emph{cumulative reward}. This means that one attempts to maximize the \emph{sum of the rewards obtained} through all arm selections. Naturally, starting off without any knowledge about the underlying distributions, this involves both exploration of arm qualities as well as exploitation of knowledge obtained so far.
 
 The latter revolves around \emph{simple reward}. This problem consists of seeking to maximize the reward one obtains if one leverages the current knowledge for \emph{another} draw. This implies that the focus lies on \emph{identification} of high-quality candidates, quality usually being assessed by high means. It is therefore it is part of the task to align estimation of the best arm with the underlying truth as well as reaching a high \emph{confidence} in this alignment.
 
 %Why is model and its problems relevant?
-The bandits model can be used for all processes involving sequential decision making. Yet, an important simplification is the assumption of the distributions being fixed over time. In how far this simplification is representative of the to-be-modelled process varies.
+The bandits model can be used for all processes involving sequential decision making. Yet, an important simplification is the assumption of the distributions being fixed over time. In how far this simplification is representative of the to-be-modeled process varies.
 
 The explore-exploit problem is applied in Recommender Systems, ad campaigns, in the context of Reinforcement Learning and Robotics.
 
@@ -70,13 +70,13 @@ Hence $\deq$ can be vaguely thought of as asymptotic relationship discounting fo
 %Why is it useful?
 %What is it used for?
 
-Thompson sampling is a sampling strategy often employed for selecting arms in the bandits scenario. By default, it particularly lends itself to the cummulative reward setting. In the following, we will discuss Thompson sampling in the context of bandits.
+Thompson sampling is a sampling strategy often employed for selecting arms in the bandits scenario. By default, it particularly lends itself to the cumulative reward setting. In the following, we will discuss Thompson sampling in the context of bandits.
 
 The foundation of Thompson sampling is a Bayesian approach: instead of 'only' possessing estimates on the means/distributions of arms, it entails a distribution \emph{over} arms, indicating the likelihood of a random variable over the arms. In the bandits scenario said random variable tends to be the mean of an arm. Hence, instead point estimate of the means, Thompson sampling requires have distributions over the means per arm.
 
-Naturally, this distribution over the arms should also leverage the knowledge aquired throughout the sampling process. Hence, per round, we can talk about \emph{prior} and \emph{posterior} distributions. This posterior distribution of a step $n$ answers the question: 'How likely are the arms $1, 2, 3$ to have means $[.193, .254, .1]$ after having observed samples 1 to $n$. As this is an iterative process, the posterior after observing sample $n$ will serve as the prior for selecting sample $n+1$. Hence the posterior can be thought of as the the prior 'updated' with the knowledge acquired of a specific round. Thanks to this duality we will continue to only talk about posteriors.
+Naturally, this distribution over the arms should also leverage the knowledge acquired throughout the sampling process. Hence, per round, we can talk about \emph{prior} and \emph{posterior} distributions. This posterior distribution of a step $n$ answers the question: 'How likely are the arms $1, 2, 3$ to have means $[.193, .254, .1]$ after having observed samples 1 to $n$. As this is an iterative process, the posterior after observing sample $n$ will serve as the prior for selecting sample $n+1$. Hence the posterior can be thought of as the the prior 'updated' with the knowledge acquired of a specific round. Thanks to this duality we will continue to only talk about posteriors.
 
-The attentive reader might wonder how exactly posteriors are updated. The update procedure is dependent of the type of utilized class of distribution for prior and posteriors. An example of this can be found in \ref{section:empirical_behaviour}.
+The attentive reader might wonder how exactly posteriors are updated. The update procedure is dependent of the type of utilized class of distribution for prior and posteriors. An example of this can be found in \ref{section:empirical_behavior}.
 
 In contrast to greedily selecting the arm that empirically maximizes the metric of desire, e.g. the mean, Thompson sampling suggests to randomly draw beliefs on arms weighted by the posterior distribution. Note that said posterior distribution is itself a function of the empirical means. Subsequently, it selects the arm which maximizes the metric of desire on the sampled belief. With many repetitions, this leads to each arm being sampled proportionally to its likelihood of maximizing the metric of desire according to current belief. \Cref{alg:thompson_sampling} illustrates this process more explicitly.
 
@@ -92,7 +92,7 @@ In contrast to greedily selecting the arm that empirically maximizes the metric 
   \end{algorithmic}
 \end{algorithm}
 
-Intuitively, this is very appealing for the cummulative reward scenario as it creates a natural balance between exploration and exploitation.
+Intuitively, this is very appealing for the cumulative reward scenario as it creates a natural balance between exploration and exploitation.
 
 \section{Best Arm Identification}
 \subsection{Model}\label{ss:top-1_model}
@@ -104,7 +104,7 @@ Best Arm identification implies disregarding the sum of the rewards encountered 
 
 Quite naturally, all other aspects being controlled for, requiring fewer samples is preferable. Hence one can formulate the goal in two ways: maximize confidence for a given amount of samples or minimize amount of samples for a given confidence level.
 
-Confidence can mean and be evaluated in different ways. For Bayesian algorithms, it is possible to quantify the confidence the model has in the currently most favourable looking candidate. This quantity corresponds to the mass a posterior puts on parameters favouring said candidate. Another approach to measure confidence stems from the realm of Probably approximately correct learning, or PAC in short. In the PAC context, one desires to make a statement of the sort $\Pr[\text{output of algoritm is $\epsilon$-correct}] \geq 1 - \delta$, where $\epsilon$-correctness requires an explicit definition. In this case, under the toleration of $\epsilon$, $1 - \delta$ can be thought of as confidence.
+Confidence can mean and be evaluated in different ways. For Bayesian algorithms, it is possible to quantify the confidence the model has in the currently most favorable looking candidate. This quantity corresponds to the mass a posterior puts on parameters favoring said candidate. Another approach to measure confidence stems from the realm of Probably approximately correct learning, or PAC in short. In the PAC context, one desires to make a statement of the sort $\Pr[\text{output of algorithm is $\epsilon$-correct}] \geq 1 - \delta$, where $\epsilon$-correctness requires an explicit definition. In this case, under the toleration of $\epsilon$, $1 - \delta$ can be thought of as confidence.
 
 Real-world applications of Best Arm identification include:
 \begin{itemize}
@@ -120,7 +120,7 @@ Real-world applications of Best Arm identification include:
 
 We start off by describing what it means for an allocation to be optimal and by enumerating some of its properties. We do not present a constructive allocation, rather we assume knowledge about the underlying truth to provide a tight bound on the best possible allocation. Intuitively it is not possible to match the performance of that optimal allocation without the knowledge of the underlying truth. Hence a very desirable statement to show that a proposed, constructive adaptive allocation \emph{converges} to the optimal allocation.
 
-As mentioned in \ref{ss:top-1_model}, the goal consists of maximizing confidence, i.e. the mass the posterior lays onto the true best arm. Oberve that for any allocation sampling each arm infinitely many times, this quantity will tend towards 1. What makes the optimal allocation optimal is the rate at which the posterior of the true arm convergence towards 1.
+As mentioned in \ref{ss:top-1_model}, the goal consists of maximizing confidence, i.e. the mass the posterior lays onto the true best arm. Observe that for any allocation sampling each arm infinitely many times, this quantity will tend towards 1. What makes the optimal allocation optimal is the rate at which the posterior of the true arm convergence towards 1.
 
 Note that the optimal allocation assumes knowledge about the underlying true value and therefore does not need to be adaptive. It can be framed as the following thought experiment: Assume you know the true underlying means. Yet your adversary doesn't trust your 'knowledge'. He only trusts the sample rewards that he can observe for himself. Now it is your task to leverage your knowledge about the true means to sample arms in a fashion convincing the adversary as quickly as possible.
 
@@ -166,7 +166,7 @@ The optimal convergence exponent under said constraint becomes:
 \subsection{Top-Two Thompson Sampling algorithm}
 % What is the algorithm?
 
-Russo proposes different algorithms that satisfy aforementioned theoretical results, yet suggests that one of them outperfoms the other empirically: Top-Two Thompson Sampling (TTTS) algorithm.
+Russo proposes different algorithms that satisfy aforementioned theoretical results, yet suggests that one of them outperforms the other empirically: Top-Two Thompson Sampling (TTTS) algorithm.
 
 The main idea behind TTTS is to repeat obtaining candidates through Thompson sampling until two different candidates have been proposed. This illustrates how Thompson sampling, usually only truly useful for exploit-explore settings can be used for pure-exploit: some of its focus is shifted towards inferior-looking candidates. Among those two candidates, the former is picked with probability $\beta$, explaining the provenance of the hyperparameter. Note the difference between \Cref{alg:thompson_sampling} and \Cref{alg:TTTS}: an additional level of 'randomization'.
 
@@ -190,7 +190,7 @@ The main idea behind TTTS is to repeat obtaining candidates through Thompson sam
   \end{algorithmic}
 \end{algorithm}
 
-Russo's formal treatment of this algorithm relies on the assumption that observations follow 1-dimensional distributions belogning to the family of exponential distributions. Moreover, he allows priors that are non-conjugate to the posteriors.
+Russo's formal treatment of this algorithm relies on the assumption that observations follow 1-dimensional distributions belonging to the family of exponential distributions. Moreover, he allows priors that are non-conjugate to the posteriors.
 
 \subsection{Alternative approaches}
 What are alternative approaches to Russo's?
@@ -209,7 +209,7 @@ How are those methods evaluated?
 What are possible qualitative shortcomings of those methods?
 What are possible quantitative shortcomings of those methods?
 
-The general LUCB algorihm can be seen in \Cref{alg:LUCB1}. For every arm $l$, an empirical mean $\hat{\mu}_l^t$ is kept and updated after each sample. The overall idea is to compute a confidence bound for every arm, in every step. Per round, arms are separated into two sets: the arms with the $m$ best empirical means, $Top(t)$ and the rest, $Bottom(t)$. The arm with the lowest lower confidence bound from $Top(t)$ and the arm with the hightest upper confidence bound from $Bottom(t)$ are sampled and all information updated.
+The general LUCB algorithm can be seen in \Cref{alg:LUCB1}. For every arm $l$, an empirical mean $\hat{\mu}_l^t$ is kept and updated after each sample. The overall idea is to compute a confidence bound for every arm, in every step. Per round, arms are separated into two sets: the arms with the $m$ best empirical means, $Top(t)$ and the rest, $Bottom(t)$. The arm with the lowest lower confidence bound from $Top(t)$ and the arm with the hightest upper confidence bound from $Bottom(t)$ are sampled and all information updated.
 The algorithm stops once its stopping criterion is met. The confidence bound of an arm $l$ equals $(\hat{\mu}_l^t - \beta(l), \hat{\mu}_l^t + \beta(l))$.
 Kalyanakrishnan et al. \cite{DBLP:conf/icml/KalyanakrishnanTAS12} propose a concrete instantiation:
 \[\beta(l) = \]
@@ -236,14 +236,14 @@ Kalyanakrishnan et al. \cite{DBLP:conf/icml/KalyanakrishnanTAS12} propose a conc
 
 \chapter{The Constrained Optimal Top-$m$ Allocation}
 
-TODO Talk about limitations on distributions.
+TODO: Talk about limitations on distributions.
 
 %What does it mean to be optimal?
 Analogously to \ref{subsection:optimal_allocation}, we define the optimal top-$m$ allocation by its convergence rate of the posterior mass put on parameters reflecting the true top-$m$ arms $\Pi_n(\Theta_{m, S^*})$. Moreover, just as in Russo's top-1 case, the algorithm we will propose introduces a constraint. We will also put the optimal allocation under that constraint with the idea being that this is but a hyperparameter that can be optimized over.
 
-In \Cref{section:optimal_statements} we first introduce some of Russo's results that also apply in our scenario. Then we will introduce some general properties, followed by a complete characterization of the optimal allocation. Moreover, we will show an example of a concrete optimal allocation in \Cref{section:conrete_optimal_allocation}. Proofs of the statements are from \Cref{section:optimal_statements} are provided in \Cref{section:optimal_proofs}. We finish the chapter with \Cref{section:optimality_sufficient_condition}, a presenting a condition on adaptive allocations, which is sufficient to show convergence to the optimal allocation.
+In \Cref{section:optimal_statements} we first introduce some of Russo's results that also apply in our scenario. Then we will introduce some general properties, followed by a complete characterization of the optimal allocation. Moreover, we will show an example of a concrete optimal allocation in \Cref{section:concrete_optimal_allocation}. Proofs of the statements are from \Cref{section:optimal_statements} are provided in \Cref{section:optimal_proofs}. We finish the chapter with \Cref{section:optimality_sufficient_condition}, a presenting a condition on adaptive allocations, which is sufficient to show convergence to the optimal allocation.
 
-Overall we hope to convince the reader that the characterization results portrayed in this chapter make for a natrual generalization of Russo's top-1 case. The guiding theme will be that instead of comparing the best arm $l^*$ to a suboptimal arm in order to identify the one it is hardest to distinguish from it, we will compare the a pairs of optimal and suboptimal arms in order to find to the pair that is the hardest to distinguish. Note that again, distinction revolves around two factors: the frequency with which an arm has been sampled, $\bar{\psi}_{n, l}$, as well as the proximity of its true mean, i.e. comparing $\theta^*_l$.
+Overall we hope to convince the reader that the characterization results portrayed in this chapter make for a natural generalization of Russo's top-1 case. The guiding theme will be that instead of comparing the best arm $l^*$ to a suboptimal arm in order to identify the one it is hardest to distinguish from it, we will compare the a pairs of optimal and suboptimal arms in order to find to the pair that is the hardest to distinguish. Note that again, distinction revolves around two factors: the frequency with which an arm has been sampled, $\bar{\psi}_{n, l}$, as well as the proximity of its true mean, i.e. comparing $\theta^*_l$.
 
 Throughout this whole chapter we will assume that every true mean is unique, i.e.
 \begin{align}
@@ -334,7 +334,7 @@ Our proposed algorithm will always allocate $\frac{1}{2}$ of its samples to arms
   \psi^{\frac{1}{2}*} &= \argmax_{\psi: \psi_{S^*}=\frac{1}{2}} \min_{i \notin S^*}\min_{j \in S^*} C_{j, i}(\psi_j, \psi_i) \label{eq:constrained_optimal_psi}\\
   \Gamma^{\frac{1}{2}*} &= \max_{\psi, \psi_{S^*} = \frac{1}{2}} \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\psi_j, \psi_i) \label{eq:constrained_optimal_gamma}
 \end{align}
-Hence we have established the optimal constrained rate of convergence $\Gamma^{\frac{1}{2}*}$ of the optimal constrained allocation $\psi^{\frac{1}{2}*}$ by making a link to the minimization over $C_{j, i}$ . We seek to further characterize $\psi^{\frac{1}{2}*}$ by relying on the same maxim as in Russo's scenario: we expect the measurement plan to collect \emph{equal evidence}, not \emph{equal measurement} for every arm. Hence in \Cref{proposition:characterization} we will show that the optimal measurement plan will fulfill \Cref{eq:condition_C}. Before doing so, we set the stage by enounciating two properties of $C_{j, i}$.
+Hence we have established the optimal constrained rate of convergence $\Gamma^{\frac{1}{2}*}$ of the optimal constrained allocation $\psi^{\frac{1}{2}*}$ by making a link to the minimization over $C_{j, i}$ . We seek to further characterize $\psi^{\frac{1}{2}*}$ by relying on the same maxim as in Russo's scenario: we expect the measurement plan to collect \emph{equal evidence}, not \emph{equal measurement} for every arm. Hence in \Cref{proposition:characterization} we will show that the optimal measurement plan will fulfill \Cref{eq:condition_C}. Before doing so, we set the stage by enunciating two properties of $C_{j, i}$.
 
 \begin{lemma}\label{lemma:C_concave}
   Each $\min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)$ is a concave function.
@@ -352,7 +352,7 @@ Hence we have established the optimal constrained rate of convergence $\Gamma^{\
 \end{lemma}
 
 \begin{proposition}\label{proposition:characterization}
-  The solution to the optimzation problem \ref{eq:constrained_optimal_psi} is the allocation $\psi^{\frac{1}{2}*}$, which is unique and satisfies
+  The solution to the optimization problem \ref{eq:constrained_optimal_psi} is the allocation $\psi^{\frac{1}{2}*}$, which is unique and satisfies
   \begin{align}
     \forall j_1, j_2 \in S^*, \forall i_1, i_2 \notin S^*: C_{j, i}(\psi^{\frac{1}{2}*}_{j_1}, \psi^{\frac{1}{2}*}_{i_1}) = C_{j, i}(\psi^{\frac{1}{2}*}_{j_2}, \psi^{\frac{1}{2}*}_{i_2})\label{eq:condition_C}
   \end{align}
@@ -363,11 +363,11 @@ Hence we have established the optimal constrained rate of convergence $\Gamma^{\
   almost surely.
 \end{proposition}
 
-\section{A Concrete Optimal Allocation}\label{section:conrete_optimal_allocation}
+\section{A Concrete Optimal Allocation}\label{section:concrete_optimal_allocation}
 For the sake of concreteness, we present numeric values of optimal allocations, both constrained and unconstrained for two top-$m$ identification scenarios.
 Hence given, the true means $\theta^*$, we seek to determine $\psi^{\frac{1}{2}*}$ and $\psi^{\frac{1}{2}*}$. Relying on \eqref{eq:condition_C}, we have a massively over-determined system of equations. The latter can be approximately solved by numerical methods, in our case least squares minimization.
 
-For this concrete example, we assume arm rewards to follow Bernoulli distributions with means $\theta^1$ and $\theta^2$ respetively. Thanks to this assumption, the KL divergences can be minimized analytically with great convenience. We refer to \Cref{section:bernoulli_c} for greater details. \Cref{fig:optimal_allocation} indicates the probability mass put onto each arm for each scenario. The results were produced for a top-4 scenario with
+For this concrete example, we assume arm rewards to follow Bernoulli distributions with means $\theta^1$ and $\theta^2$ respectively. Thanks to this assumption, the KL divergences can be minimized analytically with great convenience. We refer to \Cref{section:bernoulli_c} for greater details. \Cref{fig:optimal_allocation} indicates the probability mass put onto each arm for each scenario. The results were produced for a top-4 scenario with
 \begin{itemize}
   \item $\theta^1 = [.1,\ .2,\ .3,\ .4,\ .5,\ \underbrace{.6,\ .7,\ .8,\ .9}_\text{$S^*$}]$
   \item $\theta^2 = [.4,\ .425,\ .45,\ .475,\ .5,\ \underbrace{.525,\ .55,\ .575,\ .6}_\text{$S^*$}]$
@@ -385,7 +385,7 @@ For further details regrading the simulation implementation we refer to the code
 TODO: Propose an intuition why the concentration is so high in unconstrained scenario.
 
 \section{A sufficient condition for optimality}\label{section:optimality_sufficient_condition}
-This sufficient condition for convergence towards the optimal allocation is centered around observing consequences of over-allocation. Note that whenever an allocation is different from the optimal allocation, this implies both over- and under-allocation. We focus on the statement for overallocation, yet an analogous statement for underallocation should be possible.
+This sufficient condition for convergence towards the optimal allocation is centered around observing consequences of over-allocation. Note that whenever an allocation is different from the optimal allocation, this implies both over- and underallocation. We focus on the statement for overallocation, yet an analogous statement for underallocation should be possible.
 
 In particular, the statement expresses that if an arm $l$ has been over-allocated so far, indicated by a $\bar{\psi}_{n, l}$ larger than $\psi^{\frac{1}{2}*}_l$, this over-allocation will be corrected. In this case, correction means that its likelihood of being sampled in the next and round, $\psi_{n, l}$ is very low. The intuition of the whole statement being that if all overallocation is corrected for, then consequently all underallocation is corrected for as well, by the fact that $\psi$ is a probability distribution.
 \begin{proposition}\label{proposition:optimality_sufficient_condition}
@@ -432,7 +432,7 @@ In particular, the statement expresses that if an arm $l$ has been over-allocate
   \begin{align}
     \Pi_n(\Theta_{m, S^*}^c) \deq \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)
   \end{align}
-  For $j \in S^*$, we follow a very similary path by first leveraging the set equality from \Cref{lemma:set_relation_S*_i}. Instead of a union, as was the case for $i \in S^*$, we are now confronted with an intersection. This implies a mulitplicative effect on the distribution $\Pi_n$ instead of an additive one.
+  For $j \in S^*$, we follow a very similary path by first leveraging the set equality from \Cref{lemma:set_relation_S*_i}. Instead of a union, as was the case for $i \in S^*$, we are now confronted with an intersection. This implies a multiplicative effect on the distribution $\Pi_n$ instead of an additive one.
   \begin{align}
     &1 - \min_{j \in S^*} \Pi(\Theta_j) \leq \Pi(\Theta_{m, S^*}^c) \leq 1 - \min_{j \in S^*} (\Pi(\Theta_j))^m \\
   \end{align}
@@ -476,7 +476,7 @@ In particular, the statement expresses that if an arm $l$ has been over-allocate
 \begin{proof}[\Cref{lemma:C_unique_solution}]
   By \Cref{eq:exponential_kl} we know that for the exponential family of probability distributions it holds that:
   \[d(\theta||\theta') = (\theta - \theta')A'(\theta) - A(\theta) + A(\theta')\]
-  Appyling this identity to \eqref{eq: l2_4} for a given $j$ gives us:
+  Applying this identity to \eqref{eq: l2_4} for a given $j$ gives us:
   \begin{align}
     &\psi_{j}d(\theta^*_{j} || x) + \psi_{i}d(\theta_{i}^* ||x) \\
     &=\psi_j ((\theta_j^* - x)A'(\theta_j^*) - A(\theta_j^*) + A(x)) + \psi_i((\theta_i^* - x)A'(\theta_i^*) - A(\theta_i^*) + A(x))\\
@@ -495,7 +495,7 @@ In particular, the statement expresses that if an arm $l$ has been over-allocate
     &> \alpha d(\theta_i^*||x) + \psi_j d(\theta_j^*||x)\\
     &= f(x, \psi_j)
   \end{align}
-  And therefore $f$ is stricly increasing in $\psi_j$.
+  And therefore $f$ is strictly increasing in $\psi_j$.
 
   We fix two reals $\psi_{j1} < \psi_{j2}$ from $[0, 1]$ as well as their counterparts
   \begin{align}
@@ -554,7 +554,7 @@ In particular, the statement expresses that if an arm $l$ has been over-allocate
 
       As our distinct value so far comes from $S^{*c}$, let's also assume, w.l.o.g., $i_y \notin S^*$ with $i_y \neq i_x$.
 
-      Note that indepdently of whether $\psi^1_{i_y} \geq \psi^2_{i_y}$ or $\psi^1_{i_y} < \psi^2_{i_y}$ holds, the previous argument can be applied for any $j \in S^*$.
+      Note that independently of whether $\psi^1_{i_y} \geq \psi^2_{i_y}$ or $\psi^1_{i_y} < \psi^2_{i_y}$ holds, the previous argument can be applied for any $j \in S^*$.
 
       \item At least one arm is distinct in both $S^*$ and $S^{*c}$.
 
@@ -574,7 +574,7 @@ In particular, the statement expresses that if an arm $l$ has been over-allocate
         &= C^* \\
         &= C_{j_x, i_y}(\psi^2_{j_x}, \psi^2_{i_y})
       \end{align}
-      which, again, is a contradiction by the strictly increaseing nature of $C_{j_x, i_y}$.
+      which, again, is a contradiction by the strictly increasing nature of $C_{j_x, i_y}$.
     \end{itemize}
   \end{enumerate}
 \end{proof}
@@ -603,7 +603,7 @@ In particular, the statement expresses that if an arm $l$ has been over-allocate
 
 In this chapter we will both present and analyze our suggested generalization of Russo's Top-Two Thompson sampling: Top-2$m$ XOR Thompson sampling. The underlying idea still revolves around repeatedly apllying Thompson sampling until two different candidates are at hand.
 
-\Cref{section:algorithm} introduces the algorithm and provides some explanations with regards to generalization decisions. It also introduces the constraint $\psi_{S^*} = \frac{1}{2}$. Subsequently, \Cref{section:analysis} analyzes properties of the algorithm. In particular it presents bounds on the measurement plan, states general consequences of finite measurement and discusses implications of under- and over-allocation. We firmly believe that all of those are very useful to show that this algorithm's measurement plan converges to the optimal constrained measurement plan $\psi^{\frac{1}{2}*}$. Proofs for those statements are provided in \Cref{section:txts_proofs}. Additionaly, we provide some empirical results in \Cref{section:empirical_behaviour}.
+\Cref{section:algorithm} introduces the algorithm and provides some explanations with regards to generalization decisions. It also introduces the constraint $\psi_{S^*} = \frac{1}{2}$. Subsequently, \Cref{section:analysis} analyzes properties of the algorithm. In particular it presents bounds on the measurement plan, states general consequences of finite measurement and discusses implications of under- and over-allocation. We firmly believe that all of those are very useful to show that this algorithm's measurement plan converges to the optimal constrained measurement plan $\psi^{\frac{1}{2}*}$. Proofs for those statements are provided in \Cref{section:txts_proofs}. Additionally, we provide some empirical results in \Cref{section:empirical_behavior}.
 
 \section{Algorithm}\label{section:algorithm}
 As a generalization of Russo's TTTS, the main difference lies in the fact that candidates are sets. Hence Thompson sampling is repeated until set inequality is reached. However, we can only ever sample individual arms, i.e. not sets. Hence in this set scenario, we still need a mechanism to select a single arm from a set. Therefore, when generalizing Russo's approach, the central and unavoidable question arises: 'How to select a single arm from two unequal set candidates?'
@@ -614,9 +614,9 @@ First, given candidates $S_1$ and $S_2$ with $S_1 \neq S_2$, we compute the set 
 
 As mentioned before, the XOR of $S_1$ and $S_2$ will always contain at least two elements. Hence we need to define an approach on how to select from the XOR. According to both Russo's suggestion as well as Occam's razor, we opted for uniform selection.
 
-We believe that the applying a XOR to both candidates is essential for the correctness of the algorithm, whereas the uniform sampling from the XOR of both candidates could easily be substituted by other distributions. We would expect such a change to preserve correctness, as long as every arm of the XOR is sampled with stricly positive probability. Yet, it would likely alter the hyperparamter $\beta = \psi_{S^*}$.
+We believe that the applying a XOR to both candidates is essential for the correctness of the algorithm, whereas the uniform sampling from the XOR of both candidates could easily be substituted by other distributions. We would expect such a change to preserve correctness, as long as every arm of the XOR is sampled with strictly positive probability. Yet, it would likely alter the hyperparamter $\beta = \psi_{S^*}$.
 
-We present the approach to sample an arm in step $n + 1$ in \Cref{alg:TXTS}. This appraoch can be repeated either for a fixed amount of samples or until a specific confidence level is reached. Note that the confidence level can be approximated in every step. The confidence level is equal to $\Pi_n(\Theta_S)$ where $S = \argmax_{S'} \Pi_n(\Theta_{S'})$. Concretely, this quantity can be estimated by drawing samples from $\Pi_n$ and identifying for which set $S$ the fraction $\frac{\text{\# samples in which $S$ is optimal}}{\#samples}$ is largest. The fraction of this $S$ approximates the confidence level.
+We present the approach to sample an arm in step $n + 1$ in \Cref{alg:TXTS}. This approach can be repeated either for a fixed amount of samples or until a specific confidence level is reached. Note that the confidence level can be approximated in every step. The confidence level is equal to $\Pi_n(\Theta_S)$ where $S = \argmax_{S'} \Pi_n(\Theta_{S'})$. Concretely, this quantity can be estimated by drawing samples from $\Pi_n$ and identifying for which set $S$ the fraction $\frac{\text{\# samples in which $S$ is optimal}}{\#samples}$ is largest. The fraction of this $S$ approximates the confidence level.
 \begin{algorithm}[H]
   \caption{Given a posterior $\Pi_n$ in step $n+1$}
   \label{alg:TXTS}
@@ -689,7 +689,7 @@ Moreover, once we know that $\alpha_{n, S^*} \rightarrow 1$, we can simplify the
   \end{align}
 \end{lemma}
 
-\section{Empirical behaviour}\label{section:empirical_behaviour}
+\section{Empirical behavior}\label{section:empirical_behavior}
 %What true distributions are assumed?
 %What prior and posterior distributions are assumed?
 %How is C computed?
@@ -698,7 +698,7 @@ Moreover, once we know that $\alpha_{n, S^*} \rightarrow 1$, we can simplify the
 
 TODO: Talk about updates of priors.
 
-For the follwoing empirical results we assumed the rewards of arms to follow Bernoulli distributions with means $\theta^* = [.1, .2, .3, .4, .5, .6, .7, .8, .9]$. We defined priors/posteriors to be Beta distributed with initial parameters $\alpha = \beta = 1$, mimicking a uniform prior on the set of arms.
+For the following empirical results we assumed the rewards of arms to follow Bernoulli distributions with means $\theta^* = [.1, .2, .3, .4, .5, .6, .7, .8, .9]$. We defined priors/posteriors to be Beta distributed with initial parameters $\alpha = \beta = 1$, mimicking a uniform prior on the set of arms.
 
 The posterior mass put on certain events, in particular the confidence, were computed as described in \Cref{section:algorithm}. \Cref{fig:confidences} indicates the confidence for a given number of steps of our method compared to the the uniform allocation and Thompson sampling.
 
@@ -718,7 +718,7 @@ As we don't have a closed form for the average measurement plan $\bar{psi}_{n,l}
   \label{fig:measurement_plan}
 \end{figure}
 
-As we know from \Cref{section:optimal_statements}, the optimal allocation gathers equal evidence for all pairs from $S^* \times S^{*c}$. We used the empirical sampling frequencies to approximate those coefficients. A qualitative comparison of the individual coefficients can be found in \Cref{fig:algorithm_coefficients}. The individual $C_{j, i}$ were computed just as described in \Cref{section:conrete_optimal_allocation}.
+As we know from \Cref{section:optimal_statements}, the optimal allocation gathers equal evidence for all pairs from $S^* \times S^{*c}$. We used the empirical sampling frequencies to approximate those coefficients. A qualitative comparison of the individual coefficients can be found in \Cref{fig:algorithm_coefficients}. The individual $C_{j, i}$ were computed just as described in \Cref{section:concrete_optimal_allocation}.
 
 \begin{figure}[h]
   \centering
@@ -835,7 +835,7 @@ As we know from \Cref{section:optimal_statements}, the optimal allocation gather
 \begin{proof}[\Cref{lemma:measurement_plan_bound_max}]
   \Cref{proposition:measurement_plan_arm} tells us that
   \[\psi_{n, l} \leq \frac{1}{2}(\sum_{S: l \in S} \frac{\alpha_{n, S}}{1 - \alpha_{n, S}} (1 - \alpha_{n, l}) +  \sum_{S': l \notin S'} \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}} \alpha_{n, l})\]
-  Knowning that $\alpha_{n, S^*} \rightarrow 1$, we can bound $\psi_{n, i}$ in the following way:
+  Knowing that $\alpha_{n, S^*} \rightarrow 1$, we can bound $\psi_{n, i}$ in the following way:
   \begin{align}
     \psi_{n, i} \leq& \frac{1}{2}((1 - \alpha_{n, i}) \frac{\sum_{S: i \in S} \alpha_{n, S}}{1 - \alpha_{n, S^*}} + \alpha_{n, i} \frac{\sum_{S': i \notin S'} \alpha_{n, S'}}{1 - \alpha_{n, S^*}}) \\
     =& \frac{1}{2}((1 - \alpha_{n, i}) \frac{\alpha_{n, i}}{1 - \alpha_{n, S^*}} + \alpha_{n, i} \frac{1 - \alpha_{n, i}}{1 - \alpha_{n, S^*}}) \\
@@ -851,7 +851,7 @@ As we know from \Cref{section:optimal_statements}, the optimal allocation gather
 
 \begin{proof}[\Cref{lemma:limsup_undersampling}]
     We first show the first statement and then use it for the second.
-    For the sake of contradiction, we assume that $\limsup \bar{\psi}_{l, n} < \psi_j^*$. This implies that there is a $n_0$ from which onwards $\psi_{l, n} < \psi_l^*$.
+    For the sake of contradiction, we assume that $\limsup \bar{\psi}_{l, n} < \psi_j^*$. This implies that there is a $n_0$ from which onward $\psi_{l, n} < \psi_l^*$.
     \begin{align}
       \sum_n (\frac{1}{2} - \psi_{l, n}) &= \sum_{n=1}^{n_0} (\frac{1}{2} - \psi_{l, n}) + \sum_{n > n_0} (\frac{1}{2} - \psi_{l, n}) \\
         &= \sum_{n=1}^{n_0} (\frac{1}{2} - \psi_j) + \sum_{n > n_0} (\frac{1}{2} - \psi_{l, n})\mathbb{I}[\psi_{l, n} \leq \psi_l^* - \delta] \\

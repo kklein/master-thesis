@@ -2,7 +2,7 @@
 
 \section{Computing $C_{j, i}$ for Bernoulli means}\label{section:bernoulli_c}
 
-We assume that every arm $l$ follows a Bernoulli distribution with parameter $\theta_l$. The option space for rewards being $\{0, 1\}$, they are discretely distributed. Let us reiterate the definition of the KL divergence for discrtete distributions:
+We assume that every arm $l$ follows a Bernoulli distribution with parameter $\theta_l$. The option space for rewards being $\{0, 1\}$, they are discretely distributed. Let us reiterate the definition of the KL divergence for discrete distributions:
 \[d(p || q) = \sum_{y \in Y}p(y) \log(\frac{p(y)}{q(y)})\]
 where $Y$ corresponds the option space for the outcome.
 Instantiating this definition with our scenario, we observe that $Y=\{0, 1\}$, $p(y=1)=\theta_l$  as well as $p(y=0)=1-\theta_l$, for a given arm $l$.
