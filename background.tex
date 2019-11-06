@@ -1,0 +1,234 @@
+\chapter{Background}
+
+\section{Chernoff's 2-player game}
+Tbd whether relevant.
+
+\section{Bandits}
+%What is the scenario/model?
+The so-called stochastic multi-armed bandit is a general model to simulate decision-making in uncertain environments.
+In particular, one assumes a set of options or arms to choose from, each choice leading to an outcome, also referred to as reward. In general, one assumes many sequential selections among the set of arms. The outcome of the selection of an individual arm typically follows a fixed but unknown probability distribution.
+
+%What problems are typically tackled by this scenario?
+Within the bandits model, the concern revolves around which arm to choose next. Allocation strategies tackling this question address either of two problems: explore-exploit or pure-explore.
+
+The former concerns itself with maximizing the \emph{cumulative reward}. This means that one attempts to maximize the \emph{sum of the rewards obtained} through all arm selections. Naturally, starting off without any knowledge about the underlying distributions, this involves both exploration of arm qualities as well as exploitation of knowledge obtained so far.
+
+The latter revolves around \emph{simple reward}. This problem consists of seeking to maximize the reward one obtains if one leverages the current knowledge for \emph{another} draw. This implies that the focus lies on \emph{identification} of high-quality candidates, quality usually being assessed by high means. It is therefore it is part of the task to align estimation of the best arm with the underlying truth as well as reaching a high \emph{confidence} in this alignment.
+
+%Why is model and its problems relevant?
+The bandits model can be used for all processes involving sequential decision making. Yet, an important simplification is the assumption of the distributions being fixed over time. In how far this simplification is representative of the to-be-modeled process varies.
+
+The explore-exploit problem is applied in Recommender Systems, ad campaigns, in the context of Reinforcement Learning and Robotics.
+
+For real-world applications of the pure-exploration bandit please refer to \ref{ss:top-1_model}.
+
+There exist many specialized versions of the Bandits model, such as contextual bandits or adversarial bandits.
+
+\section{Notation}\label{section:notation}
+We assume $k$ arms to choose from and denote the set of possible arms as $[k]$. Subsets $S \subset [k]$ are assumed to be of size $m < k$.
+
+A possible set of means for the arms is denoted as the $k$-dimensional vector $\theta$, where every mean can lie between 0 and 1. We also refer to such a $\theta$ as parameter.
+
+Finding ourselves in a frequentist setting, we assume an underlying true mean of the arms refer to this as $\theta^*$. Moreover, this ground truth implies a true best arm $l^*$ and true top-$m$ arms $S^*$. When referring to an individual arm in the top-$m$ case, we proceed to use $j$ for arms in $S^*$, $i$ for arms not in $S^*$ and $l$ for arms of which this knowledge does not exist.
+
+Given the constraint that the means lie between 0 and 1, there are infinitely many possible parameter vectors which make arm $l \in [k]$ the best one under $\theta$ or $S \subset [k]$ top-$m$ under $\theta$. Hence we group such $\theta$ in the following way:
+\begin{align}
+  \Theta &:= [0, 1]^k \\
+  \Theta_{1, l} &:= \{\theta \in \Theta | l = \argmax_{l' \in [k]} \theta_{l'}\} \\
+  \Theta_{m, S} &:= \{\theta \in \Theta | S = \text{top-}m(\theta)\} \\
+    &= \{ \theta \in \Theta| \min_{j_1 \in S}\ \theta_{j_1} > \max_{j_2 \notin S}\ \theta_{j_2}\} \\
+  \Theta_{m, l} &= \{\theta \in \Theta | l \in \text{ top-}m(\theta)\}
+\end{align}
+where top-$m$ returns the $m$ highest values, i.e. means, from its argument $\theta$.
+
+After having made $n$ observations of rewards, bundled in $D_n$, $\Pi_n$ expresses a posterior distribution with density $\pi_n$ over elements of $\Theta$. E.g. for sets $\Theta_{m, S}$, we have:
+\begin{align}
+  \Pi_n(\Theta_{m, S}) &:= \int_{\theta \in \Theta_{m, S}} \pi_n(\theta) d\theta \\
+    &= \Pr[S \text{ is top-}m | D_n]
+\end{align}
+Clearly, it holds that $\Pi_n(\Theta) = 1$. As a shorthand for the top-$m$ case, we will use:
+\begin{align}
+  \alpha_{n, l} &:= \Pi_n(\Theta_{m, l}) \\
+  \alpha_{n, S} &:= \Pi_n(\Theta_{m, S})
+\end{align}
+We are mostly interested in strategies that allocate measurement effort over the arms in a randomized fashion, i.e. according to a probability distribution. We refer to such an allocation or distribution as $\psi$, defining the probability of each arm being sampled. Naturally, it holds that $\sum_{l \in [k]} \psi_l = 1$. We also define the allocation property of a set by the sum of its arms: $\psi_S = \sum_{l \in S} \psi_l$.
+
+The $n$-th sampled arm is denoted as $l_n$. For adaptive strategies, the allocation can change after every sample. After $n$ samples we refer to the allocation as $\psi_{n}$ and therefore we have $\psi_{n, l} = \Pr[l_n = l]$ for arm $l$. We might as well be interested in the average allocation up to a certain sample $n$. We write:
+\begin{align}
+  \bar{\psi}_{n, l} &:= \frac{\sum_{n' = 1}^{n} \psi_{n', l}}{n}
+\end{align}
+We use the notation $d(\theta_1||\theta_2)$ to represent the Kullback-Leibler divergence between $\theta_1$ and $\theta_2$.
+
+We employ Russo's notation $a_n \deq b_n$ if the the following relationship holds:
+\begin{align}
+  \lim_{n \rightarrow \infty}\frac{1}{n}\log{\frac{a_n}{b_n}} \rightarrow 0
+\end{align}
+Hence $\deq$ can be vaguely thought of as asymptotic relationship discounting for logarithmic factors. Note the asymmetry of the relationship: it rather represents an inequality than an equality.
+
+\section{Thompson Sampling for Bandits}
+%How does it work?
+%Why is it useful?
+%What is it used for?
+
+Thompson sampling is a sampling strategy often employed for selecting arms in the bandits scenario. By default, it particularly lends itself to the cumulative reward setting. In the following, we will discuss Thompson sampling in the context of bandits.
+
+The foundation of Thompson sampling is a Bayesian approach: instead of 'only' possessing estimates on the means/distributions of arms, it entails a distribution \emph{over} arms, indicating the likelihood of a random variable over the arms. In the bandits scenario said random variable tends to be the mean of an arm. Hence, instead point estimate of the means, Thompson sampling requires have distributions over the means per arm.
+
+Naturally, this distribution over the arms should also leverage the knowledge acquired throughout the sampling process. Hence, per round, we can talk about \emph{prior} and \emph{posterior} distributions. This posterior distribution of a step $n$ answers the question: 'How likely are the arms $1, 2, 3$ to have means $[.193, .254, .1]$ after having observed samples 1 to $n$. As this is an iterative process, the posterior after observing sample $n$ will serve as the prior for selecting sample $n+1$. Hence the posterior can be thought of as the the prior 'updated' with the knowledge acquired of a specific round. Thanks to this duality we will continue to only talk about posteriors.
+
+The attentive reader might wonder how exactly posteriors are updated. The update procedure is dependent of the type of utilized class of distribution for prior and posteriors. An example of this can be found in \ref{section:empirical_behavior}.
+
+In contrast to greedily selecting the arm that empirically maximizes the metric of desire, e.g. the mean, Thompson sampling suggests to randomly draw beliefs on arms weighted by the posterior distribution. Note that said posterior distribution is itself a function of the empirical means. Subsequently, it selects the arm which maximizes the metric of desire on the sampled belief. With many repetitions, this leads to each arm being sampled proportionally to its likelihood of maximizing the metric of desire according to current belief. \Cref{alg:thompson_sampling} illustrates this process more explicitly.
+
+\begin{algorithm}[H]
+    \caption{Given a posterior $\Pi_n$ in step $n+1$}
+    \label{alg:thompson_sampling}
+  \begin{algorithmic}
+    \State $\hat{\theta} \sim \Pi_n$
+    \State $l_{n+1} = \argmax_{l \in [k]}\hat{\theta}_l$
+    \State Play $l_{n+1}$
+    \State Observe reward $r_{n+1}$
+    \State $\Pi_{n + 1} = update(\Pi_n, l_{n+1}, r_{n+1})$
+  \end{algorithmic}
+\end{algorithm}
+
+Intuitively, this is very appealing for the cumulative reward scenario as it creates a natural balance between exploration and exploitation.
+
+\section{Best Arm Identification}
+\subsection{Model}\label{ss:top-1_model}
+%What is the problem?
+%Why is it relevant?
+%How is performance evaluated? What is 'confidence'?
+
+Best Arm identification implies disregarding the sum of the rewards encountered while sampling. Rather, the goal is to efficiently gather information maximizing the confidence of the suggestion made \emph{after} the sampling phase. In other words, there is a purely explorative phase, also referred to as 'experiment' which is then typically followed by a purely exploitative phase, having committed to an option. For this reason, Best Arm Identification is a kind of 'Experiment Design'.
+
+Quite naturally, all other aspects being controlled for, requiring fewer samples is preferable. Hence one can formulate the goal in two ways: maximize confidence for a given amount of samples or minimize amount of samples for a given confidence level.
+
+Confidence can mean and be evaluated in different ways. For Bayesian algorithms, it is possible to quantify the confidence the model has in the currently most favorable looking candidate. This quantity corresponds to the mass a posterior puts on parameters favoring said candidate. Another approach to measure confidence stems from the realm of Probably approximately correct learning, or PAC in short. In the PAC context, one desires to make a statement of the sort $\Pr[\text{output of algorithm is $\epsilon$-correct}] \geq 1 - \delta$, where $\epsilon$-correctness requires an explicit definition. In this case, under the toleration of $\epsilon$, $1 - \delta$ can be thought of as confidence.
+
+Real-world applications of Best Arm identification include:
+\begin{itemize}
+  \item Physical simulations: Given a collection of designs, e.g. the bodywork of a car, determine aerodynamic properties of the designs. Elaborate simulations can come with significant resource demands, such as compute power as well as the direct and indirect costs of time. Arriving at the same conclusion of the superiority of a certain designs, with fewer simulations can be extremely valuable.
+  \item Crop selection: Experimenting different crop types in a given growing environment measuring yields, generate a recommendation for that same growing environment.
+\end{itemize}
+
+"ML: drive generation of own data instead of" -> it is about acquisition
+
+\subsection{Optimal allocation}\label{subsection:optimal_allocation}
+% What is the overall goal?
+% How is this achieved? (Talk about optimization over hyper-parameters)
+
+We start off by describing what it means for an allocation to be optimal and by enumerating some of its properties. We do not present a constructive allocation, rather we assume knowledge about the underlying truth to provide a tight bound on the best possible allocation. Intuitively it is not possible to match the performance of that optimal allocation without the knowledge of the underlying truth. Hence a very desirable statement to show that a proposed, constructive adaptive allocation \emph{converges} to the optimal allocation.
+
+As mentioned in \ref{ss:top-1_model}, the goal consists of maximizing confidence, i.e. the mass the posterior lays onto the true best arm. Observe that for any allocation sampling each arm infinitely many times, this quantity will tend towards 1. What makes the optimal allocation optimal is the rate at which the posterior of the true arm convergence towards 1.
+
+Note that the optimal allocation assumes knowledge about the underlying true value and therefore does not need to be adaptive. It can be framed as the following thought experiment: Assume you know the true underlying means. Yet your adversary doesn't trust your 'knowledge'. He only trusts the sample rewards that he can observe for himself. Now it is your task to leverage your knowledge about the true means to sample arms in a fashion convincing the adversary as quickly as possible.
+
+\subsubsection{Rate of convergence}
+Russo \cite{DBLP:journals/corr/Russo16} shows that the rate at which the posterior $\Pi_n$ of the set parameters under which the true best arm $l^*$ is optimal $\Theta^*$ cannot be faster than the following:
+\begin{align}
+  \Pi_n(\Theta_{l^*}) &= 1 - \Pi_n(\Theta^c_{l^*}) = 1 - \exp\{-n\Gamma^*\} \\
+  \Gamma^* &= \max_{\psi} \min_{\theta \in \Theta^c_{l^*}} \sum_{l \in [k]} \psi_l d(\theta_l^* || \theta_l)
+\end{align}
+where $n$ corresponds to the number of samples acquired.
+
+The allocation $\psi$ maximizing this quantity is what we refer to as optimal allocation.
+
+\subsubsection{Defining properties}
+Russo's underlying idea is that the optimal allocation gathers equal \emph{evidence}, e.g. compared to having equal effort, as  for a uniform distribution. This notion of evidence relies on the comparison between the true best against all other arms. It takes both their respective true means as well as sampling frequencies into consideration. For an allocation $\psi$, he defines
+\begin{align}
+  C_i(\psi_{l^*}, \psi_i) := \min_{x \in \mathbb{R}} \psi_{l^*} d(\theta_{l^*}^*||x) + \psi_i d(\theta_{i}^*||x)
+\end{align}
+and goes on to show that the optimal allocation $\psi^{\frac{1}{2}*}$ is identified by fulfilling the condition
+\begin{align}
+  \forall i_1, i_2 \neq l^*: C_{i_1}(\psi_{l^*}, \psi_{i_1}) = C_{i_2}(\psi_{l^*}, \psi_{i_2})
+\end{align}
+Intuitively, this expresses that for every suboptimal arm, an equal amount of evidence of suboptimality has been gathered.
+
+Moreover, Russo goes on to show the uniqueness of the optimal allocation.
+
+\subsection{A Constrained Optimal Allocation}
+%What are properties of the constrained optimal allocation?
+%How can they be interpreted?
+
+In order to bridge the gap between algorithm and optimal allocation, Russo introduces the concept of \emph{constraining} the optimal allocation. His algorithm naturally implies the constraint that in the limit, $\beta$ of the measurement effort is allocated to the true best arm.
+
+He is able to show that his algorithm's allocation converges to the overall optimal allocation by showing that
+\begin{itemize}
+  \item The algorithm's average allocation $\bar{\psi}_n$ converges to the optimal allocation under the constraint $\psi_{l^*}^* = \beta$
+  \item The hyperparameter $\beta$ can be tuned to equal the overall optimal value.
+\end{itemize}
+The optimal convergence exponent under said constraint becomes:
+\begin{align}
+  \Gamma^*_{\beta} &= \max_{\psi: \psi_{l^*} = \beta} \min_{\theta \in \Theta^c_{l^*}} \sum_{l \in [k]} \psi_l d(\theta_l^* || \theta_l)
+\end{align}
+
+\subsection{Top-Two Thompson Sampling algorithm}
+% What is the algorithm?
+
+Russo proposes different algorithms that satisfy aforementioned theoretical results, yet suggests that one of them outperforms the other empirically: Top-Two Thompson Sampling (TTTS) algorithm.
+
+The main idea behind TTTS is to repeat obtaining candidates through Thompson sampling until two different candidates have been proposed. This illustrates how Thompson sampling, usually only truly useful for exploit-explore settings can be used for pure-exploit: some of its focus is shifted towards inferior-looking candidates. Among those two candidates, the former is picked with probability $\beta$, explaining the provenance of the hyperparameter. Note the difference between \Cref{alg:thompson_sampling} and \Cref{alg:TTTS}: an additional level of 'randomization'.
+
+\begin{algorithm}[H]
+    \caption{Given a posterior $\Pi_n$ in step $n + 1$}
+    \label{alg:TTTS}
+  \begin{algorithmic}
+    \State $\hat{\theta} \sim \Pi_n$
+    \State $l_1 := \argmax(\hat{\theta})$
+    \Repeat
+      \State $\hat{\theta} \sim \Pi_n$
+      \State $l_2 := \argmax(\hat{\theta})$
+    \Until{$l_1 \neq l_2$}
+    \State $B \sim Bernoulli(\beta)$
+    \If{$B=1$}
+      \State $l_{n+1} := l_1$
+    \Else
+      \State $l_{n+1} := l_2$
+    \EndIf
+    \State Play $l_{n+1}$, observe reward and update priors
+  \end{algorithmic}
+\end{algorithm}
+
+Russo's formal treatment of this algorithm relies on the assumption that observations follow 1-dimensional distributions belonging to the family of exponential distributions. Moreover, he allows priors that are non-conjugate to the posteriors.
+
+\subsection{Alternative approaches}
+What are alternative approaches to Russo's?
+How do they compare against Russo's?
+
+\section{Top-$m$ Arm Identification}
+% What is the problem?
+% Why is it relevant compared to Top-1?
+
+Top-$m$ Arm Identification is a generalization of Best Arm Identification. The objective is to identify the set of arms, with cardinality $m$, which contains the $m$ best arms.
+
+Applications of top-$m$ arm identification are similar to those mentioned in \ref{ss:top-1_model}. Natural explications for desiring the identification $m$ instead of a single high-quality option can be diversification or regulation.
+
+\subsection{Current approaches: LUCB}
+How are those methods evaluated?
+What are possible qualitative shortcomings of those methods?
+What are possible quantitative shortcomings of those methods?
+
+The general LUCB algorithm can be seen in \Cref{alg:LUCB1}. For every arm $l$, an empirical mean $\hat{\mu}_l^t$ is kept and updated after each sample. The overall idea is to compute a confidence bound for every arm, in every step. Per round, arms are separated into two sets: the arms with the $m$ best empirical means, $Top(t)$ and the rest, $Bottom(t)$. The arm with the lowest lower confidence bound from $Top(t)$ and the arm with the hightest upper confidence bound from $Bottom(t)$ are sampled and all information updated.
+The algorithm stops once its stopping criterion is met. The confidence bound of an arm $l$ equals $(\hat{\mu}_l^t - \beta(l), \hat{\mu}_l^t + \beta(l))$.
+Kalyanakrishnan et al. \cite{DBLP:conf/icml/KalyanakrishnanTAS12} propose a concrete instantiation:
+\[\beta(l) = \]
+
+\begin{algorithm}[H]
+    \caption{Given a prior $\Pi_n$ in step $n$}
+    \label{alg:LUCB1}
+  \begin{algorithmic}
+    \State Play $l_n$, observe reward and update priors
+    \State Sample each arm once
+    \Repeat
+      \State Compute $Top(t), Bottom(t), h_*^t, l_*^t$
+      \State Sample $h_*^t$ and $l_*^t$
+      \State Update $\hat{\mu}_t$ and confidence bounds
+    \Until{$ \mu < \epsilon$}
+  \end{algorithmic}
+\end{algorithm}
+
+
+\subsubsection{Confidence estimation 1}
+\subsubsection{Confidence estimation 2}
+\subsubsection{Confidence estimation 3}
