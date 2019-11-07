@@ -1,4 +1,4 @@
-\chapter{The Constrained Optimal Top-$m$ Allocation}
+\chapter{The Constrained Optimal Top-$m$ Allocation}\label{chapter:optimal}
 
 TODO: Talk about limitations on distributions.
 
@@ -177,7 +177,7 @@ both constrained and unconstrained for two top-$m$ identification scenarios.
 Hence given, the true means $\theta^*$, we seek to determine $\psi^*$ and
 $\psi^{\frac{1}{2}*}$. Relying on \eqref{eq:condition_C}, we have a massively
 over-determined system of equations. The latter can be approximately solved by
-numerical methods, in our case least squares minimization.
+numerical methods, in our case non-linear least squares minimization.
 
 For this concrete example, we assume arm rewards to follow Bernoulli
 distributions with means $\theta^1$ and $\theta^2$ respectively. Thanks to this
@@ -192,7 +192,7 @@ for each scenario. The results were produced for a top-4 scenario with
       .575,\ .6}_\text{$S^*$}]$
 \end{itemize}
 
-The unconstrained case on a linear scale of \Cref{fig:optimal_allocation}  might
+The unconstrained case on a linear scale of \Cref{fig:optimal_allocation} might
 surprise with a lack of symmetry between the measurement effort put on the best
 suboptimal arm and the worst optimal arm. The log scales paint a more intuitive,
 symmetric picture.

@@ -1,4 +1,4 @@
-\chapter{Background}
+\chapter{Background}\label{chapter:background}
 
 \section{Chernoff's 2-player game}
 Tbd whether relevant.
@@ -65,10 +65,10 @@ $\theta$ or $S \subset [k]$ top-$m$ under $\theta$. Hence we group such $\theta$
 in the following way:
 \begin{align}
   \Theta &:= [0, 1]^k \\
-  \Theta_{1, l} &:= \{\theta \in \Theta | l = \argmax_{l' \in [k]}
+  \Theta_{1, l} :&= \{\theta \in \Theta | l = \argmax_{l' \in [k]}
       \theta_{l'}\} \\
-  \Theta_{m, l} &= \{\theta \in \Theta | l \in \text{ top-}m(\theta)\} \\
-  \Theta_S &:= \{\theta \in \Theta | S = \text{top-}m(\theta)\} \\
+  \Theta_{m, l} :&= \{\theta \in \Theta | l \in \text{ top-}m(\theta)\} \\
+  \Theta_S :&= \{\theta \in \Theta | S = \text{top-}m(\theta)\} \\
     &= \{ \theta \in \Theta| \min_{j_1 \in S}\ \theta_{j_1} > \max_{j_2 \notin
       S}\ \theta_{j_2}\}
 \end{align}
@@ -219,7 +219,6 @@ Real-world applications of Best Arm identification include:
   environment.
 \end{itemize}
 
-"ML: drive generation of own data instead of" -> it is about acquisition
 
 \subsection{Optimal allocation}\label{subsection:optimal_allocation}
 % What is the overall goal?
