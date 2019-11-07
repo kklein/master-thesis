@@ -352,10 +352,6 @@ observations follow 1-dimensional distributions belonging to the family of
 exponential distributions. Moreover, he allows priors that are non-conjugate to
 the posteriors.
 
-\subsection{Alternative approaches}
-What are alternative approaches to Russo's?
-How do they compare against Russo's?
-
 \section{Top-$m$ arm identification}
 % What is the problem?
 % Why is it relevant compared to Top-1?
@@ -368,38 +364,39 @@ Applications of top-$m$ arm identification are similar to those mentioned in
 \ref{ss:top-1_model}. Natural explications for desiring the identification $m$
 instead of a single high-quality option can be diversification or regulation.
 
-\subsection{Current approaches: LUCB}
-How are those methods evaluated?
-What are possible qualitative shortcomings of those methods?
-What are possible quantitative shortcomings of those methods?
+\subsection{A common approach: LUCB}
+The general Lower Upper Confidence Bound algorithm is a common approach for
+top-$m$ arm identification and typically evaluated in the PAC setting. It can be
+seen in \Cref{alg:LUCB}.
 
-The general Lower Upper Confidence Bound algorithm can be seen in
-\Cref{alg:LUCB1}. For every arm $l$, an empirical mean $\hat{\mu}_l^t$ is kept
-and updated after each sample. The overall idea is to compute a confidence bound
-for every arm, in every step. Per round, arms are separated into two sets: the
-arms with the $m$ best empirical means, $Top(t)$ and the rest, $Bottom(t)$. The
-arm with the lowest lower confidence bound from $Top(t)$ and the arm with the
-hightest upper confidence bound from $Bottom(t)$ are sampled and all information
-updated. The algorithm stops once its stopping criterion is met. The confidence
-bound of an arm $l$ equals $(\hat{\mu}_l^t - \beta(l), \hat{\mu}_l^t +
-\beta(l))$. Kalyanakrishnan et al. \cite{DBLP:conf/icml/KalyanakrishnanTAS12}
-propose a concrete instantiation:
-\[\beta(l) = \]
+For every arm $l$, an empirical mean $\hat{\mu}_l$ is kept and updated after
+each sample. The overall idea is to compute a confidence bound for every arm, in
+every step. Per round, arms are separated into two sets: the arms with the $m$
+best empirical means, $Top(t)$ and the rest, $Bottom(t)$. The arm with the
+lowest lower confidence bound from $Top(t)$ and the arm with the hightest upper
+confidence bound from $Bottom(t)$ are sampled and all information updated. We
+refer to those arms as $tl$ and $bu$ respectively. The algorithm stops once
+its stopping criterion is met. The confidence bound of an arm $l$ in a given
+step equals $(\hat{\mu}_l - \beta(l), \hat{\mu}_l + \beta(l))$.
+Kalyanakrishnan et al. \cite{DBLP:conf/icml/KalyanakrishnanTAS12} propose a
+concrete instantiation by defining the estimation of the confidence bound and
+stopping crierion:
+\begin{align}
+  \beta(l) &= \sqrt{\frac{1}{2c_l}\ln\frac{knt^4}{\delta}} \\
+  \xi &= (\hat{\mu}_{bu} + \beta(bu) - (\hat{\mu}_{tl} - \beta(tl))
+\end{align}
+with constant $k=\frac{5}{4}$, $c_l$ the number of times arm $l$ has been
+sampled and $t$ the number of steps completed so far.
 \begin{algorithm}[H]
-    \caption{TODO}
-    \label{alg:LUCB1}
+    \caption{Given prior means}
+    \label{alg:LUCB}
   \begin{algorithmic}
-    \State Play $l_n$, observe reward and update priors
     \State Sample each arm once
+    \State Update $\hat{\mu}$ and confidence bounds
     \Repeat
-      \State Compute $Top(t), Bottom(t), h_*^t, l_*^t$
-      \State Sample $h_*^t$ and $l_*^t$
-      \State Update $\hat{\mu}_t$ and confidence bounds
-    \Until{$ \mu < \epsilon$}
+      \State Compute $Top(t), Bottom(t), tl, bu$
+      \State Sample $tl$ and $bu$
+      \State Update $\hat{\mu}$ and confidence bounds
+    \Until{$\xi < \epsilon$}
   \end{algorithmic}
 \end{algorithm}
-
-
-\subsubsection{Confidence estimation 1}
-\subsubsection{Confidence estimation 2}
-\subsubsection{Confidence estimation 3}
