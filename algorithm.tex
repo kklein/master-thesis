@@ -12,10 +12,12 @@ properties of the algorithm. In particular it presents bounds on the measurement
 plan, states general consequences of finite measurement and discusses
 implications of underallocation and overallocation. We firmly believe that all
 of those are very useful to show that this algorithm's measurement plan
-converges to the optimal constrained measurement plan $\psi^{\frac{1}{2}*}$.
-Proofs for those statements are provided in \Cref{section:txts_proofs}.
-Additionally, we provide some empirical results in
-\Cref{section:empirical_behavior}.
+converges to the optimal constrained measurement plan $\psi^{\frac{1}{2}*}$. We
+emphasize that this is an \emph{adaptive} algorithm, in stark contrast to the
+fixed, optimal allocation $\psi^{\frac{1}{2}*}$. In other words, instead of only
+$\psi$ influencing $\Pi_n$, they now both influence each other. Proofs for those
+statements are provided in \Cref{section:txts_proofs}. Additionally, we provide
+some empirical results in \Cref{section:empirical_behavior}.
 
 \section{Algorithm}\label{section:algorithm}
 As a generalization of Russo's TTTS, the main difference lies in the fact that
@@ -59,17 +61,17 @@ estimated by drawing samples from $\Pi_n$ and identifying for which set $S$ the
 fraction $\frac{\text{\# samples in which $S$ is optimal}}{\#samples}$ is
 largest. The fraction of this $S$ approximates the confidence level.
 \begin{algorithm}[H]
-  \caption{Given a posterior $\Pi_n$ in step $n+1$}
+  \caption{Given a posterior $\Pi_{n-1}$ in step $n$}
   \label{alg:TXTS}
   \begin{algorithmic}
-    \State $\hat{\theta} \sim \Pi_n$
+    \State $\hat{\theta} \sim \Pi_{n-1}$
     \State $S_1 =$ top-$m(\hat{\theta})$
     \Repeat
-      \State $\hat{\theta} \sim \Pi_n$
+      \State $\hat{\theta} \sim \Pi_{n-1}$
       \State $S_2 = $ top-$m(\hat{\theta})$
     \Until{$S_1 \neq S_2$}
-    \State $I_{n+1} \sim \mathcal{U}(S_1 \oplus S_2)$
-    \State Play $I_{n+1}$, observe reward and update posterior
+    \State $I_n \sim \mathcal{U}(S_1 \oplus S_2)$
+    \State Play $I_n$, observe reward and update posterior
   \end{algorithmic}
 \end{algorithm}
 We expect this algorithm to induce a measurement plan $\psi$ such that
@@ -486,7 +488,7 @@ as described in \Cref{section:concrete_optimal_allocation}.
         &\geq \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}} \frac{1 -
             \alpha_{n, j}}{1 - \alpha_{n, S^*}} \\
         &= \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}}
-            \frac{\Pi_n(\Theta_j^c)}{\Pi_n(\Theta_{S^*}^c)} \\
+            \frac{\Pi_n(\Theta_{m, j}^c)}{\Pi_n(\Theta_{S^*}^c)} \\
         &= \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}} \frac{\exp\{-n
             \min_{i \notin S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) \}}{\exp\{-
             n \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\bar{\psi}_j,

@@ -3,17 +3,43 @@
 TODO: Talk about limitations on distributions.
 
 %What does it mean to be optimal?
-Analogously to \ref{subsection:optimal_allocation}, we define the optimal top-$m$ allocation by its convergence rate of the posterior mass put on parameters reflecting the true top-$m$ arms $\Pi_n(\Theta_{m, S^*})$. Moreover, just as in Russo's top-1 case, the algorithm we will propose introduces a constraint. We will also put the optimal allocation under that constraint with the idea being that this is but a hyperparameter that can be optimized over.
+Analogously to \ref{subsection:optimal_allocation}, we define the optimal
+top-$m$ allocation by its convergence rate of the posterior mass put on
+parameters reflecting the true top-$m$ arms $\Pi_n(\Theta_{S^*})$. This, too can
+be thought of as a thought experiment of convincing an adversary by relying on
+knowledge of the true means.  Moreover, just as in Russo's top-1 case, the
+algorithm we will propose introduces a constraint. We will also put the optimal
+allocation under that constraint with the idea being that this is but a
+hyperparameter that can be optimized over. In other words: the best
+unconstrained allocation is the best constrained allocation with optimal
+hyperparameter.
 
-In \Cref{section:optimal_statements} we first introduce some of Russo's results that also apply in our scenario. Then we will introduce some general properties, followed by a complete characterization of the optimal allocation. Moreover, we will show an example of a concrete optimal allocation in \Cref{section:concrete_optimal_allocation}. Proofs of the statements are from \Cref{section:optimal_statements} are provided in \Cref{section:optimal_proofs}. We finish the chapter with \Cref{section:optimality_sufficient_condition}, a presenting a condition on adaptive allocations, which is sufficient to show convergence to the optimal allocation.
+In \Cref{section:optimal_statements} we first introduce some of Russo's results
+that also apply in our scenario. Then we will introduce some general properties,
+followed by a complete characterization of the optimal allocation. Moreover, we
+will show an example of a concrete optimal allocation in
+\Cref{section:concrete_optimal_allocation}. Proofs of the statements from
+\Cref{section:optimal_statements} are provided in \Cref{section:optimal_proofs}.
+We finish the chapter with \Cref{section:optimality_sufficient_condition}, a
+presenting a condition on adaptive allocations, which is sufficient to show
+convergence to the optimal allocation.
 
-Overall we hope to convince the reader that the characterization results portrayed in this chapter make for a natural generalization of Russo's top-1 case. The guiding theme will be that instead of comparing the best arm $l^*$ to a suboptimal arm in order to identify the one it is hardest to distinguish from it, we will compare the a pairs of optimal and suboptimal arms in order to find to the pair that is the hardest to distinguish. Note that again, distinction revolves around two factors: the frequency with which an arm has been sampled, $\bar{\psi}_{n, l}$, as well as the proximity of its true mean, i.e. comparing $\theta^*_l$.
+Overall we hope to convince the reader that the characterization results
+portrayed in this chapter make for a natural generalization of Russo's top-1
+case. In the top-1 case, Russo implied comparing the best arm $l^*$ to a
+suboptimal arm in order to identify the one it is hardest to distinguish from
+it. Our guiding theme, on the other hand, will be to compare the a pairs of
+optimal and suboptimal arms in order to find to the pair that is the hardest to
+distinguish. Note that again, distinction revolves around two factors: the
+frequency with which an arm has been sampled, $\bar{\psi}_{n, l}$, as well as
+the proximity of its true mean, i.e. comparing $\theta^*_l$.
 
 Throughout this whole chapter we will assume that every true mean is unique, i.e.
 \begin{align}
   \forall l_1, l_2 \in [k]: l_1 \neq l_2 \Rightarrow \theta^*_{l_1} \neq \theta^*_{l_2}
 \end{align}
-
+and as previously mentioned that the underlying true means follow distributions
+belonging to the family of exponential distributions.
 %%%%%%
 % Statements
 %How can C be interpreted?
@@ -26,7 +52,7 @@ Throughout this whole chapter we will assume that every true mean is unique, i.e
 TODO: How would the results look like without the relaxation from $theta_i$ to $bar_theta_i$?
 TODO: Could everything be done with j instead of i?
 
-\section{Characterizing the optimal allocation}\label{section:optimal_statements}
+\section{Characterization statements}\label{section:optimal_statements}
 Russo proves a proposition about the posterior convergence rate of general parameter sets $\tilde{\Theta}$.
 
 \begin{proposition}[Russo: Proposition 5]\label{proposition:prop5}
@@ -34,29 +60,41 @@ Russo proves a proposition about the posterior convergence rate of general param
   \[\Pi_n(\tilde{\Theta}) \deq \exp\{-n \inf_{\theta \in \tilde{\Theta}} \sum_{l \in [k]} \bar{\psi}_{n, l} d(\theta^*_l || \theta_l)\}\]
 \end{proposition}
 
-This proposition already sets the tone by expressing that the posterior of a set depends on a property of a single contained element $\theta$. The property in question is how hard it is to distinguish $\theta$ from the truth $\theta^*$.
+This proposition already sets the tone by expressing that the posterior of a set
+depends on a property of a single contained element $\theta$. The property in
+question is how hard it is to distinguish $\theta$ from the truth $\theta^*$. As
+we've stressed, the optimal allocation $\psi^*$ is non-adaptive and fixed over
+time. Thereby the average allocation $\bar{\psi}^*$ corresponds to
+$\psi^*$.
 
-As mentioned before, we seek to analyze how fast $\Theta_{S^*}$ converges to 1. Clearly we have $\Theta_{S^*} = \Theta - \Theta_{S^*}^c$. Hence instead of analyzing the rate of convergence of $\Pi_n(\Theta_{S^*})$ to 1, we can analyze the rate of convergence of $\Pi(\Theta_{S^*}^c)$ to 0.
+As mentioned before, we seek to analyze how fast $\Pi_n(\Theta_{S^*})$ converges
+to 1. Clearly we have $\Theta_{S^*} = \Theta - \Theta_{S^*}^c$. Hence instead of
+analyzing the rate of convergence of $\Pi_n(\Theta_{S^*})$ to 1, we can analyze
+the rate of convergence of $\Pi(\Theta_{S^*}^c)$ to 0.
 
-Instead of analyzing $\Pi_n(\Theta_{m, S^*}^c)$ directly, we express it with via $\Theta_{m, l}$ and its relaxation $\bar{\Theta}_i$. Intuitively, $\bar{\Theta}_i$ is the set of parameters under which $i$ proves that $S^*$ is not optimal.
+Instead of analyzing $\Pi_n(\Theta_{S^*}^c)$ directly, we express it via
+$\Theta_{m, l}$ and its relaxation $\bar{\Theta}_i$. Intuitively,
+$\bar{\Theta}_i$ is the set of parameters under which $i$ proves that $S^*$ is
+not optimal.
 \begin{align}
     \bar{\Theta}_i &= \{ \theta \in \Theta | \text{top-}m(\theta, S^* \cup \{i\}) \neq S^*\}
 \end{align}
-Observe that we have $\bar{\Theta}_i \supsetneq \Theta_i$. Moreover we present a useful relationship between $\Theta_{m, S^*}^c$ and $\bar{\Theta}_i$:
+Observe that we have $\bar{\Theta}_i \supsetneq \Theta_{m, i}$. Moreover we present a useful relationship between $\Theta_{S^*}^c$ and $\bar{\Theta}_i$:
 \begin{lemma}\label{lemma:set_relation_S*_i}
-  \[\Theta_{m, S^*}^c = \bigcup_{i \notin S^*} \bar{\Theta}_i = \Theta - \bigcap_{j \in S^*} \Theta_j\]
+  \[\Theta_{S^*}^c = \bigcup_{i \notin S^*} \bar{\Theta}_i = \Theta - \bigcap_{j \in S^*} \Theta_{m, j}\]
 \end{lemma}
-Leveraging this relationship of the sets allows us to bridge the gap between the posterior of $\Theta_{m, S^*}^c$ and the posterior of individual sets $\bar{\Theta}_i$. Note the transition from a union of sets to a minimum over sets permitted by the usage of the $\deq$ relation, as shown in \Cref{lemma:posterior_S*_i}.
+Leveraging this relationship of the sets allows us to bridge the gap between the posterior of $\Theta_{S^*}^c$ and the posterior of individual sets $\bar{\Theta}_i$. Note the transition from a union of sets to a minimum over sets permitted by the usage of the $\deq$ relation, as shown in \Cref{lemma:posterior_S*_i}.
 \begin{lemma}\label{lemma:posterior_S*_i} If $\alpha_{n, S^*} \rightarrow 1$, then
   \begin{align}
-    \Pi_n(\Theta_{m, S^*}^c) \deq \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i) \deq 1 - \min_{j \in S^*} \Pi_n(\Theta_j)
+    \Pi_n(\Theta_{S^*}^c) \deq \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i) \deq 1 - \min_{j \in S^*} \Pi_n(\Theta_{m, j})
   \end{align}
 \end{lemma}
 
 Plugging $\bar{\Theta}_i$ into \Cref{proposition:prop5} leaves us with a sum of KL divergences. We seek to simplify this sum to individual terms just after defining:
 \begin{align}
-  C_{j, i}(\psi_j,\psi_i) &=  \min_{x \in \mathbb{R}} \psi_j d(\theta^*_{j} || x) + \psi_i d(\theta_{i}^* ||x) \label{eq:C}
+  C_{j, i}(p_1, p_2) &= \min_{x \in \mathbb{R}} p_1 d(\theta^*_{j} || x) + p_2 d(\theta_{i}^* ||x) \label{eq:C}
 \end{align}
+Usually we will encounter $C_{j, i}$ with its firs argument being the measurement plan for arm $j$, $\psi_j$ and its second argument being the measurement plan for arm $i$, $\psi_i$.
 TODO: Talk about player scenario?
 
 In particular, $C_{j, i}$ can be thought of as evidence that $j$ is distinct from $i$. Quite naturally, we want this evidence to be as large as possible for every pair $(j, i) \in S^* \times {S^*}^c$.
@@ -72,12 +110,12 @@ Intuitively, this lemma tells us that for parameters in $\Bar{\Theta}_i$ the wei
 
 We can apply those statements to the quantity we care about: the mass the posterior puts on the complement of parameters reflecting the true top-$m$ arms, $\Theta_{S^*}^c$.
 
-For a given allocation $\psi$, we have:
+For a given fixed allocation $\psi$, we have:
 \begin{align}
   \Pi_n(\Theta_{S^*}^c) &\deq \max_{i \notin S^*}\Pi_n(\bar{\Theta}_i) \text{ (\Cref{lemma:posterior_S*_i})}\\
-    &\deq \max_{i \notin S^*} \exp\{-n\inf_{\theta \in \bar{\Theta}_i} \sum_{l \in [k]} \bar{\psi}_{n, l} d(\theta^*_l || \theta_l)\} \text{ (\Cref{proposition:prop5})} \\
-    &= \max_{i \notin S^*} \exp\{-n \min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)\} \text{ (\Cref{lemma:kl_to_C})} \\
-    &= \exp\{-n \min_{i \notin S^*}\min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)\} \label{eq:posterior}
+    &\deq \max_{i \notin S^*} \exp\{-n\inf_{\theta \in \bar{\Theta}_i} \sum_{l \in [k]} \psi_{n, l} d(\theta^*_l || \theta_l)\} \text{ (\Cref{proposition:prop5})} \\
+    &= \max_{i \notin S^*} \exp\{-n \min_{j \in S^*} C_{j, i}(\bar{\psi_j}, \bar{\psi_i})\} \text{ (\Cref{lemma:kl_to_C})} \\
+    &= \exp\{-n \min_{i \notin S^*}\min_{j \in S^*} C_{j, i}(\bar{\psi_j}, \bar{\psi_i})\} \label{eq:posterior}
 \end{align}
 In other words, the rate at which the posterior converges to the truth with increasing number of samples is defined by the pair of optimal and suboptimal arms for which the least evidence exists.
 
@@ -98,17 +136,23 @@ Our proposed algorithm will always allocate $\frac{1}{2}$ of its samples to arms
   \psi^{\frac{1}{2}*} &= \argmax_{\psi: \psi_{S^*}=\frac{1}{2}} \min_{i \notin S^*}\min_{j \in S^*} C_{j, i}(\psi_j, \psi_i) \label{eq:constrained_optimal_psi}\\
   \Gamma^{\frac{1}{2}*} &= \max_{\psi, \psi_{S^*} = \frac{1}{2}} \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\psi_j, \psi_i) \label{eq:constrained_optimal_gamma}
 \end{align}
-Hence we have established the optimal constrained rate of convergence $\Gamma^{\frac{1}{2}*}$ of the optimal constrained allocation $\psi^{\frac{1}{2}*}$ by making a link to the minimization over $C_{j, i}$ . We seek to further characterize $\psi^{\frac{1}{2}*}$ by relying on the same maxim as in Russo's scenario: we expect the measurement plan to collect \emph{equal evidence}, not \emph{equal measurement} for every arm. Hence in \Cref{proposition:characterization} we will show that the optimal measurement plan will fulfill \Cref{eq:condition_C}. Before doing so, we set the stage by enunciating two properties of $C_{j, i}$.
+Hence we have established the optimal constrained rate of convergence $\Gamma^{\frac{1}{2}*}$ of the optimal constrained allocation $\psi^{\frac{1}{2}*}$ by making a link to the minimization over $C_{j, i}$ . We seek to further characterize $\psi^{\frac{1}{2}*}$ by relying on the same maxim as in Russo's scenario: we expect the measurement plan to collect \emph{equal evidence}, not \emph{equal measurement} for every arm. Hence in \Cref{proposition:characterization} we will show that the optimal measurement plan will fulfill \Cref{eq:condition_C}. Before doing so, we set the stage by enunciating three properties of $C_{j, i}$: concavity, existence of a unique solution $x$ and strict monotonicity.
 
 \begin{lemma}\label{lemma:C_concave}
   Each $\min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)$ is a concave function.
 \end{lemma}
 
 \begin{lemma}\label{lemma:C_unique_solution}
-  Given a $j \in S^*$, the solution to the minimization problem \eqref{eq:C} in $x$ is $\bar{\theta} \in \mathbb{R}$, satisfying:
-  \[A'(\bar{\theta}) = \frac{\psi_j A'(\theta_j^*) + \psi_i A'(\theta_i^*)}{\psi_j + \psi_i}\]
-  where $A'(\theta)$ is the mean observation under $\theta$. Therefore
-  \[C_{j, i}(\psi_j, \psi_i) = \psi_j d(\theta^*_j || \bar{\theta}) + \psi_i d(\theta^*_i || \bar{\theta})\]
+  Assume $A'(\theta)$ to be the mean observation under $\theta$. Given a $j \in S^*$, the solution to the minimization problem \eqref{eq:C} in $x$ is $\bar{\theta} \in \mathbb{R}$, satisfying:
+  \begin{align}
+    A'(\bar{\theta}) = \frac{\psi_j A'(\theta_j^*) + \psi_i
+        A'(\theta_i^*)}{\psi_j + \psi_i}
+  \end{align}
+  Therefore
+  \begin{align}
+    C_{j, i}(\psi_j, \psi_i) = \psi_j d(\theta^*_j || \bar{\theta}) + \psi_i
+        d(\theta^*_i || \bar{\theta})
+  \end{align}
 \end{lemma}
 
 \begin{lemma}\label{lemma:C_strictly_increasing}
@@ -127,17 +171,35 @@ Hence we have established the optimal constrained rate of convergence $\Gamma^{\
   almost surely.
 \end{proposition}
 
-\section{A Concrete Optimal Allocation}\label{section:concrete_optimal_allocation}
-For the sake of concreteness, we present numeric values of optimal allocations, both constrained and unconstrained for two top-$m$ identification scenarios.
-Hence given, the true means $\theta^*$, we seek to determine $\psi^{\frac{1}{2}*}$ and $\psi^{\frac{1}{2}*}$. Relying on \eqref{eq:condition_C}, we have a massively over-determined system of equations. The latter can be approximately solved by numerical methods, in our case least squares minimization.
+\section{A concrete optimal allocation}\label{section:concrete_optimal_allocation}
+For the sake of concreteness, we present numeric values of optimal allocations,
+both constrained and unconstrained for two top-$m$ identification scenarios.
+Hence given, the true means $\theta^*$, we seek to determine $\psi^*$ and
+$\psi^{\frac{1}{2}*}$. Relying on \eqref{eq:condition_C}, we have a massively
+over-determined system of equations. The latter can be approximately solved by
+numerical methods, in our case least squares minimization.
 
-For this concrete example, we assume arm rewards to follow Bernoulli distributions with means $\theta^1$ and $\theta^2$ respectively. Thanks to this assumption, the KL divergences can be minimized analytically with great convenience. We refer to \Cref{section:bernoulli_c} for greater details. \Cref{fig:optimal_allocation} indicates the probability mass put onto each arm for each scenario. The results were produced for a top-4 scenario with
+For this concrete example, we assume arm rewards to follow Bernoulli
+distributions with means $\theta^1$ and $\theta^2$ respectively. Thanks to this
+assumption, the KL divergences can be minimized analytically with great
+convenience. We refer to \Cref{section:bernoulli_c} for greater details.
+\Cref{fig:optimal_allocation} indicates the probability mass put onto each arm
+for each scenario. The results were produced for a top-4 scenario with
 \begin{itemize}
-  \item $\theta^1 = [.1,\ .2,\ .3,\ .4,\ .5,\ \underbrace{.6,\ .7,\ .8,\ .9}_\text{$S^*$}]$
-  \item $\theta^2 = [.4,\ .425,\ .45,\ .475,\ .5,\ \underbrace{.525,\ .55,\ .575,\ .6}_\text{$S^*$}]$
+  \item $\theta^1 = [.1,\ .2,\ .3,\ .4,\ .5,\ \underbrace{.6,\ .7,\ .8,\
+      .9}_\text{$S^*$}]$
+  \item $\theta^2 = [.4,\ .425,\ .45,\ .475,\ .5,\ \underbrace{.525,\ .55,\
+      .575,\ .6}_\text{$S^*$}]$
 \end{itemize}
 
-For further details regrading the simulation implementation we refer to the code in our repository \footnote{\url{https://github.com/kkleindev/ttts/compute_optimal_allocation.py}}.
+The unconstrained case on a linear scale of \Cref{fig:optimal_allocation}  might
+surprise with a lack of symmetry between the measurement effort put on the best
+suboptimal arm and the worst optimal arm. The log scales paint a more intuitive,
+symmetric picture.
+
+For further details regarding the simulation implementation we refer to the code
+in our repository
+\footnote{\url{https://github.com/kkleindev/ttts/compute_optimal_allocation.py}}.
 
 \begin{figure}[h]
   \centering
@@ -146,37 +208,48 @@ For further details regrading the simulation implementation we refer to the code
   \label{fig:optimal_allocation}
 \end{figure}
 
-TODO: Propose an intuition why the concentration is so high in unconstrained scenario.
+\section{A sufficient condition for
+    optimality}\label{section:optimality_sufficient_condition}
+This sufficient condition for convergence towards the optimal allocation is
+centered around observing consequences of overallocation. Note that whenever an
+allocation is different from the optimal allocation, this implies both over- and
+underallocation. We focus on the statement for overallocation, yet an analogous
+statement for underallocation should be possible.
 
-\section{A sufficient condition for optimality}\label{section:optimality_sufficient_condition}
-This sufficient condition for convergence towards the optimal allocation is centered around observing consequences of overallocation. Note that whenever an allocation is different from the optimal allocation, this implies both over- and underallocation. We focus on the statement for overallocation, yet an analogous statement for underallocation should be possible.
-
-In particular, the statement expresses that if an arm $l$ has been over-allocated so far, indicated by a $\bar{\psi}_{n, l}$ larger than $\psi^{\frac{1}{2}*}_l$, this over-allocation will be corrected. In this case, correction means that its likelihood of being sampled in the next and round, $\psi_{n, l}$ is very low. The intuition of the whole statement being that if all overallocation is corrected for, then consequently all underallocation is corrected for as well, by the fact that $\psi$ is a probability distribution.
+In particular, the statement expresses that if an arm $l$ has been
+over-allocated so far, indicated by a $\bar{\psi}_{n, l}$ larger than
+$\psi^{\frac{1}{2}*}_l$, this over-allocation will be corrected. In this case,
+correction means that its likelihood of being sampled in the next and round,
+$\psi_{n, l}$ is very low. The intuition of the whole statement being that if
+all overallocation is corrected for, then consequently all underallocation is
+corrected for as well, by the fact that $\psi$ is a probability distribution.
 \begin{proposition}\label{proposition:optimality_sufficient_condition}
   If
   \begin{align}
-    \forall l \in [k], \delta > 0: \sum_{n \in \mathbb{N}} \psi_{n, l} \mathbb{I}[\bar{\psi}_{n, l} \geq \psi^*_l + \delta] < \infty \label{eq:sufficient_condition}
+    \forall l \in [k], \delta > 0: \sum_{n \in \mathbb{N}} \psi_{n, l}
+        \mathbb{I}[\bar{\psi}_{n, l} \geq \psi^*_l + \delta] < \infty
+        \label{eq:sufficient_condition}
   \end{align}
   then $\bar{\psi}_{n} \rightarrow \psi^*$.
 \end{proposition}
 
 \section{Proofs}\label{section:optimal_proofs}
 \begin{proof}[\Cref{lemma:set_relation_S*_i}]
-  We first show the relationship between $\Theta_{S^*}^c$ and sets $\bar{\Theta}_i$ and then show the relationship between $\Theta_{S^*}^c$ and $\Theta_j$.
+  We first show the relationship between $\Theta_{S^*}^c$ and sets $\bar{\Theta}_i$ and then show the relationship between $\Theta_{S^*}^c$ and $\Theta_{m, j}$.
   \begin{align}
-    \Theta_{m, S^*}^c &= \{\theta \in \Theta | \min_{j \in S^*} \theta_j > \max_{i \notin S^*} \theta_i \}^c \\
+    \Theta_{S^*}^c &= \{\theta \in \Theta | \min_{j \in S^*} \theta_j > \max_{i \notin S^*} \theta_i \}^c \\
     &= \{\theta \in \Theta | \max_{i \notin S^*} \theta_i \geq \min_{j \in S^*} \theta_j\} \\
     &= \{\theta \in \Theta | \exists i \notin S^*: \theta_i \geq \min_{j \in S^*} \theta_j\} \\
     &= \{\theta \in \Theta | \exists i \notin S^*: \text{top-}m(\theta, S^* \cup \{i\}) \neq S^*\} \\
     &= \bigcup_{i \notin S^*} \{\theta \in \Theta | \text{top-}m(\theta, S^* \cup \{i\}) \neq S^*\} \\
     &= \bigcup_{i \notin S^*} \bar{\Theta}_i \\
-    \Theta_{m, S^*} &= \{\theta \in \Theta | \min_{j \in S^*} \theta_j > \max_{j \in S^*} \theta_j\} \\
+    \Theta_{S^*} &= \{\theta \in \Theta | \min_{j \in S^*} \theta_j > \max_{j \in S^*} \theta_j\} \\
     &= \{\theta \in \Theta | \bigwedge_{j \in S^*} \theta_j > \max_{j \in S^*} \theta_j\} \\
     &= \bigcap_{j \in S^*} \{\theta \in \Theta | \theta_j > \max_{j \in S^*} \theta_j\} \\
     &= \bigcap_{j \in S^*} \{\theta \in \Theta | j \in \text{top-}m(\theta, [k])\} \\
-    &= \bigcap_{j \in S^*} \Theta_j \\
-    \Theta_{m, S^*}^c &= \Theta - \Theta_{m, S^*}\\
-    \Theta_{m, S^*}^c &= \Theta - \bigcap_{j \in S^*} \Theta_j
+    &= \bigcap_{j \in S^*} \Theta_{m, j} \\
+    \Theta_{S^*}^c &= \Theta - \Theta_{S^*}\\
+    \Theta_{S^*}^c &= \Theta - \bigcap_{j \in S^*} \Theta_{m, j}
   \end{align}
 \end{proof}
 
@@ -185,40 +258,51 @@ In particular, the statement expresses that if an arm $l$ has been over-allocate
 
   The union from \Cref{lemma:set_relation_S*_i} has an additive effect with respect to the probability distribution $\Pi_n$. There are $k-m$ possible $i$s and each single one leads to a set, whose density is bounded by the maximal density of all such sets. This gives us:
   \begin{align}
-    \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i) \leq \Pi_n(\Theta_{m, S^*}^c) \leq (k-m) \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)
+    \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i) \leq \Pi_n(\Theta_{S^*}^c) \leq (k-m) \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)
   \end{align}
   We use the definition of $\deq$ to compare lower bound and upper bound.
   \begin{align}
     \lim_{n \rightarrow \infty} \frac{1}{n} \log{\frac{\max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)}{(k-m)\max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)}}
     = \lim_{n \rightarrow \infty} \frac{1}{n} \log{\frac{1}{k-m}} \rightarrow 0
   \end{align}
-  Thanks to the lower and upper bound being 'equal' in the $\deq$ sense, we can apply the squeeze theorem. We obtain the desired result:
+  Thanks to the lower and upper bound being 'equal' in the $\deq$ sense, we can apply the Squeeze theorem\footnote{Also referred to as Sandwich teorem}. We obtain the desired result:
   \begin{align}
-    \Pi_n(\Theta_{m, S^*}^c) \deq \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)
+    \Pi_n(\Theta_{S^*}^c) \deq \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)
   \end{align}
   For $j \in S^*$, we follow a very similary path by first leveraging the set equality from \Cref{lemma:set_relation_S*_i}. Instead of a union, as was the case for $i \in S^*$, we are now confronted with an intersection. This implies a multiplicative effect on the distribution $\Pi_n$ instead of an additive one.
   \begin{align}
-    &1 - \min_{j \in S^*} \Pi(\Theta_j) \leq \Pi(\Theta_{m, S^*}^c) \leq 1 - \min_{j \in S^*} (\Pi(\Theta_j))^m \\
+    &1 - \min_{j \in S^*} \Pi(\Theta_{m, j}) \leq \Pi(\Theta_{S^*}^c) \leq 1 - \min_{j \in S^*} (\Pi(\Theta_{m, j}))^m \\
   \end{align}
   Again, we will compare upper and lower bound in the $\deq$ sense.
   \begin{align}
-    &\lim_{n \rightarrow \infty} \frac{1}{n} \log(\frac{\min_{j \in S^*} \Pi(\Theta_j)}{\min_{j \in S^*} (\Pi(\Theta_j))^m}) = \lim_{n \rightarrow \infty} \frac{-(m - 1)}{n} \log(\min_{j \in S^*} \Pi(\Theta_j))
+    &\lim_{n \rightarrow \infty} \frac{1}{n} \log(\frac{\min_{j \in S^*} \Pi(\Theta_{m, j})}{\min_{j \in S^*} (\Pi(\Theta_{m, j}))^m}) = \lim_{n \rightarrow \infty} \frac{-(m - 1)}{n} \log(\min_{j \in S^*} \Pi(\Theta_{m, j}))
   \end{align}
-  Observe that $1 \geq \min_{j \in S^*} \Pi(\Theta_j) \geq \alpha_{n, S^*} \rightarrow 1$. Hence the limit of the fraction goes to 0 and we have $\min_{j \in S^*} \Pi(\Theta_j) \deq \min_{j \in S^*} (\Pi(\Theta_j))^m$. Applying, by the Squeeze theorem it follows that
+  Observe that $1 \geq \min_{j \in S^*} \Pi(\Theta_{m, j}) \geq \alpha_{n, S^*} \rightarrow 1$. Hence the limit of the fraction goes to 0 and we have $\min_{j \in S^*} \Pi(\Theta_{m, j}) \deq \min_{j \in S^*} (\Pi(\Theta_{m, j}))^m$. Again, by the Squeeze theorem it follows that
   \begin{align}
-    \Pi_n(\Theta_{m, S^*}^c) \deq 1 - \min_{j \in S^*} \Pi_n(\Theta_j)
+    \Pi_n(\Theta_{S^*}^c) \deq 1 - \min_{j \in S^*} \Pi_n(\Theta_{m, j})
   \end{align}
 \end{proof}
 
+TODO: Explain why x can be scalar.
 \begin{proof}[\Cref{lemma:kl_to_C}]
   \begin{align}
-    \min_{\theta \in \bar{\Theta}_i} D_\psi(\theta^*||\theta) &= \min_{\theta \in \bar{\Theta}_i} \sum_{j=1}^k \psi_j d(\theta^*_j||\theta_j)\\
-    &= \min_{\theta \in \bar{\Theta}_i} \sum_{j\in S^*} \psi_{j}d(\theta^*_{j} || \theta_{j}) + \psi_{i}d(\theta_{i}^* || \theta_{i}) + \sum_{j \notin S^* \cup \{i\}} \psi_j d(\theta^*_j||\theta_j) \\
-    &= \min_{\theta \in \bar{\Theta}_i} \sum_{j\in S^*} \psi_{j}d(\theta^*_{j} || \theta_{j}) + \psi_{i}d(\theta_{i}^* || \theta_{i}) \label{eq: l2_1}\\
-    &= \min_{j\in S^*} \min_{\theta \in \bar{\Theta}_i} \psi_{j}d(\theta^*_{j} || \theta_{j}) + \psi_{i}d(\theta_{i}^* || \theta_{i}) \label{eq: l2_2}\\
-    &= \min_{j\in S^*} \min_{\theta \in \bar{\Theta}_i} \psi_{j}d(\theta^*_{j} || \theta_{j}) + \psi_{i}d(\theta_{i}^* || \theta_{j}) \label{eq: l2_3}\\
-    &= \min_{j\in S^*} \min_{x \in \mathbb{R}} \psi_{j}d(\theta^*_{j} || x) + \psi_{i}d(\theta_{i}^* ||x) \label{eq: l2_4}\\
-    &= \min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)
+    \min_{\theta \in \bar{\Theta}_i} \sum_{j=1}^k \psi_j d(\theta^*_j||\theta_j)
+      &= \min_{\theta \in \bar{\Theta}_i} \sum_{j\in S^*}
+          \psi_{j}d(\theta^*_{j} || \theta_{j}) + \psi_{i}d(\theta_{i}^* ||
+          \theta_{i}) + \sum_{j \notin S^* \cup \{i\}} \psi_j
+          d(\theta^*_j||\theta_j) \\
+      &= \min_{\theta \in \bar{\Theta}_i} \sum_{j\in S^*}
+          \psi_{j}d(\theta^*_{j} || \theta_{j}) + \psi_{i}d(\theta_{i}^* ||
+          \theta_{i}) \label{eq: l2_1}\\
+      &= \min_{j\in S^*} \min_{\theta \in \bar{\Theta}_i}
+          \psi_{j}d(\theta^*_{j} || \theta_{j}) + \psi_{i}d(\theta_{i}^* ||
+          \theta_{i}) \label{eq: l2_2}\\
+      &= \min_{j\in S^*} \min_{\theta \in \bar{\Theta}_i}
+          \psi_{j}d(\theta^*_{j} || \theta_{j}) + \psi_{i}d(\theta_{i}^* ||
+          \theta_{j}) \label{eq: l2_3}\\
+      &= \min_{j\in S^*} \min_{x \in \mathbb{R}} \psi_{j}d(\theta^*_{j} || x) +
+          \psi_{i}d(\theta_{i}^* ||x) \label{eq: l2_4}\\
+      &= \min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)
   \end{align}
   \eqref{eq: l2_1} follows from the fact that for any feasible $\theta$, we can define an alternative $\theta'$ s.t. $\theta'_i = \theta_i$, $\theta'_j = \theta_j$ for all $j \in S^*$ and $\theta'_{i_x} = \theta^*_{i_x}$ for all $i_x \notin S^* \cup \{i\}$. For such a $\theta'$, all terms involving $i_x \notin S^* \cup \{i\}$ are zero by the definition of the KL divergence while all others terms remain unchanged. Hence the minimum occurs with such a $\theta'$. Importantly, $\theta'$ remains feasible according to current definitions of $\bar{\Theta}_i$, i.e. $\theta' \in \bar{\Theta}_i$.
 
@@ -232,15 +316,26 @@ In particular, the statement expresses that if an arm $l$ has been over-allocate
 \begin{proof}[\Cref{lemma:C_concave}]
   For the sake of clarity, let us define
   \begin{align}
-    f(x, (\psi_j, \psi_i)) = \psi_j d(\theta_i^*||x) + \psi_i d(\theta_i^* || x)
+    f(x, (\psi_j, \psi_i)) = \psi_j d(\theta_j^*||x) + \psi_i d(\theta_i^* || x)
   \end{align}
   Note that $C_{j, i}(\psi_j, \psi_i) = min_{x \in \mathbb{R}} f(x,(\psi_j, \psi_i))$. Clearly, $f$ is linear in $(\psi_j, \psi_i)$. According to Boyd and Vandenberghe (3.2.5) \cite{Boyd:2004:CO:993483}, the minimum over a family of linear functions is concave.
 \end{proof}
 
+\textbf{\Cref{lemma:C_unique_solution}}
+Assume $A'(\theta)$ to be the mean observation under $\theta$. Given a $j \in S^*$, the solution to the minimization problem \eqref{eq:C} in $x$ is $\bar{\theta} \in \mathbb{R}$, satisfying:
+\begin{align}
+  A'(\bar{\theta}) = \frac{\psi_j A'(\theta_j^*) + \psi_i
+      A'(\theta_i^*)}{\psi_j + \psi_i}
+\end{align}
+Therefore
+\begin{align}
+  C_{j, i}(\psi_j, \psi_i) = \psi_j d(\theta^*_j || \bar{\theta}) + \psi_i
+      d(\theta^*_i || \bar{\theta})
+\end{align}
 \begin{proof}[\Cref{lemma:C_unique_solution}]
   By \Cref{eq:exponential_kl} we know that for the exponential family of probability distributions it holds that:
   \[d(\theta||\theta') = (\theta - \theta')A'(\theta) - A(\theta) + A(\theta')\]
-  Applying this identity to \eqref{eq: l2_4} for a given $j$ gives us:
+  Applying this identity to the definition of $C_{j, i}$ \label{eq:C} for given $j$, $i$, $\psi_j$, $\psi_i$ gives us:
   \begin{align}
     &\psi_{j}d(\theta^*_{j} || x) + \psi_{i}d(\theta_{i}^* ||x) \\
     &=\psi_j ((\theta_j^* - x)A'(\theta_j^*) - A(\theta_j^*) + A(x)) + \psi_i((\theta_i^* - x)A'(\theta_i^*) - A(\theta_i^*) + A(x))\\
@@ -253,27 +348,34 @@ In particular, the statement expresses that if an arm $l$ has been over-allocate
 \begin{proof}[\Cref{lemma:C_strictly_increasing}]
   We will proceed to show for fixed $j \in S^*$ and $i \notin S^*$, $C_{j, i}$ is increasing in its first argument $\psi_j$ as its second argument $\psi_i$ follows by symmetry.
 
-  Let us define $f(x, \psi_j) = \alpha d(\theta_i^*||x) + \psi_j d(\theta_j^*||x) + $ which implies that $C_{j, i}(\psi_j, \alpha) = \min_{x \in \mathbb{R}} f(x, \psi_j)$. As the KL divergence is non-negative we have:
+  Let us define $f(x, \psi_j, p) = \psi_j d(\theta_j^*||x) + p d(\theta_i^*||x)$ which implies that $C_{j, i}(\psi_j, p) = \min_{x \in \mathbb{R}} f(x, \psi_j, p)$. We first show that $f$ is strictly increasing in $\psi_j$ and will use that to show that the initial claim.
+
+  As the KL divergence is non-negative we have:
   \begin{align}
-    f(x, \psi_j + \epsilon) &= \alpha d(\theta_i^*||x) + \psi_j d(\theta_j^*||x) + \epsilon d(\theta_j^*||x) \\
-    &> \alpha d(\theta_i^*||x) + \psi_j d(\theta_j^*||x)\\
-    &= f(x, \psi_j)
+    f(x, \psi_j + \epsilon, p) &= \psi_j d(\theta_j^*||x) + \epsilon
+        d(\theta_j^*||x) + p d(\theta_i^*||x) \\
+      &> p d(\theta_i^*||x) + \psi_j d(\theta_j^*||x)\\
+      &= f(x, \psi_j, p)
   \end{align}
   And therefore $f$ is strictly increasing in $\psi_j$.
 
-  We fix two reals $\psi_{j1} < \psi_{j2}$ from $[0, 1]$ as well as their counterparts
+  For a given $p$, we fix $\psi_{j1} < \psi_{j2}$ from $[0, 1]$ as well as their counterparts
   \begin{align}
-    &x_1 = \argmin_{x \in \mathbb{R}} f(x, \psi_{j1})
-    &x_2 = \argmin_{x \in \mathbb{R}} f(x, \psi_{j2})
+    &x_1 = \argmin_{x \in \mathbb{R}} f(x, \psi_{j1}, p)
+    &x_2 = \argmin_{x \in \mathbb{R}} f(x, \psi_{j2}, p)
   \end{align}
-  Hence our goal is to show that $f(x_1, \psi_{j1}) < f(x_1, \psi_{j2})$ for minimizing $x_1$. By \Cref{lemma:C_unique_solution} both $x_1$ and $x_2$ are unique. As $x_1$ is unique, we have
+  Hence our goal is to show that $f(x_1, \psi_{j1}, p) < f(x_2, \psi_{j2}, p)$.
+  By \Cref{lemma:C_unique_solution} both $x_1$ and $x_2$ are unique. Hence
   \begin{align}
-    f(x_1, \psi_{j1}) &< f(x_2, \psi_{j1}) \\
-    f(x_2, \psi_{j2}) &< f(x_1, \psi_{j2})
+    f(x_1, \psi_{j1}, \alpha) &< f(x_2, \psi_{j1}, \alpha) \\
+    f(x_2, \psi_{j2}, \alpha) &< f(x_1, \psi_{j2}, \alpha)
   \end{align}
-  As $f$ is strictly increasing in its second argument, it holds that $f(x_2, \psi_{j1}) < f(x_2, \psi_{j2})$. Chaining those inequalities together we obtain:
+  As $f$ is strictly increasing in its second argument, it holds that $f(x_2,
+  \psi_{j1}, \alpha) < f(x_2, \psi_{j2}, \alpha)$. Chaining those inequalities
+  together we obtain:
   \begin{align}
-    f(x_1, \psi_{j1}) < f(x_2, \psi_{j1})  < f(x_2, \psi_{j2}) < f(x_1, \psi_{j2})
+    f(x_1, \psi_{j1}, \alpha) < f(x_2, \psi_{j1})  < f(x_2, \psi_{j2}) < f(x_1,
+        \psi_{j2})
   \end{align}
 \end{proof}
 
