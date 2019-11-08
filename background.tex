@@ -117,7 +117,7 @@ Hence $\deq$ can be vaguely thought of as asymptotic relationship indicating
 similar growth. Note the asymmetry of the relationship: it rather
 represents an inequality than an equality.
 
-\section{Thompson Sampling for bandits}
+\section{Thompson sampling for bandits}
 %How does it work?
 %Why is it useful?
 %What is it used for?
@@ -311,12 +311,12 @@ The optimal convergence exponent under said constraint becomes:
       \Theta^c_{l^*}} \sum_{l \in [k]} \psi_l d(\theta_l^* || \theta_l)
 \end{align}
 
-\subsection{Top-Two Thompson Sampling algorithm}
+\subsection{Top-Two Thompson sampling algorithm}
 % What is the algorithm?
 
 Russo proposes different algorithms that satisfy aforementioned theoretical
 results, yet suggests that one of them outperforms the other empirically:
-Top-Two Thompson Sampling (TTTS) algorithm.
+Top-Two Thompson sampling (TTTS) algorithm.
 
 The main idea behind TTTS is to repeat obtaining candidates through Thompson
 sampling until two different candidates have been proposed. This illustrates how

@@ -31,7 +31,7 @@ We assume the goal of the data generation and acquisition to be the identificati
 \end{itemize}
 In particular, we seek to address these challenges by generalizing work from Russo \cite{DBLP:journals/corr/Russo16} on best arm identification.
 
-We assume a frequentist setting. This implies that the options follow fixed distributions, which are unknown to us. Yet, we can sample from those distributions. This can be thought of being confronted with a noise-free signal that is then polluted with noise from a sensor. In this spirit, we seek to identify the true best options with as few samples as possible and be as confident of our recommendation as possible.
+We assume a frequentist setting. This implies that the options follow fixed distributions, which are unknown to us. Yet, we can sample from those distributions. This can be thought of as being confronted with a noise-free signal that is then polluted with noise from a sensor. In this spirit, we seek to identify the true best options with as few samples as possible and be as confident of our recommendation as possible.
 
 Our first contribution is the characterization of the optimal acquisition strategy, also referred to as measurement plan or allocation. What makes the optimal allocation optimal is the rate of increase in confidence in the true best options per sample. This optimal strategy is based on a thought experiment of knowing the underlying truth and acquiring samples validating the knowledge as well as possible. As a consequence, it serves as a bound for practical algorithms outside of thought experiments. Intuitively, the guiding theme of the characterization is that the allocation seeks to gather equal \emph{evidence} on every option.
 
@@ -39,4 +39,4 @@ Our second contribution is the definition of a concrete and simple adaptive algo
 
 In those undertakings we make very few assumptions on the underlying conditions. Concretely, we expect the options to follow distributions from the exponential family.
 
-\Cref{chapter:background} introduces the general problem context as well as Russo's work we attempt to generalize to top-$m$ selection. We characterize the optimal allocation in \Cref{chapter:optimal}. Our proposed algorithm, Top-2$m$ XOR Thompson Sampling, is presented and analyzed in \Cref{chapter:algorithm} before concluding our work in \Cref{chapter:conclusion}.
+\Cref{chapter:background} introduces the general problem context as well as Russo's work we attempt to generalize to top-$m$ selection. We characterize the optimal allocation in \Cref{chapter:optimal}. Our proposed algorithm, Top-2$m$ XOR Thompson sampling, is presented and analyzed in \Cref{chapter:algorithm} before concluding our work in \Cref{chapter:conclusion}.
