@@ -1,4 +1,4 @@
-\chapter{Top-2$m$ XOR Thompson Sampling}\label{chapter:algorithm}
+\chapter{Top-2$m$ XOR Thompson sampling}\label{chapter:algorithm}
 
 In this chapter we will both present and analyze our suggested generalization of
 Russo's Top-Two Thompson sampling: Top-2$m$ XOR Thompson sampling. The
@@ -52,7 +52,7 @@ such a change to preserve correctness, as long as every arm of the XOR is
 sampled with strictly positive probability. Yet, it would likely alter the
 hyperparamter $\beta = \psi_{S^*}$.
 
-We present the approach to sample an arm in step $n + 1$ in \Cref{alg:TXTS}.
+We present the approach to sample an arm in step $n$ in \Cref{alg:TXTS}.
 This approach can be repeated either for a fixed amount of samples or until a
 specific confidence level is reached. Note that the confidence level can be
 approximated in every step. The confidence level is equal to $\Pi_n(\Theta_S)$
@@ -85,7 +85,7 @@ Starting off by a statement about the implications of finite measurement, we
 later establish bounds and equalities on the measurement plan $\psi$ of the
 algorithm.
 
-The following lemma formalizes two three seemingly intuitive statements. First,
+The following lemma formalizes three seemingly intuitive statements. First,
 it shows that for each arm that is sampled infinitely many times, the estimated
 mean will converge to its true mean. Second, it demonstrates that if every arm
 is sampled infinitely often, the posterior will put all of its mass on
@@ -93,7 +93,8 @@ parameters with $S^*$ as top-$m$ arms. Third, it argues that as long as some
 arms have only been granted finite measurement, they can't be ruled out from
 being optimal.
 \begin{lemma}\label{lemma:finite_measurement}
-  $\mathcal{I} = \{l: \sum_{n=1}^\infty \psi_{n, l} < \infty\}$
+  For $\mathcal{I} = \{l: \sum_{n=1}^\infty \psi_{n, l} < \infty\}$ it holds
+      that:
   \begin{itemize}
     \item $\forall l \notin \mathcal{I}, \forall \epsilon: \Pi_n(\{\theta:
         \theta_l \in (\theta^*_l - \epsilon, \theta^*_l + \epsilon)\})
@@ -113,7 +114,7 @@ to construct a closed-form probability of arm $l$ being sampled in a given step
 as there are many more different scenarios. Vaguely speaking, the XORs can be of
 very different kinds.
 
-In this spirit, we offer both lower and upper bounds on the measurement plan of
+In light of this, we offer both lower and upper bounds on the measurement plan of
 a single arm. The overall idea is to case-distinguish if $l$ lies set $S_1$ or
 $S_2$. Facing the probability of $l$ being selected given its belonging to the
 XOR, we leverage the knowledge of the uniform draw. Hence we have $\Pr[I_n = l|l
@@ -242,7 +243,7 @@ as described in \Cref{section:concrete_optimal_allocation}.
 
   \begin{itemize}
   \item Note that this statement is equal for top-1 and top-$m$. Hence we can
-  employ Russo's Proposition 4 telling us that if$\sum_{n \in \mathbb{N}}
+  employ Russo's Proposition 4 telling us that if $\sum_{n \in \mathbb{N}}
   \psi_{n, l} \rightarrow \infty$, it follows that
   \begin{align}
     \Pi_n(\{\theta: \theta_l \in (\theta^*_l - \epsilon, \theta^*_l +
@@ -255,35 +256,38 @@ as described in \Cref{section:concrete_optimal_allocation}.
   concentrated around its true value, i.e. $\Pi_n(\{\theta^*\}) \rightarrow 1$.
   Recalling our definitions of $S^*$, $\Theta_S$ and $\alpha_{n, S}$, we see
   that
-  \[ \alpha_{n, S^*} = \Pi_n(\Theta_{S^*}) \geq \Pi_n(\{\theta^*\}) \rightarrow
-      1\]
+  \begin{align}
+    \alpha_{n, S^*} = \Pi_n(\Theta_{S^*}) \geq \Pi_n(\{\theta^*\}) \rightarrow 1
+  \end{align}
+
   As $\alpha_{n, S}$ is bounded by $[0, 1]$, we obtain the desired statement.
   \item As a syntactic alteration on $\theta_S$, let's define $\theta_{S,
-  \epsilon} = \{\theta \in \Theta | \min_{j \in S} \theta_j \geq \max_{i \notin
-  S} \theta_i + \epsilon\}$. Also, let us define $\rho^* = \max_{S \not\subseteq
-  \mathcal{I}} \min_{i \in S} \theta^*_i$. Intuitively, $\rho^*$ represents a
-  metric on the best set of arms under the true values, of which every arm is
-  sampled infinitely often under infinite samples. Choose $\epsilon$ such that
-  $\rho^* + 2\epsilon < \bar{\theta}$. For $S \subset \mathcal{I}$, we have:
+  \epsilon} = \{\theta \in \Theta | \min_{l_1 \in S} \theta_j \geq \max_{l_2
+  \notin S} \theta_i + \epsilon\}$. Also, let us define $\rho^* = \max_{S
+  \not\subseteq \mathcal{I}} \min_{l_1 \in S} \theta^*_{l_1}$. Intuitively,
+  $\rho^*$ represents a metric on the best set of arms under the true values, of
+  which every arm is sampled infinitely often under infinite samples. Assuming \bar{\theta}$ to be the largest possible parameter, choose
+  $\epsilon$ such that $\rho^* + 2\epsilon < \bar{\theta}$. For $S \subset
+  \mathcal{I}$, we have:
   \begin{align}
-    \theta_{S, \epsilon} &= \{\theta|(\min_{j \in S} \theta_j \geq \max_{i \in
-        \mathcal{I} \setminus S} \theta_i + \epsilon) \wedge (\min_{j \in S}
-        \theta_j \geq\ \max_{i \notin \mathcal{I}, S} \theta_i + \epsilon)\} \\
-      &= \{\theta | (\forall i \in \mathcal{I} \setminus S: \min_{j \in S} \geq
-          \theta_i + \epsilon) \wedge (\min_{j \in S} \theta_j \geq\ \max_{i
-          \notin \mathcal{I}, S} \theta_i + \epsilon)\} \\
-      & \supseteq \{\theta |(\min_{j \in S} \theta_j \geq \rho^* + 2 \epsilon)
-          \wedge (\forall i \in \mathcal{I} \setminus S: \rho^* > \theta_i)
-          \wedge (\min_{j \in S} \theta_j \geq\ \max_{i \notin \mathcal{I}, S}
-          \theta_i + \epsilon)\} \\
-      & \supseteq \{\theta |(\min_{j \in S} \theta_j \geq \rho^* + 2 \epsilon)
-          \wedge (\forall i \in \mathcal{I} \setminus S: \rho^* > \theta_i)
-          \wedge (\rho^* + \epsilon \geq \max_{i \notin \mathcal{I}, S}
-          \theta_i)\} \\
-      &= \underbrace{\{\theta |(\min_{j \in S} \theta_j \geq \rho^* + 2
-          \epsilon) \wedge (\forall i \in \mathcal{I} \setminus S: \rho^* >
-          \theta_i) \}}_\text{A} \setminus \underbrace{\{\theta| \max_{i \notin
-          \mathcal{I}, S} \theta_i > \rho^* + \epsilon\}}_\text{B}
+    \theta_{S, \epsilon} &= \{\theta|(\min_{l_1 \in S} \theta_{l_1} \geq
+        \max_{l_2 \in \mathcal{I} \setminus S} \theta_{l_1} + \epsilon) \wedge (\min_{l_1 \in S}
+        \theta_{l_1} \geq\ \max_{l_2 \notin \mathcal{I}} \theta_{l_2} + \epsilon)\} \\
+      &= \{\theta | (\forall l_2 \in \mathcal{I} \setminus S: \min_{l_1 \in S} \geq
+          \theta_{l_2} + \epsilon) \wedge (\min_{l_1 \in S} \theta_{l_1} \geq\ \max_{l_2
+          \notin \mathcal{I}} \theta_{l_2} + \epsilon)\} \\
+      & \supseteq \{\theta |(\min_{l_1 \in S} \theta_{l_1} \geq \rho^* + 2 \epsilon)
+          \wedge (\forall {l_2} \in \mathcal{I} \setminus S: \rho^* > \theta_{l_2})
+          \wedge (\min_{l_1 \in S} \theta_{l_1} \geq\ \max_{l_2 \notin \mathcal{I}}
+          \theta_{l_2} + \epsilon)\} \\
+      & \supseteq \{\theta |(\min_{l_1 \in S} \theta_{l_1} \geq \rho^* + 2 \epsilon)
+          \wedge (\forall l_2 \in \mathcal{I} \setminus S: \rho^* > \theta_{l_2})
+          \wedge (\rho^* + \epsilon \geq \max_{l_2 \notin \mathcal{I}}
+          \theta_{l_2})\} \\
+      &= \underbrace{\{\theta |(\min_{l_1 \in S} \theta_{l_1} \geq \rho^* + 2
+          \epsilon) \wedge (\forall l_2 \in \mathcal{I} \setminus S: \rho^* >
+          \theta_{l_2}) \}}_\text{A} \setminus \underbrace{\{\theta| \max_{l_2 \notin
+          \mathcal{I}} \theta_{l_2} > \rho^* + \epsilon\}}_\text{B}
   \end{align}
   Where the last step follows from the fact that $\{x|p(x) \wedge q(x)\} =
   \{x|p(x)\} \setminus \{x|\neg q(x)\}$. By \eqref{eq:concentration}, we know
@@ -315,7 +319,7 @@ as described in \Cref{section:concrete_optimal_allocation}.
   \begin{align}
     &\Pr[l \in S_1 \wedge l \notin S_2] + \Pr[l \notin S_1 \wedge l \in S_2]  \\
     =& \sum_{S: l \in S} \Pr[S_1 = S] \sum_{S': l \notin S'} \Pr[S_2 = S' | S_1
-        = S] + \\
+        = S] + \notag\\
     & \sum_{S': l \notin S'} \Pr[S_1 = S'] \sum_{S: l \in S} \Pr[S_2 = S | S_1
         = S'] \\
     =& \sum_{S: l \in S} \alpha_{n, S} \sum_{S': l \notin S'} \frac{\alpha_{n,
@@ -326,7 +330,10 @@ as described in \Cref{section:concrete_optimal_allocation}.
         S'}}{1 - \alpha_{n, S'}} \sum_{S: l \in S} \alpha_{n, S}\\
     =& \sum_{S: l \in S} \frac{\alpha_{n, S}}{1 - \alpha_{n, S}} (1 -
         \alpha_{n, l}) +  \sum_{S': l \notin S'} \frac{\alpha_{n, S'}}{1 -
-        \alpha_{n, S'}} \alpha_{n, l}
+        \alpha_{n, S'}} \alpha_{n, l} \\
+    =& (1 - \alpha_{n, l})\sum_{S: l \in S} \frac{\alpha_{n, S}}{1 - \alpha_{n,
+        S}} + \alpha_{n, l} \sum_{S': l \notin S'} \frac{\alpha_{n, S'}}{1 -
+        \alpha_{n, S'}}
   \end{align}
   This identity can now be leveraged for both lower and upper bound. But first,
   let's express the the measurement plan exactly.
@@ -334,7 +341,7 @@ as described in \Cref{section:concrete_optimal_allocation}.
     \psi_{n, l} =& \Pr[l \in S_1 \wedge l \notin S_2 \wedge I_n = l] + \Pr[l
         \notin S_1 \wedge l \in S_2 \wedge I_n = l] \\
     =& \Pr[I_n = l | l \in S_1 \wedge l \notin S_2] \Pr[l \in S_1 \wedge l
-        \notin S_2] + \\
+        \notin S_2] + \notag\\
     & \Pr[I_n = l | l \notin S_1 \wedge l \in S_2] \Pr[l \notin S_1 \wedge l
         \in S_2]
   \end{align}
@@ -346,14 +353,14 @@ as described in \Cref{section:concrete_optimal_allocation}.
   \begin{align}
     \psi_{n, l} \leq& \frac{1}{2} (\Pr[l \in S_1 \wedge l \notin S_2] + \Pr[l
         \notin S_1 \wedge l \in S_2]) \\
-        =& \frac{1}{2}(\sum_{S: l \in S} \frac{\alpha_{n, S}}{1 - \alpha_{n,
-            S}} (1 - \alpha_{n, l}) +  \sum_{S': l \notin S'} \frac{\alpha_{n,
-            S'}}{1 - \alpha_{n, S'}} \alpha_{n, l}) \\
+      =& \frac{1}{2}((1 - \alpha_{n, l}) \sum_{S: l \in S} \frac{\alpha_{n,
+          S}}{1 - \alpha_{n, S}} + \alpha_{n, l}) \sum_{S': l \notin S'}
+          \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}} \\
     \psi_{n, l} \geq& \frac{1}{2m} (\Pr[l \in S_1 \wedge l \notin S_2] + \Pr[l
         \notin S_1 \wedge l \in S_2]) \\
-      \geq& \frac{1}{2m}(\sum_{S: l \in S} \frac{\alpha_{n, S}}{1 - \alpha_{n,
-          S}} (1 - \alpha_{n, l}) +  \sum_{S': l \notin S'} \frac{\alpha_{n,
-          S'}}{1 - \alpha_{n, S'}} \alpha_{n, l})
+      =& \frac{1}{2m}((1 - \alpha_{n, l}) \sum_{S: l \in S} \frac{\alpha_{n,
+          S}}{1 - \alpha_{n, S}} + \alpha_{n, l}) \sum_{S': l \notin S'}
+          \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}} \\
   \end{align}
 \end{proof}
 
@@ -370,13 +377,18 @@ as described in \Cref{section:concrete_optimal_allocation}.
       &= \frac{1}{2} \alpha_{n, S} +  \Pr[I_n \in S | S_1 \neq S] (1 -
           \alpha_{n, S})
   \end{align}
+  Note that $\Pr[I_n \in S_1] = \Pr[I_n \in S_2] = \frac{1}{2}$ as the XOR
+  operation ensures that equally many elements from $S_1$ and $S_2$ in the XOR
+  set. In combination with uniform sampling this yields aforementioned relation.
+
   In order to show the second equality, we go a step further by checking if
   either of both sets equals $S$. For that purpose we first look into the
   probability that $S$ is sampled as a second set and that $I_n$ stems from $S$.
   \begin{align}
-    & \sum_{S'\neq S}\Pr[S_1 = S' \wedge S_2 = S \wedge I_n \in S_2] \\
+    & \Pr[S_2 = S \wedge I_n \in S_2] \\
+    &= \sum_{S'\neq S}\Pr[S_1 = S' \wedge S_2 = S \wedge I_n \in S_2] \\
     &= \sum_{S'\neq S} \Pr[S_1 = S'] \Pr[S_2 = S | S_1 = S'] \Pr[I_n \in S_2 |
-        S_1 = S' \wedge S_2 = S] \\
+        S_1 = S' \wedge] \\
     &= \sum_{S'\neq S} \alpha_{n, S'} \frac{\alpha_{n, S}}{1 - \alpha_{n, S'}}
         \frac{1}{2} = \frac{\alpha_{n, S}}{2} \sum_{S'\neq S} \frac{\alpha_{n,
         S'}}{1 - \alpha_{n, S'}}
@@ -384,9 +396,7 @@ as described in \Cref{section:concrete_optimal_allocation}.
   \begin{align}
     \psi_{n, S} =& \Pr[I_n \in S] \\
       =& \Pr[S_1 = S \wedge I_n \in S_1] + \Pr[S_2 = S \wedge I_n \in S_2] +
-          \Pr[S_1, S_2 \neq S \wedge I_n \in S]\\
-      =& \frac{\alpha_{n, S}}{2} + \sum_{S'\neq S}\Pr[S_1 = S' \wedge S_2 = S
-          \wedge I_n \in S_2] +  \Pr[S_1, S_2 \neq S \wedge I_n \in S] \\
+          \Pr[S_1, S_2 \neq S \wedge I_n \in S] \\
       &= \frac{\alpha_{n, S}}{2} +  \frac{\alpha_{n, S}}{2} \sum_{S'\neq S}
           \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}} + \Pr[S_1, S_2 \neq S
           \wedge I_n \in S]
@@ -395,16 +405,15 @@ as described in \Cref{section:concrete_optimal_allocation}.
 
 \begin{proof}[\Cref{lemma:infinite_measurement}]
   \Cref{proposition:measurement_pan_set} tells us that $\psi_{n, S} > \gamma
-  \alpha_{n, S}$ for some constant $j > 0$. Thanks to this we have $\sum_{n \in
-  \mathbb{N}} \psi_{n, S} > \frac{1}{2} \sum_{n \in \mathbb{N}} \alpha_{n, S}$.
-  For the sake of contradiction, assume that $\exists S'$ with $\sum_{n \in
+  \alpha_{n, S}$ for some constant $\gamma > 0$. Thanks to this we have $\sum_{n
+  \in \mathbb{N}} \psi_{n, S} > \frac{1}{2} \sum_{n \in \mathbb{N}} \alpha_{n,
+  S}$. For the sake of contradiction, assume that $\exists S'$ with $\sum_{n \in
   \mathbb{N}} \psi_{n, S'} < \infty$. According to
   \Cref{lemma:finite_measurement}'s definition, we have $S \subset \mathcal{I}$.
   Hence we can apply its third clause and get $\liminf_{n \rightarrow \infty}
-  \alpha_{n, S'} > 0$. Using our initial bound we observe that we have an
-  infinite sum of terms which have a $\liminf$ greater than 0. Hence $\sum_{n
-  \in \mathbb{N}} \psi_{n, S}$ tends to infinity with growing $n$ and the
-  assumption is contradicted.
+  \alpha_{n, S'} > 0$. It follows directly that $\sum_{n \in \mathbb{N}}
+  \alpha_{n, S} \rightarrow \infty$. Hence $\sum_{n \in \mathbb{N}} \psi_{n, S}$
+  tends to infinity with growing $n$ as well, which is a contradiction.
 \end{proof}
 
 \begin{proof}[\Cref{lemma:psi_convergence}]
@@ -414,15 +423,15 @@ as described in \Cref{section:concrete_optimal_allocation}.
 
 \begin{proof}[\Cref{lemma:measurement_plan_bound_max}]
   \Cref{proposition:measurement_plan_arm} tells us that
-  \[\psi_{n, l} \leq \frac{1}{2}(\sum_{S: l \in S} \frac{\alpha_{n, S}}{1 -
-      \alpha_{n, S}} (1 - \alpha_{n, l}) +  \sum_{S': l \notin S'}
-      \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}} \alpha_{n, l})\]
+  \[\psi_{n, l} \leq \frac{1}{2}((1 - \alpha_{n, l}) \sum_{S: l \in S}
+      \frac{\alpha_{n, S}}{1 - \alpha_{n, S}} + \alpha_{n, l})
+      \sum_{S': l \notin S'} \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}}\]
   Knowing that $\alpha_{n, S^*} \rightarrow 1$, we can bound $\psi_{n, i}$ in
   the following way:
   \begin{align}
     \psi_{n, i} \leq& \frac{1}{2}((1 - \alpha_{n, i}) \frac{\sum_{S: i \in S}
         \alpha_{n, S}}{1 - \alpha_{n, S^*}} + \alpha_{n, i} \frac{\sum_{S': i
-        \notin S'} \alpha_{n, S'}}{1 - \alpha_{n, S^*}}) \\
+        \notin S'} \alpha_{n, S'}}{1 - \alpha_{n, S^*}}) \label{eq:l46:1}\\
       =& \frac{1}{2}((1 - \alpha_{n, i}) \frac{\alpha_{n, i}}{1 - \alpha_{n,
           S^*}} + \alpha_{n, i} \frac{1 - \alpha_{n, i}}{1 - \alpha_{n, S^*}})\\
       \leq& \frac{1}{2} \frac{2 \alpha_{n, i} (1 - \alpha_{n, i})}{\max_{S'
@@ -435,12 +444,14 @@ as described in \Cref{section:concrete_optimal_allocation}.
         S'}}
   \end{align}
   for $j \in S^*$.
+
+  Note that in \eqref{eq:l46:1} we used that for any $S \neq S^*$ $\alpha_{n, S} < \apha_{n S^*}$ thanks to our assumption $\alpha_{n, S^*} \rightarrow 1$.
 \end{proof}
 
 \begin{proof}[\Cref{lemma:limsup_undersampling}]
     We first show the first statement and then use it for the second. For the
-    sake of contradiction, we assume that $\limsup \bar{\psi}_{l, n} <
-    \psi_j^*$. This implies that there is a $n_0$ from which onward $\psi_{l,
+    sake of contradiction, assume that $\limsup \bar{\psi}_{l, n} <
+    \psi_l^*$. This implies that there is a $n_0$ from which onward $\psi_{l,
     n} < \psi_l^*$.
     \begin{align}
       \sum_n (\frac{1}{2} - \psi_{l, n}) &= \sum_{n=1}^{n_0} (\frac{1}{2} -
@@ -458,10 +469,11 @@ as described in \Cref{section:concrete_optimal_allocation}.
       \bar{\psi}_{l, n} &= \frac{-C}{n} + \frac{1}{2}\sum_n\frac{1}{n} \\
         &= \frac{-C}{n} + \frac{1}{2} H_n
     \end{align}
-    We know that $H_n$ is asymptotically equivalent to $\log(n)$. Hence we get
-    that $\bar{\psi}_{l, n} \rightarrow \infty$, which is a contradiction.
+    We know that $H_n$ is asymptotically equivalent to $\log(n)$. Therefore we
+    arrive at $\bar{\psi}_{l, n} \rightarrow \infty$, which is a contradiction.
     Therefore we have $\limsup \bar{\psi}_{l, n} \geq \psi_j^*$.
 
+    TODO: Fix this reference.
     The argument from Lemma 9 can be repeated to show the second statement.
   \end{proof}
 
@@ -471,20 +483,17 @@ as described in \Cref{section:concrete_optimal_allocation}.
   \end{remark}
 
   \begin{proof}[\Cref{lemma:psi_undersampled}]
-    For $j \in S^* \setminus \{\hat{j}\}$:
+    As previously seen in \Cref{lemma:measurement_plan_bound_max}, we have that
+    for $j \in S^* \setminus \{\hat{j}\}$ with $\alpha_{n, S^*} \rightarrow 1$:
     \begin{align}
-      \psi_{j, n} &\leq \sum_{S: j \in S} \frac{\alpha_{n, S}}{1 - \alpha_{n,
-          S}}(1 - \alpha_{n, j})+ \sum_{S': j \notin S'} \frac{\alpha_{n,
-          S'}}{{1 - \alpha_{n, S'}}}\alpha_{n, j} \\
-        &\leq \frac{\alpha_{n, j}}{1 - \alpha_{n, S^*}}(1 - \alpha_{n, j}) +
-            \frac{1 - \alpha_{n, j}}{1 - \alpha_{n, S^*}} \alpha_{n, j} \\
-        &\leq \frac{2 \alpha_{n, j}(1 - \alpha_{n, j})}{1 - \alpha_{nm S^*}} \\
-        &\leq \frac{1 - \alpha_{n, j}}{1 - \alpha_{n, S^*}}
+      \psi_{j, n} &\leq \frac{1 - \alpha_{n, j}}{1 - \alpha_{n, S^*}}
     \end{align}
-    Where the second line follows from $\alpha_{n, S^*} \rightarrow 1$.
+    Additionally, $\alpha_{n, S^*} \rightarrow 1$, according to \Cref{lemma:psi_convergence} allows us to assume that $\psi_{n, S^*} \rightarrow \frac{1}{2}$.
     \begin{align}
-      \psi_{n, \hat{j}} &= \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}}
-          \psi_{n, j}\\
+      \psi_{n, \hat{j}} &= \psi_{n, S^*} - \sum_{j \in S^* \setminus
+          \{\hat{j}\}} \psi_{n, j}\\
+        &\rightarrow \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}}
+            \psi_{n, j}\\
         &\geq \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}} \frac{1 -
             \alpha_{n, j}}{1 - \alpha_{n, S^*}} \\
         &= \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}}

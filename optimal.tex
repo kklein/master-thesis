@@ -306,26 +306,38 @@ corrected for as well, by the fact that $\psi$ is a probability distribution.
 
 \section{Proofs}\label{section:optimal_proofs}
 \begin{proof}[\Cref{lemma:set_relation_S*_i}]
-  We first show the relationship between $\Theta_{S^*}^c$ and sets $\bar{\Theta}_i$ and then show the relationship between $\Theta_{S^*}^c$ and $\Theta_{m, j}$.
+  We first show the relationship between $\Theta_{S^*}^c$ and sets
+  $\bar{\Theta}_i$ and then show the relationship between $\Theta_{S^*}^c$ and
+  $\Theta_{m, j}$.
   \begin{align}
-    \Theta_{S^*}^c &= \{\theta \in \Theta | \min_{j \in S^*} \theta_j > \max_{i \notin S^*} \theta_i \}^c \\
-    &= \{\theta \in \Theta | \max_{i \notin S^*} \theta_i \geq \min_{j \in S^*} \theta_j\} \\
-    &= \{\theta \in \Theta | \exists i \notin S^*: \theta_i \geq \min_{j \in S^*} \theta_j\} \\
-    &= \{\theta \in \Theta | \exists i \notin S^*: \text{top-}m(\theta, S^* \cup \{i\}) \neq S^*\} \\
-    &= \bigcup_{i \notin S^*} \{\theta \in \Theta | \text{top-}m(\theta, S^* \cup \{i\}) \neq S^*\} \\
+    \Theta_{S^*}^c &= \{\theta \in \Theta | \min_{j \in S^*} \theta_j > \max_{i
+        \notin S^*} \theta_i \}^c \\
+    &= \{\theta \in \Theta | \max_{i \notin S^*} \theta_i \geq \min_{j \in S^*}
+        \theta_j\} \\
+    &= \{\theta \in \Theta | \exists i \notin S^*: \theta_i \geq \min_{j \in
+        S^*} \theta_j\} \\
+    &= \{\theta \in \Theta | \exists i \notin S^*: \text{top-}m(\theta, S^*
+        \cup \{i\}) \neq S^*\} \\
+    &= \bigcup_{i \notin S^*} \{\theta \in \Theta | \text{top-}m(\theta, S^*
+        \cup \{i\}) \neq S^*\} \\
     &= \bigcup_{i \notin S^*} \bar{\Theta}_i \\
-    \Theta_{S^*} &= \{\theta \in \Theta | \min_{j \in S^*} \theta_j > \max_{i \notin S^*} \theta_i\} \\
-    &= \{\theta \in \Theta | \bigwedge_{j \in S^*} \theta_j > \max_{i \notin S^*} \theta_i\} \\
-    &= \bigcap_{j \in S^*} \{\theta \in \Theta | \theta_j > \max_{i \notin S^*} \theta_i\} \\
-    &= \bigcap_{j \in S^*} \{\theta \in \Theta | j \in \text{top-}m(\theta, [k])\} \\
+    \Theta_{S^*} &= \{\theta \in \Theta | \min_{j \in S^*} \theta_j > \max_{i
+        \notin S^*} \theta_i\} \\
+    &= \{\theta \in \Theta | \bigwedge_{j \in S^*} \theta_j > \max_{i \notin
+        S^*} \theta_i\} \\
+    &= \bigcap_{j \in S^*} \{\theta \in \Theta | \theta_j > \max_{i \notin S^*}
+        \theta_i\} \\
+    &= \bigcap_{j \in S^*} \{\theta \in \Theta | j \in \text{top-}m(\theta,
+        [k])\} \\
     &= \bigcap_{j \in S^*} \Theta_{m, j} \\
     \Theta_{S^*}^c &= \Theta - \Theta_{S^*}\\
-    \Theta_{S^*}^c &= \Theta - \bigcap_{j \in S^*} \Theta_{m, j}
+      &= \Theta - \bigcap_{j \in S^*} \Theta_{m, j}
   \end{align}
 \end{proof}
 
 \begin{proof}[\Cref{lemma:posterior_S*_i}]
-  First, we prove the equality for $i \notin S^*$, followed by the equality for $j \in S^*$.
+  First, we prove the equality for $i \notin S^*$, followed by the equality for
+  $j \in S^*$.
 
   The union from \Cref{lemma:set_relation_S*_i} has an additive effect with
   respect to the probability distribution $\Pi_n$. There are $k-m$ possible $i$s
