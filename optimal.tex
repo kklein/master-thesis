@@ -314,9 +314,9 @@ corrected for as well, by the fact that $\psi$ is a probability distribution.
     &= \{\theta \in \Theta | \exists i \notin S^*: \text{top-}m(\theta, S^* \cup \{i\}) \neq S^*\} \\
     &= \bigcup_{i \notin S^*} \{\theta \in \Theta | \text{top-}m(\theta, S^* \cup \{i\}) \neq S^*\} \\
     &= \bigcup_{i \notin S^*} \bar{\Theta}_i \\
-    \Theta_{S^*} &= \{\theta \in \Theta | \min_{j \in S^*} \theta_j > \max_{j \in S^*} \theta_j\} \\
-    &= \{\theta \in \Theta | \bigwedge_{j \in S^*} \theta_j > \max_{j \in S^*} \theta_j\} \\
-    &= \bigcap_{j \in S^*} \{\theta \in \Theta | \theta_j > \max_{j \in S^*} \theta_j\} \\
+    \Theta_{S^*} &= \{\theta \in \Theta | \min_{j \in S^*} \theta_j > \max_{i \notin S^*} \theta_i\} \\
+    &= \{\theta \in \Theta | \bigwedge_{j \in S^*} \theta_j > \max_{i \notin S^*} \theta_i\} \\
+    &= \bigcap_{j \in S^*} \{\theta \in \Theta | \theta_j > \max_{i \notin S^*} \theta_i\} \\
     &= \bigcap_{j \in S^*} \{\theta \in \Theta | j \in \text{top-}m(\theta, [k])\} \\
     &= \bigcap_{j \in S^*} \Theta_{m, j} \\
     \Theta_{S^*}^c &= \Theta - \Theta_{S^*}\\
