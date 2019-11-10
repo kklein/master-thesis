@@ -37,6 +37,7 @@ Our first contribution is the characterization of the optimal acquisition strate
 
 Our second contribution is the definition of a concrete and simple adaptive algorithm. As compared to the optimal allocation, the algorithm changes its measurement plan after every sample, based on the observations it has made. The algorithm being Bayesian, it comes with the upside of confidence estimation and allows for leveraging and expressing domain knowledge through the use of priors. We analyze properties of the algorithm and highlight insights that we deem very useful for proving asymptotic convergence of this algorithm's allocation to the optimal allocation.
 
-In those undertakings we make very few assumptions on the underlying conditions. Concretely, we expect the options to follow distributions from the exponential family.
+In those undertakings we make very few assumptions on the underlying conditions. Concretely, we expect the options to follow distributions from the
+one-dimensional canonical exponential family. This includes common distributions such as the Bernoulli, binomial with known number of trials, Poisson, exponential, Pareto with known minimal value, chi-squared or the normal distribution with known variance.
 
 \Cref{chapter:background} introduces the general problem context as well as Russo's work we attempt to generalize to top-$m$ selection. We characterize the optimal allocation in \Cref{chapter:optimal}. Our proposed algorithm, Top-2$m$ XOR Thompson sampling, is presented and analyzed in \Cref{chapter:algorithm} before concluding our work in \Cref{chapter:conclusion}.

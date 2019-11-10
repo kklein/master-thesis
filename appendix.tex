@@ -27,12 +27,15 @@ Drawing from the minimization problem of $C_{j,i}$ for given $j$, $i$, $\psi_j$ 
 Hence we have a very intuitive analytical solution for $x$: it is an average of the means of $j$ and $j$, weighted by their respective measurement allocation.
 
 \section{Facts about the exponential family}
-%TODO:Explain what A, A' and theta represent.
-%TODO:Doublecheck correctness of A' via wikipedia
-Russo presents the following insight about the exponential family of probability distributions.
+Russo presents the following insight about the one-dimensional exponential family of probability distributions.
 \begin{itemize}
-  \item Its log-partition-function $A(\theta)$ is strictly convex and differentiable.
-  \item Its mean equals $A'(\theta) = \int T(y)p(y|\theta)d\nu(y)$.
+  \item They have a scalar parameter $\theta$.
+  \item They come with the definition of function $T(x)$, $\nu(\theta)$, $h(x)$ and $A(\theta)$. $T$ corresponds to the sufficient statistic and $A$ to the log-partition function.
+  \item The probability density function is defined by:
+    \[f_X(x|\theta) = h(x) \exp(\nu(\theta) T(x) - A(\theta))\]
+  \item Their log-partition-function $A(\theta)$ is strictly convex and differentiable.
+  \item They have conjugate priors.
+  \item Their mean equals $A'(\theta) = \int T(y)p(y|\theta)d\nu(y)$. In the typical case of $T(y)=y$, this yields that $A'(\theta) = \mu(\theta)$.
   \item The KL divergence equals:
     \begin{align}
         d(\theta||\theta') = (\theta - \theta')A'(\theta) - A(\theta) + A(\theta')\label{eq:exponential_kl}
@@ -43,6 +46,7 @@ Russo presents the following insight about the exponential family of probability
       &\theta'' < \theta' \leq \theta \Rightarrow d(\theta||\theta'') < d(\theta||\theta')
     \end{align}
 \end{itemize}
+
 
 \section{Useful technical statements}\label{section:technical_proofs}
   \begin{lemma}\label{lemma_lim_sup}
