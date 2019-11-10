@@ -189,9 +189,12 @@ bound from \Cref{proposition:measurement_plan_arm}.
 \end{lemma}
 
 \begin{lemma}\label{lemma:fraction_bound}
-  $\forall i \notin S^*, \forall \delta > 0$, if $\bar{\psi}_{n, S^*} \rightarrow 1/2$, then there exists $\delta' > 0$ and a sequence $\epsilon_n \rightarrow 0$ such that $\forall n \in \mathbb{N}$:
+  If $\bar{\psi}_{n, S^*} \rightarrow 1/2$, then there exists a sequence
+  $\epsilon_n \rightarrow 0$ such that $\forall i \notin S^*, \forall n \in
+  \mathbb{N}$:
   \begin{align}
-    \psi_{n, i} \leq \exp\{-n( \min_{j \in S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) - \Gamma^*_{\frac{1}{2}} - \epsilon_n) \}
+    \psi_{n, i} \leq \exp\{-n( \min_{j \in S^*} C_{j, i}(\bar{\psi}_j,
+        \bar{\psi}_i) - \Gamma^*_{\frac{1}{2}} - \epsilon_n) \}
   \end{align}
 \end{lemma}
 
@@ -220,9 +223,9 @@ the the uniform allocation and Thompson sampling.
   \label{fig:confidences}
 \end{figure}
 As we don't have a closed form for the average measurement plan
-$\bar{psi}_{n,l}$ at our disposal, we approximate it with the empirical sampling
-frequencies. \Cref{fig:measurement_plan} indicates said empirical sampling
-frequencies. Note that $\bar{psi}_{S^*}$ can nicely be read to equal
+$\bar{\psi}_{n,l}$ at our disposal, we approximate it with the empirical
+sampling frequencies. \Cref{fig:measurement_plan} indicates said empirical
+sampling frequencies. Note that $\bar{\psi}_{S^*}$ can nicely be read to equal
 $\frac{1}{2}$.
 \begin{figure}[h]
   \centering
@@ -248,22 +251,22 @@ as described in \Cref{section:concrete_optimal_allocation}.
 \section{Further results and outlook}
 
 Looking at \Cref{proposition:optimality_sufficient_condition}, we see that in
-order to show $\bar{psi}_n \rightarrow \psi^{frac{1}{2}*}$, we need to show that
-once an arm has been oversampled on average, its likelihood of being sampled
-soon is very low. We expect the upper bound from \Cref{lemma:fraction_bound} to
-be useful for this task as a similar approach has succeeded in Russo's case. In
-particular, the missing link in the chain is to show that under oversampling
-conditions, $\min_{j \in S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) \geq
-\Gamma^*_{\frac{1}{2}}$. If the latter is satisfied, the probability $\psi_{i,
-n}$ is exponentially small in $n$ and therefore the sum from
-\Cref{proposition:optimality_sufficient_condition} finite by the geometric
-series.
+order to show $\bar{\psi}_n \rightarrow \psi^{\frac{1}{2}*}$, we need to show
+that once an arm has been oversampled on average, its likelihood of being
+sampled soon is very low. We expect the upper bound from
+\Cref{lemma:fraction_bound} to be useful for this task as a similar approach has
+succeeded in Russo's case. In particular, the missing link in the chain is to
+show that under oversampling conditions, $\min_{j \in S^*} C_{j,
+i}(\bar{\psi}_j, \bar{\psi}_i) \geq \Gamma^*_{\frac{1}{2}}$. If the latter is
+satisfied, the probability $\psi_{n, i}$ is exponentially small in $n$ and
+therefore the sum from \Cref{proposition:optimality_sufficient_condition} finite
+by the geometric series.
 
 However, this crucial condition is not naturally satisfied. Investigating it
-more carefully, we realize that that implies an excess of evidence over the
-optimal allocation. This can only happen in a given round if the optimal arms $j
-\in S^*$ have sampling probabilities equal to the optical allocation
-$\psi^{\frac{1}{2}*}$.
+more carefully, we realize that its satisfaction requires an excess of evidence
+over the optimal allocation. This can only happen in a given round if the
+optimal arms $j \in S^*$ have sampling probabilities greater equal to the
+optical allocation $\psi^{\frac{1}{2}*}$.
 
 As we are not convinced that this holds true, we started looking into the
 scenario in which the minimizing $j$ is currently undersampled. Our intuition is
@@ -274,15 +277,14 @@ for.
 \Cref{proposition:optimality_sufficient_condition} for undersampling.
 \Cref{lemma:psi_undersampled} suggests that if an arm is undersampled, it will
 be given a lot of measurement effort very soon.
-
 \begin{lemma}\label{lemma:limsup_undersampling}
-  Given $\sum_n(\frac{1}{2} - \psi_{l, n}) \mathbb{I}[\psi_{l, n} \leq \psi_l^*
+  Given $\sum_n(\frac{1}{2} - \psi_{n, l}) \mathbb{I}[\psi_{n, l} \leq \psi_l^*
   - \delta] < \infty$ we have that
-  \[\limsup \bar{\psi}_{l, n} \geq \psi_j^* \text{ and } \liminf \bar{\psi}_{l,
-  n} \geq \psi_j^*\]
+  \[\limsup \bar{\psi}_{n, l} \geq \psi_j^* \text{ and } \liminf \bar{\psi}_{n, l} \geq \psi_j^*\]
 \end{lemma}
-
 \begin{lemma}\label{lemma:psi_undersampled}
+  If $\alpha_{n, S^*} \rightarrow 1$ and $\bar{\psi}_{n, j} < \psi^{\frac{1}{2}*}_j$ then there exists $\delta > 0$
+  with
   \begin{align}
     \psi_{n, \hat{j}} \geq \frac{1}{2} - m\exp(-n \delta)
   \end{align}
@@ -507,7 +509,8 @@ be given a lot of measurement effort very soon.
   bounds for the respective numerator.
 
   \Cref{proposition:characterization} gives us that
-  \[\lim_{n \rightarrow \infty} \sup - \frac{1}{n} \log \Pi_n(\Theta^c_{S^*}) \leq \Gamma^*_{\frac{1}{2}}\]
+  \[\lim_{n \rightarrow \infty} \sup - \frac{1}{n} \log \Pi_n(\Theta^c_{S^*})
+      \leq \Gamma^*_{\frac{1}{2}}\]
   \Cref{lemma_lim_sup} tells us that there is a sequence $\epsilon_n > 0,
   \epsilon_n \rightarrow 0$ s.t.
   \begin{align}
@@ -554,14 +557,14 @@ be given a lot of measurement effort very soon.
 
 \begin{proof}[\Cref{lemma:limsup_undersampling}]
     We first show the first statement and then use it for the second. For the
-    sake of contradiction, assume that $\limsup \bar{\psi}_{l, n} <
-    \psi_l^*$. This implies that there is a $n_0$ from which onward $\psi_{l,
-    n} < \psi_l^*$.
+    sake of contradiction, assume that $\limsup \bar{\psi}_{n, l} <
+    \psi_l^*$. This implies that there is a $n_0$ from which onward $\psi_{n,
+    l} < \psi_l^*$.
     \begin{align}
-      \sum_n (\frac{1}{2} - \psi_{l, n}) &= \sum_{n=1}^{n_0} (\frac{1}{2} -
-          \psi_{l, n}) + \sum_{n > n_0} (\frac{1}{2} - \psi_{l, n}) \\
+      \sum_n (\frac{1}{2} - \psi_{n, l}) &= \sum_{n=1}^{n_0} (\frac{1}{2} -
+          \psi_{n, l}) + \sum_{n > n_0} (\frac{1}{2} - \psi_{n, l}) \\
         &= \sum_{n=1}^{n_0} (\frac{1}{2} - \psi_j) + \sum_{n > n_0}
-            (\frac{1}{2} - \psi_{l, n})\mathbb{I}[\psi_{l, n} \leq \psi_l^* -
+            (\frac{1}{2} - \psi_{n, l})\mathbb{I}[\psi_{n, l} \leq \psi_l^* -
             \delta] \\
         &= C
     \end{align}
@@ -569,15 +572,16 @@ be given a lot of measurement effort very soon.
     sum is a finite amount of individually finite quantities. Hence we can
     write:
     \begin{align}
-      \sum_n \psi_{l, n} &= -C + \sum_n \frac{1}{2} \\
-      \bar{\psi}_{l, n} &= \frac{-C}{n} + \frac{1}{2}\sum_n\frac{1}{n} \\
+      \sum_n \psi_{n, l} &= -C + \sum_n \frac{1}{2} \\
+      \bar{\psi}_{n, l} &= \frac{-C}{n} + \frac{1}{2}\sum_n\frac{1}{n} \\
         &= \frac{-C}{n} + \frac{1}{2} H_n
     \end{align}
     We know that $H_n$ is asymptotically equivalent to $\log(n)$. Therefore we
-    arrive at $\bar{\psi}_{l, n} \rightarrow \infty$, which is a contradiction.
-    Therefore we have $\limsup \bar{\psi}_{l, n} \geq \psi_j^*$.
+    arrive at $\bar{\psi}_{n, l} \rightarrow \infty$, which is a contradiction.
+    Therefore we have $\limsup \bar{\psi}_{n, l} \geq \psi_j^*$.
 
-    The argument from \Cref{proposition:optimality_sufficient_condition} can be mirrored to show the second statement.
+    The argument from \Cref{proposition:optimality_sufficient_condition} can be
+    mirrored to show the second statement.
   \end{proof}
 
   \begin{remark}[Kevin 19/10/29]
@@ -586,31 +590,40 @@ be given a lot of measurement effort very soon.
   \end{remark}
 
   \begin{proof}[\Cref{lemma:psi_undersampled}]
-    As previously seen in \Cref{lemma:measurement_plan_bound_max}, we have that
-    for $j \in S^* \setminus \{\hat{j}\}$ with $\alpha_{n, S^*} \rightarrow 1$:
+    Thanks to $\alpha_{n, S^*} \rightarrow 1$: we can apply
+    \Cref{lemma:measurement_plan_bound_max}, and get for $j \in S^*$:
     \begin{align}
-      \psi_{j, n} &\leq \frac{1 - \alpha_{n, j}}{1 - \alpha_{n, S^*}}
+      \psi_{n, j} &\leq \frac{1 - \alpha_{n, j}}{1 - \alpha_{n, S^*}}
     \end{align}
-    Additionally, $\alpha_{n, S^*} \rightarrow 1$, according to \Cref{lemma:psi_convergence} allows us to assume that $\psi_{n, S^*} \rightarrow \frac{1}{2}$.
+    Additionally, according to \Cref{lemma:psi_convergence}, $\alpha_{n, S^*}
+    \rightarrow 1$, allows us to assume that $\psi_{n, S^*} \rightarrow
+    \frac{1}{2}$.
+
+    Assume for $\hat{j} \in S^*$ it holds that $\bar{\psi}_{\hat{j}, n} <
+    \psi^{\frac{1}{2}*}_{\hat{j}}$
     \begin{align}
       \psi_{n, \hat{j}} &= \psi_{n, S^*} - \sum_{j \in S^* \setminus
           \{\hat{j}\}} \psi_{n, j}\\
         &\rightarrow \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}}
             \psi_{n, j}\\
         &\geq \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}} \frac{1 -
-            \alpha_{n, j}}{1 - \alpha_{n, S^*}} \\
+            \alpha_{n, j}}{1 - \alpha_{n, S^*}} \text{
+            (\Cref{lemma:measurement_plan_bound_max})} \\
         &= \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}}
             \frac{\Pi_n(\Theta_{m, j}^c)}{\Pi_n(\Theta_{S^*}^c)} \\
         &= \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}} \frac{\exp\{-n
             \min_{i \notin S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) \}}{\exp\{-
             n \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\bar{\psi}_j,
-            \bar{\psi}_i) \}}\\
+            \bar{\psi}_i) \}} \label{eq:like_lemma10}\\
         &= \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}} \exp\{-
             n(\min_{i \notin S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) -
             \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\bar{\psi}_j,
             \bar{\psi}_i))\} \\
         &= \frac{1}{2} - m \exp(-n\delta)
     \end{align}
-    Third to to last step: found in Lemma 10.
-    Last step: Assumption of $\hat{j}$ scenario.
+    Where \Cref{eq:like_lemma10} relies on a combination of
+    \Cref{proposition:prop5} and \Cref{lemma:kl_to_C}, just as we've done in
+    \Cref{lemma:fraction_bound}. The last step stems from the fact that a
+    minimization over both indices will always yield a value lesser or equal to
+    the minimization over only one of the indices.
   \end{proof}
