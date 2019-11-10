@@ -81,17 +81,32 @@ consequence of the design decision of which operation to apply to candidates
 $S_1$ and $S_2$.
 
 \section{Analysis}\label{section:analysis}
-Starting off by a statement about the implications of finite measurement, we
-later establish bounds and equalities on the measurement plan $\psi$ of the
+Starting off by repeating a general proposition from Russo, we continue by a statement about the implications of finite measurement. Later establish bounds and equalities on the measurement plan $\psi$ of the
 algorithm.
 
-The following lemma formalizes three seemingly intuitive statements. First,
-it shows that for each arm that is sampled infinitely many times, the estimated
-mean will converge to its true mean. Second, it demonstrates that if every arm
-is sampled infinitely often, the posterior will put all of its mass on
-parameters with $S^*$ as top-$m$ arms. Third, it argues that as long as some
-arms have only been granted finite measurement, they can't be ruled out from
-being optimal.
+\begin{proposition}[Russo: Proposition 4]\label{proposition:russo_4}
+  Assuming $\theta \in [\underline{\theta}, \bar{\theta}]^k$, for any $l \in
+      [k]$ if $\psi_{n, l} \rightarrow \infty$ the for all $\epsilon > 0$:
+  \begin{align}
+    \Pi_n(\{\theta \in \Theta | \theta_l \notin (\theta_l', \theta_l'')\})
+        \rightarrow 0
+  \end{align}
+  with probability 1. If $\mathcal{I} = \{l: \sum_{n=1}^\infty \psi_{n, l} <
+  \infty\} \neq \emptyset$ then
+  \begin{align}
+    \inf_{n \in \mathbb{N}} \Pi_n(\{\theta \in \Theta | \theta_i \in
+        (\theta_l', \theta_l'') \forall l \in \mathcal{I}\}) > 0
+  \end{align}
+  for any collections of open intervals $(\theta_l', \theta_l'') \subset
+  (\underline{\theta}, \bar{\theta})$ ranging over $l \in \mathcal{I}$.
+\end{proposition}
+Directly using \Cref{proposition:russo_4}, the following lemma formalizes three
+seemingly intuitive statements. First, it shows that for each arm that is
+sampled infinitely many times, the estimated mean will converge to its true
+mean. Second, it demonstrates that if every arm is sampled infinitely often, the
+posterior will put all of its mass on parameters with $S^*$ as top-$m$ arms.
+Third, it argues that as long as some arms have only been granted finite
+measurement, they can't be ruled out from being optimal.
 \begin{lemma}\label{lemma:finite_measurement}
   For $\mathcal{I} = \{l: \sum_{n=1}^\infty \psi_{n, l} < \infty\}$ it holds
       that:
@@ -173,6 +188,13 @@ bound from \Cref{proposition:measurement_plan_arm}.
   \end{align}
 \end{lemma}
 
+\begin{lemma}\label{lemma:fraction_bound}
+  $\forall i \notin S^*, \forall \delta > 0$, if $\bar{\psi}_{n, S^*} \rightarrow 1/2$, then there exists $\delta' > 0$ and a sequence $\epsilon_n \rightarrow 0$ such that $\forall n \in \mathbb{N}$:
+  \begin{align}
+    \psi_{n, i} \leq \exp\{-n( \min_{j \in S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) - \Gamma^*_{\frac{1}{2}} - \epsilon_n) \}
+  \end{align}
+\end{lemma}
+
 \section{Empirical behavior}\label{section:empirical_behavior}
 %What true distributions are assumed?
 %What prior and posterior distributions are assumed?
@@ -223,7 +245,35 @@ as described in \Cref{section:concrete_optimal_allocation}.
   \label{fig:algorithm_coefficients}
 \end{figure}
 
-\section{Further results}
+\section{Further results and outlook}
+
+Looking at \Cref{proposition:optimality_sufficient_condition}, we see that in
+order to show $\bar{psi}_n \rightarrow \psi^{frac{1}{2}*}$, we need to show that
+once an arm has been oversampled on average, its likelihood of being sampled
+soon is very low. We expect the upper bound from \Cref{lemma:fraction_bound} to
+be useful for this task as a similar approach has succeeded in Russo's case. In
+particular, the missing link in the chain is to show that under oversampling
+conditions, $\min_{j \in S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) \geq
+\Gamma^*_{\frac{1}{2}}$. If the latter is satisfied, the probability $\psi_{i,
+n}$ is exponentially small in $n$ and therefore the sum from
+\Cref{proposition:optimality_sufficient_condition} finite by the geometric
+series.
+
+However, this crucial condition is not naturally satisfied. Investigating it
+more carefully, we realize that that implies an excess of evidence over the
+optimal allocation. This can only happen in a given round if the optimal arms $j
+\in S^*$ have sampling probabilities equal to the optical allocation
+$\psi^{\frac{1}{2}*}$.
+
+As we are not convinced that this holds true, we started looking into the
+scenario in which the minimizing $j$ is currently undersampled. Our intuition is
+that if $\hat{j} \in S^*$ is currently undersampled, it will soon be corrected
+for.
+
+\Cref{lemma:limsup_undersampling} proposes an analogous form of
+\Cref{proposition:optimality_sufficient_condition} for undersampling.
+\Cref{lemma:psi_undersampled} suggests that if an arm is undersampled, it will
+be given a lot of measurement effort very soon.
 
 \begin{lemma}\label{lemma:limsup_undersampling}
   Given $\sum_n(\frac{1}{2} - \psi_{l, n}) \mathbb{I}[\psi_{l, n} \leq \psi_l^*
@@ -243,7 +293,7 @@ as described in \Cref{section:concrete_optimal_allocation}.
 
   \begin{itemize}
   \item Note that this statement is equal for top-1 and top-$m$. Hence we can
-  employ Russo's Proposition 4 telling us that if $\sum_{n \in \mathbb{N}}
+  employ \Cref{proposition:russo_4} telling us that if $\sum_{n \in \mathbb{N}}
   \psi_{n, l} \rightarrow \infty$, it follows that
   \begin{align}
     \Pi_n(\{\theta: \theta_l \in (\theta^*_l - \epsilon, \theta^*_l +
@@ -261,14 +311,21 @@ as described in \Cref{section:concrete_optimal_allocation}.
   \end{align}
 
   As $\alpha_{n, S}$ is bounded by $[0, 1]$, we obtain the desired statement.
-  \item As a syntactic alteration on $\theta_S$, let's define $\theta_{S,
-  \epsilon} = \{\theta \in \Theta | \min_{l_1 \in S} \theta_j \geq \max_{l_2
-  \notin S} \theta_i + \epsilon\}$. Also, let us define $\rho^* = \max_{S
-  \not\subseteq \mathcal{I}} \min_{l_1 \in S} \theta^*_{l_1}$. Intuitively,
-  $\rho^*$ represents a metric on the best set of arms under the true values, of
-  which every arm is sampled infinitely often under infinite samples. Assuming \bar{\theta}$ to be the largest possible parameter, choose
-  $\epsilon$ such that $\rho^* + 2\epsilon < \bar{\theta}$. For $S \subset
-  \mathcal{I}$, we have:
+
+  \item Similar to $\theta_S$, we define $\theta_{S, \epsilon} = \{\theta \in
+  \Theta | \min_{l_1 \in S} \theta_j \geq \max_{l_2 \notin S} \theta_i +
+  \epsilon\}$. In other words, $\theta_{S,\epsilon}$ is the set of parameters
+  under which $S$ optimal with a distance of at least $\epsilon$ to the
+  next-best arm. As a lower bound suffices for our statement, we tighten this
+  condition to conveniently allow for usage of the previous points.
+
+  We now pose two tightening conditions on parameters $\theta$: First we
+  restrict arms from $\mathcal{I}^c$ to be at most $\epsilon$ better than the
+  \emph{true} best parameter from $\mathcal{I}^c$. Second we restrict arms from
+  $\mathcal{I}$, other than from $S$, to be worse than the true best parameter
+  from $\mathcal{I}^c$. For the sake of convenience, let us define $\rho^* =
+  \max_{S \not\subseteq \mathcal{I}} \min_{l_1 \in S} \theta^*_{l_1}$ on the
+  true parameters. For $S \subset \mathcal{I}$, we have:
   \begin{align}
     \theta_{S, \epsilon} &= \{\theta|(\min_{l_1 \in S} \theta_{l_1} \geq
         \max_{l_2 \in \mathcal{I} \setminus S} \theta_{l_1} + \epsilon) \wedge (\min_{l_1 \in S}
@@ -291,7 +348,7 @@ as described in \Cref{section:concrete_optimal_allocation}.
   \end{align}
   Where the last step follows from the fact that $\{x|p(x) \wedge q(x)\} =
   \{x|p(x)\} \setminus \{x|\neg q(x)\}$. By \eqref{eq:concentration}, we know
-  that $\Pi_n(B) \rightarrow 0$. The second part of Russo's Proposition 4 tells
+  that $\Pi_n(B) \rightarrow 0$. The second part of \Cref{proposition:russo_4} tells
   us that over any open interval $(\theta_l', \theta_l'')$, we have $\inf_{n \in
   \mathbb{N}} \Pi_n(\{\theta| \theta_l \in (\theta_l', \theta_l'')\ \forall l
   \in \mathcal{I}\}) > 0$. By defining $(\theta_l', \theta_l'')$ to be $(\rho +
@@ -308,10 +365,6 @@ as described in \Cref{section:concrete_optimal_allocation}.
   \end{align}
   \end{itemize}
 \end{proof}
-
-\begin{remark}[Kevin 19/09/05]
-  Why did we need $2\epsilon$ instead of $\epsilon$?
-\end{remark}
 
 \begin{proof}[\Cref{proposition:measurement_plan_arm}]
   It will prove itself useful to first investigate the probability of a given
@@ -445,7 +498,58 @@ as described in \Cref{section:concrete_optimal_allocation}.
   \end{align}
   for $j \in S^*$.
 
-  Note that in \eqref{eq:l46:1} we used that for any $S \neq S^*$ $\alpha_{n, S} < \apha_{n S^*}$ thanks to our assumption $\alpha_{n, S^*} \rightarrow 1$.
+  Note that in \eqref{eq:l46:1} we used that for any $S \neq S^*$, $\alpha_{n,
+  S} < \alpha_{n S^*}$ thanks to our assumption $\alpha_{n, S^*} \rightarrow 1$.
+\end{proof}
+
+\begin{proof}[\Cref{lemma:fraction_bound}]
+  We first want to find a lower bound for the denominator and then find upper
+  bounds for the respective numerator.
+
+  \Cref{proposition:characterization} gives us that
+  \[\lim_{n \rightarrow \infty} \sup - \frac{1}{n} \log \Pi_n(\Theta^c_{S^*}) \leq \Gamma^*_{\frac{1}{2}}\]
+  \Cref{lemma_lim_sup} tells us that there is a sequence $\epsilon_n > 0,
+  \epsilon_n \rightarrow 0$ s.t.
+  \begin{align}
+    - \frac{1}{n} \log \Pi_n(\Theta^c_{S^*}) &\leq \Gamma^*_{\frac{1}{2}} +
+        \epsilon_n \label{eq: epsilon}\\
+   \Pi_n(\Theta^c_{S^*}) &\geq \exp\{-n (\Gamma^*_{\frac{1}{2}} + \epsilon_n)\}
+  \end{align}
+  We observe that $\Theta^c_{S^*} = \bigcup_{S' \neq S^*} \Theta_{S'}$. We use
+  the union bound to notice that $ \max_{S' \neq S^*} \alpha_{n, S'} \leq
+  \Pi(\Theta_{S^*}^c) \leq {k \choose m} \max_{S' \neq S^*} \alpha_{n, S'}$. We
+  have \[\lim_{n \rightarrow \infty} \frac{1}{n} \log\frac{\alpha_{n, S}}{{k
+  \choose m} \alpha_{n, S}} \rightarrow 0 \Rightarrow \alpha_{n, S} \deq {k
+  \choose m} \alpha_{n, S}\] and hence by the Squeeze theorem $\max_{S' \neq
+  S^*} \alpha_{n, S'} \deq \Pi(\Theta_{S^*}^c)$. Combining these two insights,
+  we obtain our desired lower bound for the denominator: \[\max_{S' \neq S^*}
+  \alpha_{n, S'} \deq \Pi_n(\Theta^c_{S^*}) \geq \exp\{-n
+  (\Gamma^*_{\frac{1}{2}} + \epsilon_n)\}\] Let's investigate the numerators.
+
+  For $i \notin S^*$, we have $\Theta_i \subset \bar{\Theta}_i$ and hence:
+  \begin{align}
+    \alpha_{n,i} =& \Pi_n(\Theta_i) \\
+    \leq& \Pi_n(\bar{\Theta}_i) \\
+    \deq& \exp\{-n \inf_{\theta \in \bar{\Theta}_i}
+        D_{\bar{\psi}_n}(\theta^*||\theta)\} \text{ \Cref{proposition:prop5}}\\
+    =& \exp\{-n \min_{j \in S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i)\} \text{
+        (\Cref{lemma:kl_to_C}) } \label{eq: only_i}
+  \end{align}
+  Simultaneously leveraging both bounds we obtain:
+  \begin{align}
+    \frac{\alpha_{n, i}}{\max_{S' \neq S^*} \alpha_{n, S'}} &\leq \frac{\exp\{-
+        n \min_{j \in S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i)\}}{ \exp\{-n
+        (\Gamma^*_{\frac{1}{2}} + \epsilon_n)\}} \\
+    &= \exp\{-n( \min_{j \in S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) -
+        \Gamma^*_{\frac{1}{2}} - \epsilon_n) \}
+  \end{align}
+  As $C$ is strictly increasing in its second argument and by the assumptions of
+  the lemma $\bar{\psi}_i > \psi_i^* + \delta$, we have that for any $j \in S^*$
+  $C_{j, i}(\psi_j^*, \bar{\psi}_i) = C_{j, i}(\psi_j^*, \psi_i^*) + \delta' =
+  \Gamma^* + \delta'$ with $\delta' > 0$. It remains to show that a similar
+  equality holds when minimizing over $j$ and with $\bar{\psi}_j$ instead of
+  $\psi^*$ as first argument. One should be able to leverage $\bar{\psi}_{S^*}
+  \rightarrow \frac{1}{2} = \psi_{S^*}^*$ along the way.
 \end{proof}
 
 \begin{proof}[\Cref{lemma:limsup_undersampling}]
@@ -473,8 +577,7 @@ as described in \Cref{section:concrete_optimal_allocation}.
     arrive at $\bar{\psi}_{l, n} \rightarrow \infty$, which is a contradiction.
     Therefore we have $\limsup \bar{\psi}_{l, n} \geq \psi_j^*$.
 
-    TODO: Fix this reference.
-    The argument from Lemma 9 can be repeated to show the second statement.
+    The argument from \Cref{proposition:optimality_sufficient_condition} can be mirrored to show the second statement.
   \end{proof}
 
   \begin{remark}[Kevin 19/10/29]
