@@ -6,18 +6,19 @@ underlying idea still revolves around repeatedly applying Thompson sampling
 until two different candidates are at hand.
 
 \Cref{section:algorithm} introduces the algorithm and provides some explanations
-with regards to generalization decisions. It also introduces the constraint
-$\psi_{S^*} = \frac{1}{2}$. Subsequently, \Cref{section:analysis} analyzes
-properties of the algorithm. In particular it presents bounds on the measurement
-plan, states general consequences of finite measurement and discusses
-implications of underallocation and overallocation. We firmly believe that all
-of those are very useful to show that this algorithm's measurement plan
-converges to the optimal constrained measurement plan $\psi^{\frac{1}{2}*}$. We
-emphasize that this is an \emph{adaptive} algorithm, in stark contrast to the
-fixed, optimal allocation $\psi^{\frac{1}{2}*}$. In other words, instead of only
-$\psi$ influencing $\Pi_n$, they now both influence each other. Proofs for those
-statements are provided in \Cref{section:txts_proofs}. Additionally, we provide
-some empirical results in \Cref{section:empirical_behavior}.
+on how the algorithm generalizes Russo's TTTS for best arm identification. It
+also introduces the constraint $\psi_{S^*} = \frac{1}{2}$. Subsequently,
+\Cref{section:analysis} analyzes properties of the algorithm. In particular it
+presents bounds on the measurement plan, states general consequences of finite
+measurement and discusses implications of underallocation and overallocation. We
+conjecture that all of those are very useful to show that this algorithm's
+measurement plan converges to the optimal constrained measurement plan
+$\psi^{\frac{1}{2}*}$. We emphasize that this is an \emph{adaptive} algorithm,
+in stark contrast to the fixed, optimal allocation $\psi^{\frac{1}{2}*}$. In
+other words, instead of only $\psi$ influencing $\Pi_n$, they now both influence
+each other. Proofs for those statements are provided in
+\Cref{section:txts_proofs}. Additionally, we provide some empirical results in
+\Cref{section:empirical_behavior}.
 
 \section{Algorithm}\label{section:algorithm}
 As a generalization of Russo's TTTS, the main difference lies in the fact that
@@ -47,7 +48,7 @@ uniform selection.
 
 We believe that the applying a XOR to both candidates is essential for the
 correctness of the algorithm, whereas the uniform sampling from the XOR of both
-candidates could easily be substituted by other distributions. We would expect
+candidates could possibly be substituted by other distributions. We would expect
 such a change to preserve correctness, as long as every arm of the XOR is
 sampled with strictly positive probability. Yet, it would likely alter the
 hyperparamter $\beta = \psi_{S^*}$.
@@ -86,10 +87,10 @@ algorithm.
 
 \begin{proposition}[Russo: Proposition 4]\label{proposition:russo_4}
   Assuming $\theta \in [\underline{\theta}, \bar{\theta}]^k$, for any $l \in
-      [k]$ if $\psi_{n, l} \rightarrow \infty$ the for all $\epsilon > 0$:
+      [k]$ if $\psi_{n, l} \rightarrow \infty$ then for all $\epsilon > 0$:
   \begin{align}
-    \Pi_n(\{\theta \in \Theta | \theta_l \notin (\theta_l', \theta_l'')\})
-        \rightarrow 0
+    \Pi_n(\{\theta \in \Theta | \theta_l \notin (\theta_l^* - \epsilon,
+        \theta_l^* + \epsilon)\}) \rightarrow 0
   \end{align}
   with probability 1. If $\mathcal{I} = \{l: \sum_{n=1}^\infty \psi_{n, l} <
   \infty\} \neq \emptyset$ then
@@ -138,12 +139,12 @@ can be trivially bounded from below by 2 or from above by 2$m$. Note that these
 inequalities are tight with respect to $n$ as $m$ can be seen as a constant.
 \begin{proposition}\label{proposition:measurement_plan_arm}
   \begin{align}
-    \psi_{n, l} &\leq \frac{1}{2}(\sum_{S: l \in S} \frac{\alpha_{n, S}}{1 -
-        \alpha_{n, S}} (1 - \alpha_{n, l}) +  \sum_{S': l \notin S'}
-        \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}} \alpha_{n, l}) \\
-    \psi_{n, l} &\geq \frac{1}{2m}(\sum_{S: l \in S} \frac{\alpha_{n, S}}{1 -
-        \alpha_{n, S}} (1 - \alpha_{n, l}) +  \sum_{S': l \notin S'}
-        \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}} \alpha_{n, l})
+    \psi_{n, l} &\leq \frac{1}{2}((1 - \alpha_{n, l}) \sum_{S: l \in S}
+        \frac{\alpha_{n, S}}{1 - \alpha_{n, S}} + \alpha_{n, l} \sum_{S': l
+        \notin S'} \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}}) \\
+    \psi_{n, l} &\geq \frac{1}{m}((1 - \alpha_{n, l}) \sum_{S: l \in S}
+        \frac{\alpha_{n, S}}{1 - \alpha_{n, S}} + \alpha_{n, l} \sum_{S': l
+        \notin S'} \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}}) \\
   \end{align}
 \end{proposition}
 Having established bounds on the measurement plan for individual arms, we
@@ -278,9 +279,10 @@ for.
 \Cref{lemma:psi_undersampled} suggests that if an arm is undersampled, it will
 be given a lot of measurement effort very soon.
 \begin{lemma}\label{lemma:limsup_undersampling}
-  Given $\sum_n(\frac{1}{2} - \psi_{n, l}) \mathbb{I}[\psi_{n, l} \leq \psi_l^*
-  - \delta] < \infty$ we have that
-  \[\limsup \bar{\psi}_{n, l} \geq \psi_j^* \text{ and } \liminf \bar{\psi}_{n, l} \geq \psi_j^*\]
+  Given $\sum_n(\frac{1}{2} - \psi_{n, l}) \mathbb{I}[\bar{\psi}_{n, l} \leq
+    \psi_l^* - \delta] < \infty$ we have that
+  \[\limsup \bar{\psi}_{n, l} \geq \psi_j^* \text{ and } \liminf \bar{\psi}_{n,
+      ul} \geq \psi_j^*\]
 \end{lemma}
 \begin{lemma}\label{lemma:psi_undersampled}
   If $\alpha_{n, S^*} \rightarrow 1$ and $\bar{\psi}_{n, j} < \psi^{\frac{1}{2}*}_j$ then there exists $\delta > 0$
@@ -479,8 +481,8 @@ be given a lot of measurement effort very soon.
 \begin{proof}[\Cref{lemma:measurement_plan_bound_max}]
   \Cref{proposition:measurement_plan_arm} tells us that
   \[\psi_{n, l} \leq \frac{1}{2}((1 - \alpha_{n, l}) \sum_{S: l \in S}
-      \frac{\alpha_{n, S}}{1 - \alpha_{n, S}} + \alpha_{n, l})
-      \sum_{S': l \notin S'} \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}}\]
+      \frac{\alpha_{n, S}}{1 - \alpha_{n, S}} + \alpha_{n, l}
+      \sum_{S': l \notin S'} \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}})\]
   Knowing that $\alpha_{n, S^*} \rightarrow 1$, we can bound $\psi_{n, i}$ in
   the following way:
   \begin{align}
@@ -501,7 +503,8 @@ be given a lot of measurement effort very soon.
   for $j \in S^*$.
 
   Note that in \eqref{eq:l46:1} we used that for any $S \neq S^*$, $\alpha_{n,
-  S} < \alpha_{n S^*}$ thanks to our assumption $\alpha_{n, S^*} \rightarrow 1$.
+  S} < \alpha_{n, S^*}$ thanks to our assumption $\alpha_{n, S^*} \rightarrow
+  1$.
 \end{proof}
 
 \begin{proof}[\Cref{lemma:fraction_bound}]
@@ -558,14 +561,14 @@ be given a lot of measurement effort very soon.
 \begin{proof}[\Cref{lemma:limsup_undersampling}]
     We first show the first statement and then use it for the second. For the
     sake of contradiction, assume that $\limsup \bar{\psi}_{n, l} <
-    \psi_l^*$. This implies that there is a $n_0$ from which onward $\psi_{n,
-    l} < \psi_l^*$.
+    \psi_l^*$. This implies that there is a $n_0$ from which onward
+    $\bar{psi}_{n, l} < \psi_l^*$.
     \begin{align}
       \sum_n (\frac{1}{2} - \psi_{n, l}) &= \sum_{n=1}^{n_0} (\frac{1}{2} -
-          \psi_{n, l}) + \sum_{n > n_0} (\frac{1}{2} - \psi_{n, l}) \\
+            \psi_{n, l}) + \sum_{n > n_0} (\frac{1}{2} - \psi_{n, l}) \\
         &= \sum_{n=1}^{n_0} (\frac{1}{2} - \psi_j) + \sum_{n > n_0}
-            (\frac{1}{2} - \psi_{n, l})\mathbb{I}[\psi_{n, l} \leq \psi_l^* -
-            \delta] \\
+            (\frac{1}{2} - \psi_{n, l})\mathbb{I}[\bar{\psi}_{n, l} \leq
+            \psi_l^* - \delta] \\
         &= C
     \end{align}
     Where the last line follows from the assumption and the fact that the first

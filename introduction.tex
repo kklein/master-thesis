@@ -19,25 +19,73 @@
 %   \item Explain the flow of the document.
 % \end{itemize}
 
+Much of Machine Learning revolves around how to learn from observations.
+Technological advances allow for an extensive gathering of data in a plurality
+of domains. Notwithstanding, many domains are still, and likely to remain, areas
+of expensive data acquisition. Due to immense complexity, human behavior as well
+as many physical processes can only be simulated at very high costs or not at
+all. As a consequence, data is gathered by experiments that can be long-lasting,
+strictly constrained in quantity and precious. In light of that, we focus on the
+following aspect of Machine Learning: how to acquire observations.
 
-Much of Machine Learning revolves around how to learn from observations. On the one hand, technological advances allow for an extensive gathering of data in a pluratily of domains. On the other hand, many domains are still, and likely to remain, areas of expensive data acquisition. Due to immense complexity, human behaviour as well as many physical processes can only be simulated at very high costs or not at all. As a consequence, data is gathered by experiments that can be long-lasting, strictly constrained in quantity and precious. In light of that, we focus on the following aspect of Machine Learning: how to acquire observations.
+In order to capture the complexity of real-world processes, we model outcomes of
+decisions according to probability distributions. More precisely, we make use of
+the well-established multi-armed bandits model for that exact purpose. As we've
+mentioned, we seek to describe a manner of acquiring, or sampling, observations.
+Naturally, one must ask the question: 'With what exact goal?'
 
-In order to capture the complexity of real-world processes, we model outcomes of decisions according to probability distributions. More precisely, we make use of the well-established multi-armed bandits model for that exact purpose. As we've mentioned, we seek to describe a manner of acquiring, or sampling, observations. Naturally, one must ask the question: 'With what exact goal?'
-
-We assume the goal of the data generation and acquisition to be the identification of the $m$ best options. Within the realm of this goal, we tackle problems:
+We assume the goal of the data generation and acquisition to be the
+identification of the $m$ best out of $k$ options. Within the realm of this
+goal, we attempt to tackle the following problems:
 \begin{itemize}
   \item What is, in theory, the best possible acquisition strategy?
-  \item What can be algorithm that can, under some constraints, mimics this best possible acquisition strategy?
+  \item What is an algorithm that can, under some constraints, mimic this best possible acquisition strategy?
 \end{itemize}
-In particular, we seek to address these challenges by generalizing work from Russo \cite{DBLP:journals/corr/Russo16} on best arm identification.
+In particular, we seek to address these challenges by generalizing work from
+Russo \cite{DBLP:journals/corr/Russo16} on identification of the single best
+option. Consistent with existing literature, we will continue to refer to
+options as arms. This terminology stems from the image of a many-armed bandit
+slot machine.
 
-We assume a frequentist setting. This implies that the options follow fixed distributions, which are unknown to us. Yet, we can sample from those distributions. This can be thought of as being confronted with a noise-free signal that is then polluted with noise from a sensor. In this spirit, we seek to identify the true best options with as few samples as possible and be as confident of our recommendation as possible.
+We assume a frequentist setting. This implies that the options follow fixed
+distributions, which are unknown to us. Yet, we can learn about those unknown
+distributions by observing the samples the environment draws. This can be
+thought of as being confronted with a noise-free signal that is then polluted
+with noise from a sensor. In this spirit, we seek to identify the true best
+options with as few samples as possible and be as confident of our
+recommendation as possible, which will be formalized.
 
-Our first contribution is the characterization of the optimal acquisition strategy, also referred to as measurement plan or allocation. What makes the optimal allocation optimal is the rate of increase in confidence in the true best options per sample. This optimal strategy is based on a thought experiment of knowing the underlying truth and acquiring samples validating the knowledge as well as possible. As a consequence, it serves as a bound for practical algorithms outside of thought experiments. Intuitively, the guiding theme of the characterization is that the allocation seeks to gather equal \emph{evidence} on every option.
+Our first contribution is the characterization of the optimal acquisition
+strategy, also referred to as optimal measurement plan or allocation. What makes
+the optimal allocation optimal is the rate of increase in confidence in the true
+best options per sample. This optimal strategy is based on a thought experiment
+of knowing the underlying truth and acquiring samples validating the knowledge
+as well as possible. As a consequence, it serves as a bound for practical
+algorithms outside of thought experiments. Intuitively, the guiding theme of the
+characterization is that the allocation seeks to gather equal \emph{evidence} on
+every option. We will provide a definition and intuition of evidence closely
+following Russo's work.
 
-Our second contribution is the definition of a concrete and simple adaptive algorithm. As compared to the optimal allocation, the algorithm changes its measurement plan after every sample, based on the observations it has made. The algorithm being Bayesian, it comes with the upside of confidence estimation and allows for leveraging and expressing domain knowledge through the use of priors. We analyze properties of the algorithm and highlight insights that we deem very useful for proving asymptotic convergence of this algorithm's allocation to the optimal allocation.
+Our second contribution is the definition of a concrete and simple adaptive
+algorithm. As compared to the optimal allocation, the algorithm changes its
+measurement plan after every sample, based on the observations it has made. The
+algorithm, being Bayesian, comes with the upside of confidence estimation and
+allows for leveraging and expressing domain knowledge through the use of priors.
+We analyze properties of the algorithm and highlight insights that we deem very
+useful for proving asymptotic convergence of this algorithm's allocation to the
+optimal allocation.
 
-In those undertakings we make very few assumptions on the underlying conditions. Concretely, we expect the options to follow distributions from the
-one-dimensional canonical exponential family. This includes common distributions such as the Bernoulli, binomial with known number of trials, Poisson, exponential, Pareto with known minimal value, chi-squared or the normal distribution with known variance.
+In those undertakings we make very few assumptions on the underlying conditions.
+Concretely, we expect the options to follow distributions from the
+one-dimensional canonical exponential family. This includes common distributions
+such as the Bernoulli, binomial with known number of trials, Poisson,
+exponential, Pareto with known minimal value, chi-squared or the normal
+distribution with known
+variance \footnote{\url{https://en.wikipedia.org/wiki/Exponential_family}}.
 
-\Cref{chapter:background} introduces the general problem context as well as Russo's work we attempt to generalize to top-$m$ selection. We characterize the optimal allocation in \Cref{chapter:optimal}. Our proposed algorithm, Top-2$m$ XOR Thompson sampling, is presented and analyzed in \Cref{chapter:algorithm} before concluding our work in \Cref{chapter:conclusion}.
+\Cref{chapter:background} introduces the general problem context as well as
+Russo's work, which we attempt to generalize from top-1 to top-$m$ selection. We
+characterize the optimal allocation in \Cref{chapter:optimal}. Our proposed
+algorithm, Top-2$m$ XOR Thompson sampling, is presented and analyzed in
+\Cref{chapter:algorithm} before concluding our work in
+\Cref{chapter:conclusion}.

@@ -37,8 +37,8 @@ i.e.
   \forall l_1, l_2 \in [k]: l_1 \neq l_2 \Rightarrow \theta^*_{l_1} \neq
       \theta^*_{l_2}
 \end{align}
-and as previously mentioned that the underlying true means follow distributions
-belonging to the family of exponential distributions.
+and as previously mentioned the rewards follow distributions belonging to the
+family of exponential distributions.
 %%%%%%
 % Statements
 %How can C be interpreted?
@@ -129,14 +129,14 @@ every pair $(j, i) \in S^* \times {S^*}^c$.
 
 Intuitively, this lemma tells us that for parameters in $\Bar{\Theta}_i$ the
 weighted sum of KL divergences can be by simplified to only two arms. One of
-those arms will be $i$. The other has arm to stem from the true set of arms
+those arms will be $i$. The other arm has to stem from the true set of arms
 $S^*$ in order to satisfy $\Bar{\Theta}_i$'s requirement of 'disproving' $S^*$.
-This arm $j \in S^*$ is chosen as to seem the 'least distinctive' from $i$.
-Distinction is made up of two aspects, as seen in the definition of $C_{j, i}$
-in \eqref{eq:C}: how much this arm $j$ is sampled, i.e. $\psi_j$, and how
-different its true mean $\theta^*_j$ is from the true mean $\theta^*_i$ of $i$.
-The latter difference is captured by the KL divergence between both arms and a
-minimal $x$, individually.
+This arm $j \in S^*$ is chosen as to seem the 'least distinctive' from $i$ under
+$\psi$. Distinction is made up of two aspects, as seen in the definition of
+$C_{j, i}$ in \eqref{eq:C}: how much this arm $j$ is sampled, i.e. $\psi_j$, and
+how different its true mean $\theta^*_j$ is from the true mean $\theta^*_i$ of
+$i$. The latter difference is captured by the KL divergence between both arms
+and a minimal $x$, individually.
 
 We can apply those statements to the quantity we care about: the mass the
 posterior puts on the complement of parameters reflecting the true top-$m$ arms,
@@ -157,10 +157,10 @@ In other words, the rate at which the posterior converges to the truth with
 increasing number of samples is defined by the pair of optimal and suboptimal
 arms for which the least evidence exists.
 
-As we've described, the optimal allocation $\psi^{\frac{1}{2}*}$ is the one
-which makes the quantity from \Cref{eq:posterior} as small as possible. We have:
+As we've described, the optimal allocation $\psi^*$ is the one which makes the
+quantity from \Cref{eq:posterior} as small as possible. We have:
 \begin{align}
-  \psi^{\frac{1}{2}*} &= \argmin_{\psi} \exp\{-n \min_{i \notin S^*}\min_{j \in
+  \psi^* &= \argmin_{\psi} \exp\{-n \min_{i \notin S^*}\min_{j \in
       S^*} C_{j, i}(\psi_j, \psi_i)\} \\
     &= \argmax_{\psi} \min_{i \notin S^*}\min_{j \in S^*} C_{j, i}(\psi_j,
         \psi_i) \label{eq:psi^*}
@@ -198,7 +198,8 @@ enunciating three properties of $C_{j, i}$: concavity, existence of a unique
 solution $x$ and strict monotonicity.
 
 \begin{lemma}\label{lemma:C_concave}
-  Each $\min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)$ is a concave function.
+  Each $\min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)$ is a jointly concave
+  function.
 \end{lemma}
 
 \begin{lemma}\label{lemma:C_unique_solution}
@@ -239,14 +240,18 @@ solution $x$ and strict monotonicity.
   almost surely.
 \end{proposition}
 
-The attentive reader might have noticed that we started off with relations between $\Theta_{S^*}$ and both suboptimal arms $i$ and optimal $j$, such as in \Cref{lemma:set_relation_S*_i} and \Cref{lemma:posterior_S*_i}. We stopped doing so in \Cref{lemma:kl_to_C} and proceeded to rely on $i$. We are confident in saying that the same results could have been reached by focusing on $j$, through symmetry.
+The attentive reader might have noticed that we started off with relations
+between $\Theta_{S^*}$ and both suboptimal arms $i$ and optimal $j$, such as in
+\Cref{lemma:set_relation_S*_i} and \Cref{lemma:posterior_S*_i}. We stopped doing
+so in \Cref{lemma:kl_to_C} and proceeded to rely on $i$. We conjecture  that the
+same results could have been reached by focusing on $j$, through symmetry.
 
-\section{A concrete optimal allocation}
+\section{An exemplary optimal allocation}
     \label{section:concrete_optimal_allocation}
 For the sake of concreteness, we present numeric values of optimal allocations,
 both constrained and unconstrained for two top-$m$ identification scenarios.
 Hence given, the true means $\theta^*$, we seek to determine $\psi^*$ and
-$\psi^{\frac{1}{2}*}$. Relying on \eqref{eq:condition_C}, we have a massively
+$\psi^{\frac{1}{2}*}$. Relying on \eqref{eq:condition_C}, we have a
 over-determined system of equations. The latter can be approximately solved by
 numerical methods, in our case non-linear least squares minimization.
 
@@ -469,12 +474,13 @@ Therefore
   \begin{align}
     f(x, \psi_j + \epsilon, p) &= \psi_j d(\theta_j^*||x) + \epsilon
         d(\theta_j^*||x) + p d(\theta_i^*||x) \\
-      &> p d(\theta_i^*||x) + \psi_j d(\theta_j^*||x)\\
+      &\geq p d(\theta_i^*||x) + \psi_j d(\theta_j^*||x)\\
       &= f(x, \psi_j, p)
   \end{align}
-  And therefore $f$ is strictly increasing in $\psi_j$.
+  And therefore $f$ is increasing in $\psi_j$.
 
-  For a given $p$, we fix $\psi_{j1} < \psi_{j2}$ from $[0, 1]$ as well as their counterparts
+  For a given $p$, we fix $\psi_{j1} < \psi_{j2}$ from $[0, 1]$ as well as their
+  counterparts
   \begin{align}
     &x_1 = \argmin_{x \in \mathbb{R}} f(x, \psi_{j1}, p)
     &x_2 = \argmin_{x \in \mathbb{R}} f(x, \psi_{j2}, p)
@@ -482,15 +488,15 @@ Therefore
   Hence our goal is to show that $f(x_1, \psi_{j1}, p) < f(x_2, \psi_{j2}, p)$.
   By \Cref{lemma:C_unique_solution} both $x_1$ and $x_2$ are unique. Hence
   \begin{align}
-    f(x_1, \psi_{j1}, \alpha) &< f(x_2, \psi_{j1}, \alpha) \\
-    f(x_2, \psi_{j2}, \alpha) &< f(x_1, \psi_{j2}, \alpha)
+    f(x_1, \psi_{j1}, p) &< f(x_2, \psi_{j1}, p) \\
+    f(x_2, \psi_{j2}, p) &< f(x_1, \psi_{j2}, p)
   \end{align}
   As $f$ is strictly increasing in its second argument, it holds that $f(x_2,
-  \psi_{j1}, \alpha) < f(x_2, \psi_{j2}, \alpha)$. Chaining those inequalities
-  together we obtain:
+  \psi_{j1}, p) \leq f(x_2, \psi_{j2}, p)$. Chaining those inequalities together
+  we obtain:
   \begin{align}
-    f(x_1, \psi_{j1}, \alpha) < f(x_2, \psi_{j1})  < f(x_2, \psi_{j2}) < f(x_1,
-        \psi_{j2})
+    f(x_1, \psi_{j1}, p) < f(x_2, \psi_{j1}, p)  \leq f(x_2, \psi_{j2}, p) <
+        f(x_1, \psi_{j2}, p)
   \end{align}
 \end{proof}
 
