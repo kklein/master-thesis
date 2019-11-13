@@ -11,14 +11,14 @@ also introduces the constraint $\psi_{S^*} = \frac{1}{2}$. Subsequently,
 \Cref{section:analysis} analyzes properties of the algorithm. In particular it
 states general consequences of finite measurement and presents bounds on the
 measurement plan. In \Cref{section:further_results} we discuss properties of
-underallocation and overallocation. We conjecture that all of those can be very
-useful to show that this algorithm's measurement plan converges to the optimal
-constrained measurement plan $\psi^{\frac{1}{2}*}$. We emphasize that this is an
-\emph{adaptive} algorithm, in stark contrast to the fixed, optimal allocation
-$\psi^{\frac{1}{2}*}$. In other words, instead of only $\psi$ influencing
-$\Pi_n$, they now both influence each other. Proofs for those statements are
-provided in \Cref{section:txts_proofs}. Additionally, we provide some empirical
-results in \Cref{section:empirical_behavior}.
+underallocation and overallocation. We conjecture that those can be very useful
+in showing that this algorithm's average measurement plan $\bar{\psi}_n$
+converges to the optimal constrained measurement plan $\psi^{\frac{1}{2}*}$. We
+emphasize that this is an \emph{adaptive} algorithm, in stark contrast to the
+fixed, optimal allocation $\psi^{\frac{1}{2}*}$. In other words, instead of only
+$\psi$ influencing $\Pi_n$, they now both influence each other. Proofs for those
+statements are provided in \Cref{section:txts_proofs}. Additionally, we provide
+some empirical results in \Cref{section:empirical_behavior}.
 
 \section{Algorithm}\label{section:algorithm}
 As a generalization of Russo's TTTS, the main difference lies in the fact that
@@ -220,7 +220,7 @@ $\frac{\alpha}{\alpha + \beta}$.
 
 The posterior mass put on certain events, in particular the confidence, was
 computed as described in \Cref{section:algorithm}. \Cref{fig:confidences}
-indicates the confidence for a given number of steps of our method compared to
+illustrates the confidence for a given number of steps of our method compared to
 the the uniform allocation and Thompson sampling. We repeated each of the three
 methods with 50 different random seeds. Boxes indicate quartiles. We
 hope to convince the reader that TXTS increases in confidence much quicker than
@@ -238,11 +238,11 @@ sampling frequencies. Said frequencies simply indicate what fraction of the
 samples has been allocated to a certain arm.
 
 \Cref{fig:measurement_plan} indicates the empirical sampling frequencies. The
-arms are ordered according to there true means with the worst being at the
-bottom and the best at the top. Adding up the subotimal, i.e. the 5 lower arms,
-and optimal, i.e. the 4 upper arms, we note that $\bar{\psi}_{S^*}$ can nicely
-be read to equal $\frac{1}{2}$ - just as we have argued theoretically. The value
-of $\frac{1}{2}$ is indicated by a horizontal bar.
+arms are ordered according to their true means with the worst being at the
+bottom and the best at the top. Adding up the suboptimal, i.e. the five lower
+arms, and optimal, i.e. the four upper arms, we note that $\bar{\psi}_{S^*}$ can
+nicely be read to equal $\frac{1}{2}$ - just as we have argued theoretically.
+The value of $\frac{1}{2}$ is indicated by a horizontal bar.
 
 Moreover, we compared the empirical sampling frequencies to the fixed optimal
 allocation from \Cref{section:concrete_optimal_allocation}, the uniform
@@ -274,7 +274,7 @@ described in \Cref{section:concrete_optimal_allocation}. Seeing a discrepancy
 between the coefficients, we wondered whether the algorithm wasn't able to
 balance the evidence because of its lacking accuracy on $\theta^*$ and therefore
 also computed the coefficients with the estimated $\hat{\theta}$. The results
-were gathered by executing TXTS with 150 different random seeds, each amounting to 2000 samples. We interpret this result as a confirmation that Z.
+were gathered by executing TXTS with 150 different random seeds, each amounting to 2000 samples. Coefficients based on $\theta^*$ can be seen on the left-hand side, coefficients based on $\hat{\theta}$ can on the right-hand side. We interpret this result as a vague indication that the evidence for for each pair of optimal and suboptimal arms is \emph{roughly} balanced.
 \begin{figure}[h]
   \centering
   \includegraphics[width=\textwidth]{190909-coefficients_2000.png}
@@ -285,16 +285,16 @@ were gathered by executing TXTS with 150 different random seeds, each amounting 
 \section{Further results and outlook}\label{section:further_results}
 
 Looking at \Cref{proposition:optimality_sufficient_condition}, we see that in
-order to show $\bar{\psi}_n \rightarrow \psi^{\frac{1}{2}*}$, we can show
-that once an arm has been oversampled on average, its likelihood of being
-sampled in the next step is very low. We expect the upper bound from
+order to show $\bar{\psi}_n \rightarrow \psi^{\frac{1}{2}*}$, we can show that
+once an arm has been oversampled on average, its likelihood of being sampled in
+the next step is very low. We expect the upper bound from
 \Cref{lemma:fraction_bound} to be useful for this task as a similar approach has
 succeeded in Russo's case. In particular, the missing link in the chain is to
-show that if $i$ has been oversampled, $\min_{j \in S^*} C_{j,
-i}(\bar{\psi}_j, \bar{\psi}_i) \geq \Gamma^*_{\frac{1}{2}}$. If the latter is
-satisfied, the probability $\psi_{n, i}$ is exponentially small in $n$ and
-therefore the sum from \Cref{proposition:optimality_sufficient_condition} finite
-by the geometric series.
+show that if $i$ has been oversampled, $\min_{j \in S^*} C_{j, i}(\bar{\psi}_j,
+\bar{\psi}_i) \geq \Gamma^*_{\frac{1}{2}}$. If the latter is satisfied, the
+probability $\psi_{n, i}$ is exponentially small in $n$ and therefore the sum
+from \Cref{proposition:optimality_sufficient_condition} finite by the geometric
+series. We formalize this in \Cref{lemma:if_converged_then_converged}.
 
 However, this crucial condition is not naturally satisfied. Investigating it
 more carefully, we realize that its satisfaction requires an excess of evidence
@@ -311,6 +311,9 @@ for.
 \Cref{proposition:optimality_sufficient_condition} for undersampling.
 \Cref{lemma:psi_undersampled} suggests that if an arm is undersampled, it will
 be given a lot of measurement effort very soon.
+\begin{lemma}\label{lemma:if_converged_then_converged}
+  TODO.
+\end{lemma}
 \begin{lemma}\label{lemma:limsup_undersampling}
   Given $\sum_n(\frac{1}{2} - \psi_{n, l}) \mathbb{I}[\bar{\psi}_{n, l} \leq
     \psi_l^* - \delta] < \infty$ we have that
@@ -594,6 +597,10 @@ be given a lot of measurement effort very soon.
   $\psi^*$ as first argument. One should be able to leverage $\bar{\psi}_{S^*}
   \rightarrow \frac{1}{2} = \psi_{S^*}^*$ along the way.
 \end{remark}
+
+\begin{proof}[\Cref{lemma:if_converged_then_converged}]
+  TODO.
+\end{proof}
 
 \begin{proof}[\Cref{lemma:limsup_undersampling}]
     We first show the first statement and then use it for the second. For the
