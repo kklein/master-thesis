@@ -1,1 +1,24 @@
 \chapter{Conclusion}\label{chapter:conclusion}
+
+In \Cref{chapter:optimal} we introduced a notion of evidence for the top-$m$ arm
+identification case and characterized a fixed optimal allocation through it.
+This allows for the computation of a best-possible convergence rate,
+establishing intuition on the top-$m$ optimization mechanism and computation of
+concrete optimal allocations as benchmarks for cases in which the underlying
+truth is at hand.
+
+In \Cref{chapter:algorithm} we presented our simple, adaptive Bayesian algorithm
+for top-$m$ arm identification. Relying on Thompson sampling and an additional
+layer of randomization, we presented theoretical results regarding its
+measurement allocation. In addition, provided intuition as to why we expect it
+to sample the most relevant arms in a given step. Furthermore, we've proven
+statements that we conjecture to be very useful to show that this algorithm
+converges to the optimal allocation characterized in \Cref{chapter:optimal}.
+Qualitative empirical results from simulations have not contradicted our
+statements or intuitions.
+
+Proving that TXTS converges to the fixed optimal constrained allocation seems to
+require some more elaborate techniques than employed by Russo for his top-1
+case. Nevertheless, thanks to the empirical results, the nature of the algorithm
+being a natural generalization of Russo's top-1 algorithm and the already
+established theoretical foundations, we suggest the conjecture holds.
