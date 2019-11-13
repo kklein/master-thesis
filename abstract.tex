@@ -1,17 +1,16 @@
 \begin{abstract}
   ~150 words
-
-  1 Top-m arm identification comprehensible for any scientist
-
-  2 Top-m arm identification comprehensible for scientist from the field
-
-  1 The problem addressed by this paper
-
-  1 Summary of main result
-
-  2 How the main result changes previous knowledge
-
-  1 Result in general context
-
-  2 Broader perspective, understandable by any scientist
+  % 1 Top-m arm identification comprehensible for any scientist
+  Top-$m$ arm revolves around identifying the set of $m$ best options with rewards following unknown probability distributions through the draw of samples.
+  % 2 Top-m arm identification comprehensible for scientist from the field
+  In particular, for a fixed budget of samples, one seeks to increase confidence in the estimate. Conversely, for a fixed confidence, one seeks to require the least amount of samples possible. Hence the optimization revolves around a fast convergence rate of the confidence for increasing samples.
+  %1 The problem addressed by this paper
+  Our work seeks to characterize this optimality concept more explicitly and intuitively as well as provide an algorithm which is promising to converge to said optimality.
+  % 1 Summary of main result
+  Our characterization, relying on a definition of evidence, proves that the optimal allocation collects equal evidence to distinguish every pair of optimal and suboptimal arms.
+  % 2 How the main result changes previous knowledge
+  This characterization allows for a better intuitive understanding of the top-$m$ mechanism and should make it more convenient to prove convergence of algorithms. Being very simplistic to understand and implement, our algorithm comes with confidence estimates and allows for leveraging prior knowledge.
+  %!1 Result in general context
+  %2 Broader perspective, understandable by any scientist
+  We hope that this work lays the foundation for top-$m$ convergence proofs, in particular for our suggested algorithm.
 \end{abstract}
