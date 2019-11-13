@@ -9,16 +9,16 @@ until two different candidates are at hand.
 on how the algorithm generalizes Russo's TTTS for best arm identification. It
 also introduces the constraint $\psi_{S^*} = \frac{1}{2}$. Subsequently,
 \Cref{section:analysis} analyzes properties of the algorithm. In particular it
-presents bounds on the measurement plan, states general consequences of finite
-measurement and discusses implications of underallocation and overallocation. We
-conjecture that all of those are very useful to show that this algorithm's
-measurement plan converges to the optimal constrained measurement plan
-$\psi^{\frac{1}{2}*}$. We emphasize that this is an \emph{adaptive} algorithm,
-in stark contrast to the fixed, optimal allocation $\psi^{\frac{1}{2}*}$. In
-other words, instead of only $\psi$ influencing $\Pi_n$, they now both influence
-each other. Proofs for those statements are provided in
-\Cref{section:txts_proofs}. Additionally, we provide some empirical results in
-\Cref{section:empirical_behavior}.
+states general consequences of finite measurement and presents bounds on the
+measurement plan. In \Cref{section:further_results} we discuss properties of
+underallocation and overallocation. We conjecture that all of those can be very
+useful to show that this algorithm's measurement plan converges to the optimal
+constrained measurement plan $\psi^{\frac{1}{2}*}$. We emphasize that this is an
+\emph{adaptive} algorithm, in stark contrast to the fixed, optimal allocation
+$\psi^{\frac{1}{2}*}$. In other words, instead of only $\psi$ influencing
+$\Pi_n$, they now both influence each other. Proofs for those statements are
+provided in \Cref{section:txts_proofs}. Additionally, we provide some empirical
+results in \Cref{section:empirical_behavior}.
 
 \section{Algorithm}\label{section:algorithm}
 As a generalization of Russo's TTTS, the main difference lies in the fact that
@@ -46,14 +46,14 @@ elements. Hence we need to define an approach on how to select from the XOR.
 According to both Russo's suggestion as well as Occam's razor, we opted for
 uniform selection.
 
-We believe that the applying a XOR to both candidates is essential for the
-correctness of the algorithm, whereas the uniform sampling from the XOR of both
-candidates could possibly be substituted by other distributions. We would expect
-such a change to preserve correctness, as long as every arm of the XOR is
-sampled with strictly positive probability. Yet, it would likely alter the
-hyperparamter $\beta = \psi_{S^*}$.
+We believe that the application of the XOR operation to both candidates is
+essential for the correctness of the algorithm, whereas the uniform sampling
+from the XOR set of both candidates could possibly be substituted by other
+distributions. We would expect such a change to preserve correctness, as long as
+every arm of the XOR set is sampled with strictly positive probability. Yet, it
+would likely alter the hyperparamter $\beta = \psi_{S^*}$.
 
-We present the approach to sample an arm in step $n$ in \Cref{alg:TXTS}.
+We present the approach of sampling the $n$th arm in \Cref{alg:TXTS}.
 This approach can be repeated either for a fixed amount of samples or until a
 specific confidence level is reached. Note that the confidence level can be
 approximated in every step. The confidence level is equal to $\Pi_n(\Theta_S)$
@@ -62,7 +62,7 @@ estimated by drawing samples from $\Pi_n$ and identifying for which set $S$ the
 fraction $\frac{\text{\# samples in which $S$ is optimal}}{\#samples}$ is
 largest. The fraction of this $S$ approximates the confidence level.
 \begin{algorithm}[H]
-  \caption{Given a posterior $\Pi_{n-1}$ in step $n$}
+  \caption{Given a posterior $\Pi_{n-1}$ in step $n$.}
   \label{alg:TXTS}
   \begin{algorithmic}
     \State $\hat{\theta} \sim \Pi_{n-1}$
@@ -206,58 +206,91 @@ bound from \Cref{proposition:measurement_plan_arm}.
 %How is alpha computed, as it is defined via a huge integral?
 %How is psi computed, as there is no closed form?
 
-TODO: Talk about updates of priors.
-
 For the following empirical results we assumed the rewards of arms to follow
 Bernoulli distributions with means $\theta^* = [.1, .2, .3, .4, .5, .6, .7, .8,
-.9]$. We defined priors/posteriors to be Beta distributed with initial
-parameters $\alpha = \beta = 1$, mimicking a uniform prior on the set of arms.
+.9]$. Furthermore, we assumed $m=4$. We defined priors/posteriors to be Beta
+distributed with initial parameters $\alpha = \beta = 1$. The Beta distribution
+is a conjugate prior of the Bernoulli distribution. Its parameters can be
+interpreted as counts for events of success and failure. Hence the choice
+$\alpha = \beta = 1$ for each arm mimics a uniform prior. After an observation
+of the reward of arm $l$, an update consists of simply increasing either
+$\alpha$ or $\beta$ of $l$, depending on whether it was a success or failure.
+The mean of the Beta distribution can therefore simply be computed as
+$\frac{\alpha}{\alpha + \beta}$.
 
-The posterior mass put on certain events, in particular the confidence, were
+The posterior mass put on certain events, in particular the confidence, was
 computed as described in \Cref{section:algorithm}. \Cref{fig:confidences}
 indicates the confidence for a given number of steps of our method compared to
-the the uniform allocation and Thompson sampling.
+the the uniform allocation and Thompson sampling. We repeated each of the three
+methods with 50 different random seeds. Boxes indicate quartiles. We
+hope to convince the reader that TXTS increases in confidence much quicker than
+both alternatives.
 \begin{figure}[h]
   \centering
   \includegraphics[width=.5\textwidth]{190723-confidences.png}
-  \caption{Unconstrained and constrained optimal allocation for $\theta_1$ and $\theta_2$, top-4}
+  \caption{Confidence per steps for TXTS, uniform and Thompson sampling.}
   \label{fig:confidences}
 \end{figure}
+
 As we don't have a closed form for the average measurement plan
 $\bar{\psi}_{n,l}$ at our disposal, we approximate it with the empirical
-sampling frequencies. \Cref{fig:measurement_plan} indicates said empirical
-sampling frequencies. Note that $\bar{\psi}_{S^*}$ can nicely be read to equal
-$\frac{1}{2}$.
+sampling frequencies. Said frequencies simply indicate what fraction of the
+samples has been allocated to a certain arm.
+
+\Cref{fig:measurement_plan} indicates the empirical sampling frequencies. The
+arms are ordered according to there true means with the worst being at the
+bottom and the best at the top. Adding up the subotimal, i.e. the 5 lower arms,
+and optimal, i.e. the 4 upper arms, we note that $\bar{\psi}_{S^*}$ can nicely
+be read to equal $\frac{1}{2}$ - just as we have argued theoretically. The value
+of $\frac{1}{2}$ is indicated by a horizontal bar.
+
+Moreover, we compared the empirical sampling frequencies to the fixed optimal
+allocation from \Cref{section:concrete_optimal_allocation}, the uniform
+allocation and the allocation produced by Thompson sampling. In order to
+illustrate progression over time, we plotted TXTS and Thompson sampling for
+different numbers of samples, i.e. timesteps. This can be seen in figure
+\Cref{fig:measurement_plan_comparison}. We hope to convey that TXTS steadily
+approaches the optimal allocation with increasing number of samples
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{190723-selections_2.png}
-  \caption{Unconstrained and constrained optimal allocation for $\theta_1$ and
-  $\theta_2$, top-4}
+  \includegraphics[width=.25\textwidth]{190723-selections_2.png}
+  \caption{TXTS empirical allocation after 1000 steps.}
   \label{fig:measurement_plan}
 \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{191112-selection.png}
+  \caption{Comparison of allocations for different methods and numbers of
+      samples.}
+  \label{fig:measurement_plan_comparison}
+\end{figure}
+
 As we know from \Cref{section:optimal_statements}, the optimal allocation
 gathers equal evidence for all pairs from $S^* \times S^{*c}$. We used the
 empirical sampling frequencies to approximate those coefficients. A qualitative
 comparison of the individual coefficients can be found in
-\Cref{fig:algorithm_coefficients}. The individual $C_{j, i}$ were computed just
-as described in \Cref{section:concrete_optimal_allocation}.
+\Cref{fig:algorithm_coefficients}. The individual $C_{j, i}$ were computed as
+described in \Cref{section:concrete_optimal_allocation}. Seeing a discrepancy
+between the coefficients, we wondered whether the algorithm wasn't able to
+balance the evidence because of its lacking accuracy on $\theta^*$ and therefore
+also computed the coefficients with the estimated $\hat{\theta}$. The results
+were gathered by executing TXTS with 150 different random seeds, each amounting to 2000 samples. We interpret this result as a confirmation that Z.
 \begin{figure}[h]
   \centering
   \includegraphics[width=\textwidth]{190909-coefficients_2000.png}
-  \caption{Unconstrained and constrained optimal allocation for $\theta_1$ and
-  $\theta_2$, top-4}
+  \caption{Comparison of estimated $\theta$ and coefficients $C_{j, i}$.}
   \label{fig:algorithm_coefficients}
 \end{figure}
 
-\section{Further results and outlook}
+\section{Further results and outlook}\label{section:further_results}
 
 Looking at \Cref{proposition:optimality_sufficient_condition}, we see that in
-order to show $\bar{\psi}_n \rightarrow \psi^{\frac{1}{2}*}$, we need to show
+order to show $\bar{\psi}_n \rightarrow \psi^{\frac{1}{2}*}$, we can show
 that once an arm has been oversampled on average, its likelihood of being
-sampled soon is very low. We expect the upper bound from
+sampled in the next step is very low. We expect the upper bound from
 \Cref{lemma:fraction_bound} to be useful for this task as a similar approach has
 succeeded in Russo's case. In particular, the missing link in the chain is to
-show that under oversampling conditions, $\min_{j \in S^*} C_{j,
+show that if $i$ has been oversampled, $\min_{j \in S^*} C_{j,
 i}(\bar{\psi}_j, \bar{\psi}_i) \geq \Gamma^*_{\frac{1}{2}}$. If the latter is
 satisfied, the probability $\psi_{n, i}$ is exponentially small in $n$ and
 therefore the sum from \Cref{proposition:optimality_sufficient_condition} finite
@@ -271,7 +304,7 @@ optical allocation $\psi^{\frac{1}{2}*}$.
 
 As we are not convinced that this holds true, we started looking into the
 scenario in which the minimizing $j$ is currently undersampled. Our intuition is
-that if $\hat{j} \in S^*$ is currently undersampled, it will soon be corrected
+that if $j \in S^*$ is currently undersampled, it will soon be corrected
 for.
 
 \Cref{lemma:limsup_undersampling} proposes an analogous form of
@@ -282,7 +315,7 @@ be given a lot of measurement effort very soon.
   Given $\sum_n(\frac{1}{2} - \psi_{n, l}) \mathbb{I}[\bar{\psi}_{n, l} \leq
     \psi_l^* - \delta] < \infty$ we have that
   \[\limsup \bar{\psi}_{n, l} \geq \psi_j^* \text{ and } \liminf \bar{\psi}_{n,
-      ul} \geq \psi_j^*\]
+      l} \geq \psi_j^*\]
 \end{lemma}
 \begin{lemma}\label{lemma:psi_undersampled}
   If $\alpha_{n, S^*} \rightarrow 1$ and $\bar{\psi}_{n, j} < \psi^{\frac{1}{2}*}_j$ then there exists $\delta > 0$
@@ -294,7 +327,6 @@ be given a lot of measurement effort very soon.
 
 \section{Proofs}\label{section:txts_proofs}
 \begin{proof}[\Cref{lemma:finite_measurement}]
-
   \begin{itemize}
   \item Note that this statement is equal for top-1 and top-$m$. Hence we can
   employ \Cref{proposition:russo_4} telling us that if $\sum_{n \in \mathbb{N}}
@@ -328,8 +360,8 @@ be given a lot of measurement effort very soon.
   \emph{true} best parameter from $\mathcal{I}^c$. Second we restrict arms from
   $\mathcal{I}$, other than from $S$, to be worse than the true best parameter
   from $\mathcal{I}^c$. For the sake of convenience, let us define $\rho^* =
-  \max_{S \not\subseteq \mathcal{I}} \min_{l_1 \in S} \theta^*_{l_1}$ on the
-  true parameters. For $S \subset \mathcal{I}$, we have:
+  \max_{l_1 \in \mathcal{I}^c} \theta^*_{l_1}$ on the true parameters. For $S
+  \subset \mathcal{I}$, we have:
   \begin{align}
     \theta_{S, \epsilon} &= \{\theta|(\min_{l_1 \in S} \theta_{l_1} \geq
         \max_{l_2 \in \mathcal{I} \setminus S} \theta_{l_1} + \epsilon) \wedge (\min_{l_1 \in S}
@@ -411,13 +443,13 @@ be given a lot of measurement effort very soon.
     \psi_{n, l} \leq& \frac{1}{2} (\Pr[l \in S_1 \wedge l \notin S_2] + \Pr[l
         \notin S_1 \wedge l \in S_2]) \\
       =& \frac{1}{2}((1 - \alpha_{n, l}) \sum_{S: l \in S} \frac{\alpha_{n,
-          S}}{1 - \alpha_{n, S}} + \alpha_{n, l}) \sum_{S': l \notin S'}
-          \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}} \\
+          S}}{1 - \alpha_{n, S}} + \alpha_{n, l} \sum_{S': l \notin S'}
+          \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}}) \\
     \psi_{n, l} \geq& \frac{1}{2m} (\Pr[l \in S_1 \wedge l \notin S_2] + \Pr[l
         \notin S_1 \wedge l \in S_2]) \\
       =& \frac{1}{2m}((1 - \alpha_{n, l}) \sum_{S: l \in S} \frac{\alpha_{n,
-          S}}{1 - \alpha_{n, S}} + \alpha_{n, l}) \sum_{S': l \notin S'}
-          \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}} \\
+          S}}{1 - \alpha_{n, S}} + \alpha_{n, l} \sum_{S': l \notin S'}
+          \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}})
   \end{align}
 \end{proof}
 
@@ -469,8 +501,9 @@ be given a lot of measurement effort very soon.
   \Cref{lemma:finite_measurement}'s definition, we have $S \subset \mathcal{I}$.
   Hence we can apply its third clause and get $\liminf_{n \rightarrow \infty}
   \alpha_{n, S'} > 0$. It follows directly that $\sum_{n \in \mathbb{N}}
-  \alpha_{n, S} \rightarrow \infty$. Hence $\sum_{n \in \mathbb{N}} \psi_{n, S}$
-  tends to infinity with growing $n$ as well, which is a contradiction.
+  \alpha_{n, S} \rightarrow \infty$. As a consequence $\sum_{n \in \mathbb{N}}
+  \psi_{n, S}$ tends to infinity with growing $n$ as well, which is a
+  contradiction.
 \end{proof}
 
 \begin{proof}[\Cref{lemma:psi_convergence}]
@@ -508,8 +541,8 @@ be given a lot of measurement effort very soon.
 \end{proof}
 
 \begin{proof}[\Cref{lemma:fraction_bound}]
-  We first want to find a lower bound for the denominator and then find upper
-  bounds for the respective numerator.
+  We first want to find a lower bound for the denominator and then find an upper
+  bound for the numerator.
 
   \Cref{proposition:characterization} gives us that
   \[\lim_{n \rightarrow \infty} \sup - \frac{1}{n} \log \Pi_n(\Theta^c_{S^*})
@@ -528,16 +561,18 @@ be given a lot of measurement effort very soon.
   \choose m} \alpha_{n, S}} \rightarrow 0 \Rightarrow \alpha_{n, S} \deq {k
   \choose m} \alpha_{n, S}\] and hence by the Squeeze theorem $\max_{S' \neq
   S^*} \alpha_{n, S'} \deq \Pi(\Theta_{S^*}^c)$. Combining these two insights,
-  we obtain our desired lower bound for the denominator: \[\max_{S' \neq S^*}
-  \alpha_{n, S'} \deq \Pi_n(\Theta^c_{S^*}) \geq \exp\{-n
-  (\Gamma^*_{\frac{1}{2}} + \epsilon_n)\}\] Let's investigate the numerators.
+  we obtain our desired lower bound for the denominator:
+  \[\max_{S' \neq S^*} \alpha_{n, S'} \deq \Pi_n(\Theta^c_{S^*}) \geq \exp\{-n
+      (\Gamma^*_{\frac{1}{2}} + \epsilon_n)\}\]
+  Let's investigate the numerator.
 
   For $i \notin S^*$, we have $\Theta_i \subset \bar{\Theta}_i$ and hence:
   \begin{align}
     \alpha_{n,i} =& \Pi_n(\Theta_i) \\
     \leq& \Pi_n(\bar{\Theta}_i) \\
     \deq& \exp\{-n \inf_{\theta \in \bar{\Theta}_i}
-        D_{\bar{\psi}_n}(\theta^*||\theta)\} \text{ \Cref{proposition:prop5}}\\
+        D_{\bar{\psi}_n}(\theta^*||\theta)\} \text{
+        (\Cref{proposition:prop5})}\\
     =& \exp\{-n \min_{j \in S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i)\} \text{
         (\Cref{lemma:kl_to_C}) } \label{eq: only_i}
   \end{align}
@@ -549,6 +584,8 @@ be given a lot of measurement effort very soon.
     &= \exp\{-n( \min_{j \in S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) -
         \Gamma^*_{\frac{1}{2}} - \epsilon_n) \}
   \end{align}
+\end{proof}
+\begin{remark}
   As $C$ is strictly increasing in its second argument and by the assumptions of
   the lemma $\bar{\psi}_i > \psi_i^* + \delta$, we have that for any $j \in S^*$
   $C_{j, i}(\psi_j^*, \bar{\psi}_i) = C_{j, i}(\psi_j^*, \psi_i^*) + \delta' =
@@ -556,7 +593,7 @@ be given a lot of measurement effort very soon.
   equality holds when minimizing over $j$ and with $\bar{\psi}_j$ instead of
   $\psi^*$ as first argument. One should be able to leverage $\bar{\psi}_{S^*}
   \rightarrow \frac{1}{2} = \psi_{S^*}^*$ along the way.
-\end{proof}
+\end{remark}
 
 \begin{proof}[\Cref{lemma:limsup_undersampling}]
     We first show the first statement and then use it for the second. For the
@@ -581,16 +618,11 @@ be given a lot of measurement effort very soon.
     \end{align}
     We know that $H_n$ is asymptotically equivalent to $\log(n)$. Therefore we
     arrive at $\bar{\psi}_{n, l} \rightarrow \infty$, which is a contradiction.
-    Therefore we have $\limsup \bar{\psi}_{n, l} \geq \psi_j^*$.
+    As a consequence we have $\limsup \bar{\psi}_{n, l} \geq \psi_j^*$.
 
     The argument from \Cref{proposition:optimality_sufficient_condition} can be
     mirrored to show the second statement.
   \end{proof}
-
-  \begin{remark}[Kevin 19/10/29]
-    I'm not sure whether the indicator variable should be on $\bar{\psi}$ or
-    $\psi$. I think it the proof should hold in both cases, though.
-  \end{remark}
 
   \begin{proof}[\Cref{lemma:psi_undersampled}]
     Thanks to $\alpha_{n, S^*} \rightarrow 1$: we can apply

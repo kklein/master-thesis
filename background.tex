@@ -7,7 +7,7 @@ Tbd whether relevant.
 %What is the scenario/model?
 The so-called stochastic multi-armed bandit is a general model to simulate
 decision-making in uncertain environments. In particular, one assumes a set of
-options or arms to choose from, each choice leading to an outcome, also referred
+arms to choose from, each choice leading to an outcome, referred
 to as reward. In general, one assumes many sequential selections among the set
 of arms. The outcome of the selection of an individual arm typically follows a
 fixed but unknown probability distribution.
@@ -26,9 +26,8 @@ The latter revolves around \emph{simple reward}. This problem consists of
 seeking to maximize the reward one obtains if one leverages the current
 knowledge for \emph{another} draw. This implies that the focus lies on
 \emph{identification} of high-quality candidates, quality usually being assessed
-by high means. It is therefore part of the task to align estimation of the
-best arm with the underlying truth on the one hand as well as reaching a high
-\emph{confidence} in this alignment on the other hand.
+by high means. The main task is therefore to estimate the true best arms
+with high \emph{confidence}.
 
 %Why is model and its problems relevant?
 The bandits model can be used for all processes involving sequential decision
@@ -36,14 +35,13 @@ making. Yet, an important simplification is the assumption of the distributions
 being fixed over time. In how far this simplification is representative of the
 to-be-modeled process varies.
 
-The explore-exploit problem is applied in Recommender Systems, ad campaigns, in
-the context of Reinforcement Learning and Robotics.
+The explore-exploit problem can be found in Recommender Systems \cite{McInerney:2018:EEE:3240323.3240354}, ad campaigns \cite{5360225},
+in the context of Reinforcement Learning
+\cite{DBLP:journals/corr/abs-1811-12560} \cite{Szepesvari:2010:ARL:1855083} and
+Robotics \cite{Baldassano}.
 
 For real-world applications of the pure-exploration bandit please refer to
 \ref{ss:top-1_model}.
-
-The interested reader can find many many specialized versions of the Bandits
-model, such as contextual bandits or adversarial bandits.
 
 \section{Notation}\label{section:notation}
 We assume $k$ arms to choose from and denote the set of possible arms as $[k]$.
@@ -90,12 +88,10 @@ Clearly, it holds that $\Pi_n(\Theta) = 1$. As a shorthand for the top-$m$ case,
 \end{align}
 We are mostly interested in strategies that allocate measurement effort over the
 arms in a randomized fashion, i.e. according to a probability distribution. We
-refer to such an allocation or distribution as $\psi \in [0, 1]^k$, defining the
-probability of each arm being sampled. Naturally, it holds that $\sum_{l \in
+refer to such an allocation or measurement plan as $\psi \in [0, 1]^k$, defining
+the probability of each arm being sampled. Naturally, it holds that $\sum_{l \in
 [k]} \psi_l = 1$. We also define the allocation property of a set by the sum of
 its arms: $\psi_S = \sum_{l \in S} \psi_l$.
-
-We indicate the complement of a set $\Theta$ by $\Theta^c$.
 
 The $n$-th sampled arm is denoted as $l_n$. For adaptive strategies, the
 allocation can change after every sample. After $n$ samples we refer to the
@@ -115,7 +111,7 @@ holds:
 \end{align}
 Hence $\deq$ can be vaguely thought of as asymptotic relationship indicating
 similar growth. Note the asymmetry of the relationship: it rather
-represents an inequality than an equality.
+represents an inequality than an equality. Russo points refers to this relation as \emph{logarithmic equivalence} and points out that $a_n$ and $b_n$ are \emph{equal up to first order in the exponent}. Clearly, it holds that $a_n + b_n \deq \max\{a_n, b_n\}$ and $c a_n \deq a_n$ for positive constant $c$.
 
 \section{Thompson sampling for bandits}
 %How does it work?
@@ -131,7 +127,7 @@ The foundation of Thompson sampling is a Bayesian approach: instead of 'only'
 possessing estimates on the means/distributions of arms, it entails a
 distribution \emph{over} arms, indicating the likelihood of a random variable
 over the arms. In the bandits scenario said random variable tends to be the mean
-of an arm. Hence, instead of only point estimates for per arm, Thompson sampling comes with a distribution over the arms.
+of an arm. Hence, instead of only point estimates for per arm, Thompson sampling requires a distribution over the arms.
 
 Naturally, this distribution over the arms should also leverage the knowledge
 acquired throughout the sampling process. Hence, per round, we can talk about
@@ -139,23 +135,22 @@ acquired throughout the sampling process. Hence, per round, we can talk about
 a step $n$ answers the question: 'How likely are the arms $1, 2, 3$ to have
 means $[.193, .254, .1]$ after having observed samples 1 to $n$?'. As this is an
 iterative process, the posterior after observing sample $n$ will serve as the
-prior for selecting sample $n+1$. Hence the posterior can be thought of as the
-the prior 'updated' with the knowledge acquired of a specific round. Thanks to
-this duality we will continue to only talk about posteriors.
+prior for selecting sample $n+1$. Hence the posterior is the the prior
+\emph{updated} with the knowledge acquired of a specific round. Thanks to this
+duality we will continue to only talk about posteriors.
 
-The attentive reader might wonder how exactly posteriors are updated. The update
-procedure is dependent of the type of utilized class of distribution for prior
-and posteriors. An example of this can be found in
-\ref{section:empirical_behavior}.
+One might wonder how exactly posteriors are updated. The update procedure is
+dependent of the type of utilized class of distribution for prior and
+posteriors. An example of this can be found in \ref{section:empirical_behavior}.
 
 In contrast to greedily selecting the arm that empirically maximizes the metric
-of desire, e.g. the mean, Thompson sampling suggests to randomly draw beliefs on
-arms weighted by the posterior distribution. Note that said posterior
-distribution is itself a function of the empirical means. Subsequently, it
-selects the arm which maximizes the metric of desire on the sampled belief. With
-many repetitions, this leads to each arm being sampled proportionally to its
-likelihood of maximizing the metric of desire according to current belief.
-\Cref{alg:thompson_sampling} illustrates this process more explicitly.
+of desire, e.g. the mean, Thompson sampling suggests to draw from posterior.
+Note that said posterior distribution is itself a function of the empirical
+means. Subsequently, it selects the arm which maximizes the metric of desire on
+the sampled belief. With many repetitions, this leads to each arm being sampled
+proportionally to its likelihood of maximizing the metric of desire according to
+current belief. \Cref{alg:thompson_sampling} illustrates this process more
+explicitly.
 
 \begin{algorithm}[H]
     \caption{Given a posterior $\Pi_{n-1}$ in step $n$}
@@ -183,8 +178,8 @@ while sampling. Rather, the goal is to efficiently gather information maximizing
 the confidence of the suggestion made \emph{after} the sampling phase. In other
 words, there is a purely explorative phase, also referred to as 'experiment'
 which is then typically followed by a purely exploitative phase, having
-committed to an option. For this reason, Best Arm Identification is a kind of
-'Experiment Design'.
+committed to an option. For this reason, Best Arm Identification is closely
+related to Optimal Experiment Design.
 
 Quite naturally, all other aspects being controlled for, requiring fewer samples
 is preferable. Hence one can formulate the goal in two ways: maximize confidence
@@ -220,23 +215,23 @@ Real-world applications of Best Arm identification include:
 \end{itemize}
 
 
-\subsection{Optimal allocation}\label{subsection:optimal_allocation}
+\subsection{Optimal fixed allocation}\label{subsection:optimal_allocation}
 % What is the overall goal?
 % How is this achieved? (Talk about optimization over hyper-parameters)
 
 We start off by describing what it means for an allocation to be optimal and by
 enumerating some of its properties. We do not present a constructive allocation,
 rather we assume knowledge about the underlying truth to provide a tight bound
-on the best possible allocation. Intuitively it is not possible to match the
-performance of that optimal allocation without the knowledge of the underlying
-truth. Hence a very desirable statement is to show that a proposed, constructive
-adaptive allocation \emph{converges} to the optimal allocation.
+on the best possible fixed allocation. Intuitively it is not possible to match
+the performance of that optimal allocation without the knowledge of the
+underlying truth. Hence a very desirable statement is to show that a proposed,
+constructive adaptive allocation \emph{converges} to the optimal allocation.
 
 As mentioned in \ref{ss:top-1_model}, the goal consists of maximizing
 confidence, i.e. the mass the posterior lays onto the true best arm. Observe
-that for any allocation sampling each arm infinitely many times, this quantity
-will tend towards 1. What makes the optimal allocation optimal is the rate at
-which the posterior of the true arm converges towards 1.
+that for any allocation sampling each arm with at least some probability, this
+quantity will tend towards 1. What makes the optimal allocation optimal is the
+rate at which the posterior of the true arm converges towards 1.
 
 Note that the optimal allocation assumes knowledge about the underlying true
 value and therefore does not need to be adaptive. It can be framed as the
@@ -320,7 +315,7 @@ Top-Two Thompson sampling (TTTS) algorithm.
 
 The main idea behind TTTS is to repeat obtaining candidates through Thompson
 sampling until two different candidates have been proposed. This illustrates how
-Thompson sampling, usually only truly useful for exploit-explore settings can be
+Thompson sampling, most commonly used for exploit-explore settings can be
 used for pure-exploit: some of its focus is shifted towards inferior-looking
 candidates. Among those two candidates, the former is picked with probability
 $\beta$, explaining the provenance of the hyperparameter. Note the difference
@@ -350,7 +345,7 @@ between \Cref{alg:thompson_sampling} and \Cref{alg:TTTS}: an additional level of
 Russo's formal treatment of this algorithm relies on the assumption that
 observations follow 1-dimensional distributions belonging to the family of
 exponential distributions. Moreover, he allows priors that are non-conjugate to
-the posteriors.
+the posteriors, though does not discuss how to update or sample from them.
 
 \section{Top-$m$ arm identification}
 % What is the problem?
@@ -366,7 +361,7 @@ instead of a single high-quality option can be diversification or regulation.
 
 \subsection{A common approach: LUCB}
 The general Lower Upper Confidence Bound algorithm is a common approach for
-top-$m$ arm identification and typically evaluated in the PAC setting. It can be
+top-$m$ arm identification \cite{kaufmann2013information} and typically evaluated in the PAC setting. It can be
 seen in \Cref{alg:LUCB}.
 
 For every arm $l$, an empirical mean $\hat{\mu}_l$ is kept and updated after
