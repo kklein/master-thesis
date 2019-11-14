@@ -195,7 +195,7 @@ bound from \Cref{proposition:measurement_plan_arm}.
   \mathbb{N}$:
   \begin{align}
     \psi_{n, i} \leq \exp\{-n( \min_{j \in S^*} C_{j, i}(\bar{\psi}_j,
-        \bar{\psi}_i) - \Gamma^*_{\frac{1}{2}} - \epsilon_n) \}
+        \bar{\psi}_i) - \Gamma^{\frac{1}{2}*} - \epsilon_n) \}
   \end{align}
 \end{lemma}
 
@@ -290,29 +290,40 @@ once an arm has been oversampled on average, its likelihood of being sampled in
 the next step is very low. We expect the upper bound from
 \Cref{lemma:fraction_bound} to be useful for this task as a similar approach has
 succeeded in Russo's case. In particular, the missing link in the chain is to
-show that if $i$ has been oversampled, $\min_{j \in S^*} C_{j, i}(\bar{\psi}_j,
-\bar{\psi}_i) \geq \Gamma^*_{\frac{1}{2}}$. If the latter is satisfied, the
+show that if $i$ has been oversampled
+\begin{align}
+  \min_{j \in S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) \geq
+      \Gamma^{\frac{1}{2}*} \label{eq:missing_link}
+\end{align}
+If \Cref{eq:missing_link} is satisfied, the
 probability $\psi_{n, i}$ is exponentially small in $n$ and therefore the sum
 from \Cref{proposition:optimality_sufficient_condition} finite by the geometric
-series. We formalize this in \Cref{lemma:if_converged_then_converged}.
+series.
 
-However, this crucial condition is not naturally satisfied. Investigating it
-more carefully, we realize that its satisfaction requires an excess of evidence
-over the optimal allocation. This can only happen in a given round if the
-optimal arms $j \in S^*$ have sampling probabilities greater equal to the
-optical allocation $\psi^{\frac{1}{2}*}$.
+However, this crucial condition from \Cref{eq:missing_link} is not naturally
+satisfied. Investigating it more carefully, we realize that its satisfaction
+requires an excess of evidence over the optimal allocation. This can only happen
+in a given round if the optimal arms $j \in S^*$ have sampling probabilities
+greater equal to the optical allocation $\psi^{\frac{1}{2}*}$. We formalize
+this is in \Cref{lemma:if_converged_then_converged}.
 
-As we are not convinced that this holds true, we started looking into the
-scenario in which the minimizing $j$ is currently undersampled. Our intuition is
-that if $j \in S^*$ is currently undersampled, it will soon be corrected
-for.
+As we are not convinced that \Cref{eq:missing_link} generally holds true, we
+look into the scenario in which the minimizing $j$ is currently undersampled, in
+contrast to the scenario in which it is accurately sampled or oversampled. Our
+intuition is that if $j \in S^*$ is currently undersampled, it will soon be
+corrected for.
 
 \Cref{lemma:limsup_undersampling} proposes an analogous form of
 \Cref{proposition:optimality_sufficient_condition} for undersampling.
 \Cref{lemma:psi_undersampled} suggests that if an arm is undersampled, it will
 be given a lot of measurement effort very soon.
 \begin{lemma}\label{lemma:if_converged_then_converged}
-  TODO.
+  If $\forall j \in S^* \bar{\psi}_{n, j} \rightarrow \psi^{\frac{1}{2}*}_j$
+  then $\forall i \in S^* \bar{\psi}_{n, i} \rightarrow \psi^{\frac{1}{2}*}_i$
+  and thereby
+  \begin{align}
+    \bar{\psi}_n \rightarrow \psi^{\frac{1}{2}*}
+  \end{align}
 \end{lemma}
 \begin{lemma}\label{lemma:limsup_undersampling}
   Given $\sum_n(\frac{1}{2} - \psi_{n, l}) \mathbb{I}[\bar{\psi}_{n, l} \leq
@@ -544,18 +555,19 @@ be given a lot of measurement effort very soon.
 \end{proof}
 
 \begin{proof}[\Cref{lemma:fraction_bound}]
-  We first want to find a lower bound for the denominator and then find an upper
-  bound for the numerator.
+  Relying on \Cref{lemma:measurement_plan_bound_max}, we first want to find a
+  lower bound for the denominator and then find an upper bound for the
+  numerator.
 
   \Cref{proposition:characterization} gives us that
   \[\lim_{n \rightarrow \infty} \sup - \frac{1}{n} \log \Pi_n(\Theta^c_{S^*})
-      \leq \Gamma^*_{\frac{1}{2}}\]
+      \leq \Gamma^{\frac{1}{2}*}\]
   \Cref{lemma_lim_sup} tells us that there is a sequence $\epsilon_n > 0,
   \epsilon_n \rightarrow 0$ s.t.
   \begin{align}
-    - \frac{1}{n} \log \Pi_n(\Theta^c_{S^*}) &\leq \Gamma^*_{\frac{1}{2}} +
+    - \frac{1}{n} \log \Pi_n(\Theta^c_{S^*}) &\leq \Gamma^{\frac{1}{2}*} +
         \epsilon_n \label{eq: epsilon}\\
-   \Pi_n(\Theta^c_{S^*}) &\geq \exp\{-n (\Gamma^*_{\frac{1}{2}} + \epsilon_n)\}
+   \Pi_n(\Theta^c_{S^*}) &\geq \exp\{-n (\Gamma^{\frac{1}{2}*} + \epsilon_n)\}
   \end{align}
   We observe that $\Theta^c_{S^*} = \bigcup_{S' \neq S^*} \Theta_{S'}$. We use
   the union bound to notice that $ \max_{S' \neq S^*} \alpha_{n, S'} \leq
@@ -566,7 +578,7 @@ be given a lot of measurement effort very soon.
   S^*} \alpha_{n, S'} \deq \Pi(\Theta_{S^*}^c)$. Combining these two insights,
   we obtain our desired lower bound for the denominator:
   \[\max_{S' \neq S^*} \alpha_{n, S'} \deq \Pi_n(\Theta^c_{S^*}) \geq \exp\{-n
-      (\Gamma^*_{\frac{1}{2}} + \epsilon_n)\}\]
+      (\Gamma^{\frac{1}{2}*} + \epsilon_n)\}\]
   Let's investigate the numerator.
 
   For $i \notin S^*$, we have $\Theta_i \subset \bar{\Theta}_i$ and hence:
@@ -583,23 +595,45 @@ be given a lot of measurement effort very soon.
   \begin{align}
     \frac{\alpha_{n, i}}{\max_{S' \neq S^*} \alpha_{n, S'}} &\leq \frac{\exp\{-
         n \min_{j \in S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i)\}}{ \exp\{-n
-        (\Gamma^*_{\frac{1}{2}} + \epsilon_n)\}} \\
+        (\Gamma^{\frac{1}{2}*} + \epsilon_n)\}} \\
     &= \exp\{-n( \min_{j \in S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) -
-        \Gamma^*_{\frac{1}{2}} - \epsilon_n) \}
+        \Gamma^{\frac{1}{2}*} - \epsilon_n) \}
   \end{align}
+  Plugging this into \Cref{lemma:measurement_plan_bound_max} yields the desired
+  result.
 \end{proof}
-\begin{remark}
-  As $C$ is strictly increasing in its second argument and by the assumptions of
-  the lemma $\bar{\psi}_i > \psi_i^* + \delta$, we have that for any $j \in S^*$
-  $C_{j, i}(\psi_j^*, \bar{\psi}_i) = C_{j, i}(\psi_j^*, \psi_i^*) + \delta' =
-  \Gamma^* + \delta'$ with $\delta' > 0$. It remains to show that a similar
-  equality holds when minimizing over $j$ and with $\bar{\psi}_j$ instead of
-  $\psi^*$ as first argument. One should be able to leverage $\bar{\psi}_{S^*}
-  \rightarrow \frac{1}{2} = \psi_{S^*}^*$ along the way.
-\end{remark}
 
 \begin{proof}[\Cref{lemma:if_converged_then_converged}]
-  TODO.
+  Let us investigate arbitrary oversampled $i \notin S^*$. More formally this
+  means that $\bar{\psi}_{n, i} > \psi^{\frac{1}{2}*}_i$. In
+  \Cref{lemma:C_strictly_increasing} we have shown that $C_{j, i}$ is strictly
+  increasing in its second argument. It follows that for any $j \in S^*$
+  \begin{align}
+    C_{j, i}(\psi_j^*, \bar{\psi}_i) = C_{j, i}(\psi_j^*, \psi_i^*) + \delta = \Gamma^* + \delta
+  \end{align}
+  with $\delta > 0$. By the assumption of the lemma we have that from
+  some $n_0$ onwards $\psi^{\frac{1}{2}*}_j - \epsilon < \bar{\psi}_{n,
+  j} < \psi^{\frac{1}{2}*}_j + \epsilon$ for arbitrarily small $\epsilon$.
+
+  By continuity, we can find an $\epsilon$ small enough to accommodate for a $\delta' > 0$ such that:
+  \begin{align}
+    C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) = C_{j, i}(\psi_j^*, \psi_i^*) + \delta'' = \Gamma^* + \delta'
+  \end{align}
+  By recalling that the latter holds for any $j$, and therefore also the minimizing one and combining it with \Cref{lemma:fraction_bound} we obtain
+  \begin{align}
+    \psi_{n, i} &\leq \exp\{-n( \min_{j \in S^*} C_{j, i}(\bar{\psi}_j,
+        \bar{\psi}_i) - \Gamma^{\frac{1}{2}*} - \epsilon_n) \}\\
+      &= \exp\{-n(\delta' - \epsilon_n)\}
+  \end{align}
+  with $\epsilon_n \rightarrow 0$. Remembering that this holds for all oversampled $i$, we plug this into the condition of \Cref{proposition:optimality_sufficient_condition} yields
+  \begin{align}
+    \sum_{n \in \mathbb{N}} \psi_{n, i}
+        \mathbb{I}[\bar{\psi}_{n, i} \geq \psi^*_i + \delta]
+      &= \sum_{n \in \mathbb{N}} \exp\{-n(\delta' - \epsilon_n)\}
+          \mathbb{I}[\bar{\psi}_{n, i} \geq \psi^*_i + \delta]
+      &< \infty
+  \end{align}
+  by the geometric series. For the converged $j \in S^*$ the sum is trivially finite. Hence the sufficient condition of optimality from \Cref{proposition:optimality_sufficient_condition} is satisfied.
 \end{proof}
 
 \begin{proof}[\Cref{lemma:limsup_undersampling}]
