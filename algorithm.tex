@@ -1,6 +1,6 @@
 \chapter{Top-2$m$ XOR Thompson sampling}\label{chapter:algorithm}
 
-In this chapter we will both present and analyze our suggested generalization of
+In this chapter we both present and analyze our suggested generalization of
 Russo's Top-Two Thompson sampling: Top-2$m$ XOR Thompson sampling. The
 underlying idea still revolves around repeatedly applying Thompson sampling
 until two different candidates are at hand.
@@ -21,24 +21,25 @@ statements are provided in \Cref{section:txts_proofs}. Additionally, we provide
 some empirical results in \Cref{section:empirical_behavior}.
 
 \section{Algorithm}\label{section:algorithm}
-As a generalization of Russo's TTTS, the main difference lies in the fact that
-candidates are sets. Hence Thompson sampling is repeated until set inequality is
-reached. However, we can only ever sample individual arms, i.e. not sets. Hence
-in this set scenario, we still need a mechanism to select a single arm from a
-set. Therefore, when generalizing Russo's approach, the central and unavoidable
-question arises: 'How to select a single arm from two unequal set candidates?'
+As a generalization of Russo's TTTS, the main difference ofr our algorithm lies
+in the fact that candidates are sets. Hence Thompson sampling is repeated until
+set inequality is reached. However, we can only ever sample individual arms,
+i.e.\ not sets. Hence in this set scenario, we still need a mechanism to select
+a single arm from a set. Therefore, when generalizing Russo's approach, the
+central and unavoidable question arises: 'How to select a single arm from two
+unequal set candidates?'
 
 According to a suggestion Russo gives in his outlook, we decided to tackle this
 question by splitting it up into two steps.
 
 First, given candidates $S_1$ and $S_2$ with $S_1 \neq S_2$, we compute the set
-of elements which are contained in exactly one of both sets, i.e. the XOR of
+of elements which are contained in exactly one of both sets, i.e.\ the XOR of
 both sets. Naturally, this restricted set is of cardinality at least 2.
 Intuitively it points us towards arms which are 'uncertain'. Observe that arms
 which are clearly suboptimal are very unlikely to appear in either $S_1$ or
 $S_2$ through Thompson sampling. At the same time, arms that are clearly optimal
 are very likely to appear in both $S_1$ and $S_2$ through Thompson sampling.
-Hence arms that appear in only either of them are neither clearly optimal nor
+Hence arms that appear in only one of them are neither clearly optimal nor
 clearly suboptimal.
 
 As mentioned before, the XOR of $S_1$ and $S_2$ will always contain at least two
@@ -50,8 +51,8 @@ We believe that the application of the XOR operation to both candidates is
 essential for the correctness of the algorithm, whereas the uniform sampling
 from the XOR set of both candidates could possibly be substituted by other
 distributions. We would expect such a change to preserve correctness, as long as
-every arm of the XOR set is sampled with strictly positive probability. Yet, it
-would likely alter the hyperparamter $\beta = \psi_{S^*}$.
+every arm of the XOR set is sampled with strictly positive probability. This,
+however, would likely alter the hyperparamter $\beta = \psi_{S^*}$.
 
 We present the approach of sampling the $n$th arm in \Cref{alg:TXTS}.
 This approach can be repeated either for a fixed amount of samples or until a
@@ -62,7 +63,7 @@ estimated by drawing samples from $\Pi_n$ and identifying for which set $S$ the
 fraction $\frac{\text{\# samples in which $S$ is optimal}}{\#samples}$ is
 largest. The fraction of this $S$ approximates the confidence level.
 \begin{algorithm}[H]
-  \caption{Given a posterior $\Pi_{n-1}$ in step $n$.}
+  \caption{TXTS: Given a posterior $\Pi_{n-1}$ in step $n$.}
   \label{alg:TXTS}
   \begin{algorithmic}
     \State $\hat{\theta} \sim \Pi_{n-1}$
@@ -164,8 +165,12 @@ This form of $\psi_{n, S}$ allows us to deduct that the algorithm collects infin
     \sum_{n \in \mathbb{N}} \psi_{n, S} \rightarrow \infty
   \end{align}
 \end{lemma}
-Recalling \Cref{lemma:finite_measurement}, this is particularly interesting as it signals that for $n \rightarrow \infty$ we have that $\mathcal{I} = \emptyset$. Therefore $\alpha_{n, S^*} \rightarrow 1$ holds true, too.
-Having established $\psi_{n, S}$ as function of $\alpha_{n, S}$, we continue by analyzing the effect of $\alpha_{n, S} \rightarrow 1$ on $\psi_{n, S}$, for general $S$, followed by the application on $S^*$.
+Recalling \Cref{lemma:finite_measurement}, this is particularly interesting as
+it implies that for $n \rightarrow \infty$ we have that $\mathcal{I} =
+\emptyset$. Therefore $\alpha_{n, S^*} \rightarrow 1$ holds true, too. Having
+established $\psi_{n, S}$ as function of $\alpha_{n, S}$, we continue by
+analyzing the effect of $\alpha_{n, S} \rightarrow 1$ on $\psi_{n, S}$, for
+general $S$, followed by the application on $S^*$.
 \begin{lemma}\label{lemma:psi_convergence}
   \begin{align}
     \alpha_{n, S} \rightarrow 1 \Rightarrow \psi_{n, S} \rightarrow \frac{1}{2}
@@ -227,7 +232,7 @@ hope to convince the reader that TXTS increases in confidence much quicker than
 both alternatives.
 \begin{figure}[h]
   \centering
-  \includegraphics[width=.5\textwidth]{190723-confidences.png}
+  \includegraphics[width=\textwidth]{190723-confidences.png}
   \caption{Confidence per steps for TXTS, uniform and Thompson sampling.}
   \label{fig:confidences}
 \end{figure}
@@ -239,8 +244,8 @@ samples has been allocated to a certain arm.
 
 \Cref{fig:measurement_plan} indicates the empirical sampling frequencies. The
 arms are ordered according to their true means with the worst being at the
-bottom and the best at the top. Adding up the suboptimal, i.e. the five lower
-arms, and optimal, i.e. the four upper arms, we note that $\bar{\psi}_{S^*}$ can
+bottom and the best at the top. Adding up the suboptimal, i.e.\ the five lower
+arms, and optimal, i.e.\ the four upper arms, we note that $\bar{\psi}_{S^*}$ can
 nicely be read to equal $\frac{1}{2}$ - just as we have argued theoretically.
 The value of $\frac{1}{2}$ is indicated by a horizontal bar.
 
@@ -248,7 +253,7 @@ Moreover, we compared the empirical sampling frequencies to the fixed optimal
 allocation from \Cref{section:concrete_optimal_allocation}, the uniform
 allocation and the allocation produced by Thompson sampling. In order to
 illustrate progression over time, we plotted TXTS and Thompson sampling for
-different numbers of samples, i.e. timesteps. This can be seen in figure
+different numbers of samples, i.e.\ timesteps. This can be seen in figure
 \Cref{fig:measurement_plan_comparison}. We hope to convey that TXTS steadily
 approaches the optimal allocation with increasing number of samples
 \begin{figure}[h]
@@ -277,7 +282,7 @@ also computed the coefficients with the estimated $\hat{\theta}$. The results
 were gathered by executing TXTS with 150 different random seeds, each amounting to 2000 samples. Coefficients based on $\theta^*$ can be seen on the left-hand side, coefficients based on $\hat{\theta}$ can on the right-hand side. We interpret this result as a vague indication that the evidence for for each pair of optimal and suboptimal arms is \emph{roughly} balanced.
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{190909-coefficients_2000.png}
+  \includegraphics[width=1.2\textwidth]{190909-coefficients_2000.png}
   \caption{Comparison of estimated $\theta$ and coefficients $C_{j, i}$.}
   \label{fig:algorithm_coefficients}
 \end{figure}
@@ -353,7 +358,7 @@ be given a lot of measurement effort very soon.
   $\mathcal{I} = \emptyset$, every arm is sampled infinitely often when the
   number of samples goes to infinity. This means that \eqref{eq:concentration}
   holds for every arm. In other words, our estimate of each arm is arbitrarily
-  concentrated around its true value, i.e. $\Pi_n(\{\theta^*\}) \rightarrow 1$.
+  concentrated around its true value, i.e.\ $\Pi_n(\{\theta^*\}) \rightarrow 1$.
   Recalling our definitions of $S^*$, $\Theta_S$ and $\alpha_{n, S}$, we see
   that
   \begin{align}
@@ -640,7 +645,7 @@ be given a lot of measurement effort very soon.
     We first show the first statement and then use it for the second. For the
     sake of contradiction, assume that $\limsup \bar{\psi}_{n, l} <
     \psi_l^*$. This implies that there is a $n_0$ from which onward
-    $\bar{psi}_{n, l} < \psi_l^*$.
+    $\bar{\psi}_{n, l} < \psi_l^*$.
     \begin{align}
       \sum_n (\frac{1}{2} - \psi_{n, l}) &= \sum_{n=1}^{n_0} (\frac{1}{2} -
             \psi_{n, l}) + \sum_{n > n_0} (\frac{1}{2} - \psi_{n, l}) \\
@@ -699,7 +704,7 @@ be given a lot of measurement effort very soon.
     \end{align}
     Where \Cref{eq:like_lemma10} relies on a combination of
     \Cref{proposition:prop5} and \Cref{lemma:kl_to_C}, just as we've done in
-    \Cref{lemma:fraction_bound}. The last step stems from the fact that a
+    \Cref{lemma:fraction_bound}. The last step leverages the fact that a
     minimization over both indices will always yield a value lesser or equal to
     the minimization over only one of the indices.
   \end{proof}

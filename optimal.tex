@@ -5,40 +5,40 @@ top-$m$ allocation by its convergence rate of the posterior mass put on
 parameters reflecting the true top-$m$ arms $\Pi_n(\Theta_{S^*})$. This, too can
 be thought of as a thought experiment of convincing an adversary by relying on
 knowledge of the true means.  Moreover, just as in Russo's top-1 case, the
-algorithm we will propose introduces a constraint. We will also put the optimal
-allocation under that constraint with the idea being that this is but a
-hyperparameter that can be optimized over. In other words: the best
-unconstrained allocation is the best constrained allocation with optimal
-hyperparameter.
+algorithm we propose introduces a constraint. This constraint defines which
+fraction of the measurement effort is spent on arms from the true set of top-$m$
+arms. We also put the optimal allocation under that constraint with the idea
+being that this is but a hyperparameter that can be optimized over. In other
+words: the best unconstrained allocation is the best constrained allocation with
+optimal hyperparameter.
 
 In \Cref{section:optimal_statements} we first introduce some of Russo's results
-that also apply in our scenario. Then we will introduce some general properties,
+that also apply in our scenario. Then, we introduce some general properties,
 followed by a complete characterization of the optimal allocation. Moreover, we
-will show an example of a concrete optimal allocation in
+show an example of a concrete optimal allocation in
 \Cref{section:concrete_optimal_allocation}. Proofs of the statements from
 \Cref{section:optimal_statements} are provided in \Cref{section:optimal_proofs}.
-We finish the chapter with \Cref{section:optimality_sufficient_condition}, a
+We finish the chapter with \Cref{section:optimality_sufficient_condition}, by
 presenting a condition on adaptive allocations, which is sufficient to show
 convergence to the optimal allocation.
 
-Overall we hope to convince the reader that the characterization results
+Overall, we hope to convince the reader that the characterization results
 portrayed in this chapter make for a natural generalization of Russo's top-1
 case. In the top-1 case, Russo implied comparing the best arm $l^*$ to a
-suboptimal arm in order to identify the one it is hardest to distinguish from
-it. Our guiding theme, on the other hand, will be to compare the a pairs of
-optimal and suboptimal arms in order to find to the pair that is the hardest to
-distinguish. Note that again, distinction revolves around two factors: the
+suboptimal arm in order to identify the one it is hardest to distinguish from. Our guiding theme, on the other hand, will be to compare pairs of
+optimal and suboptimal arms in order to find the pair that is the hardest to
+distinguish. Note again, that this distinction revolves around two factors: the
 frequency with which an arm has been sampled, $\bar{\psi}_{n, l}$, as well as
-the proximity of its true mean, i.e. comparing $\theta^*_l$.
+the proximity of its true mean, i.e.\ comparing $\theta^*_l$.
 
-Throughout this whole chapter we will assume that every true mean is unique,
-i.e.
+Throughout this whole chapter we assume that every true mean is unique,
+i.e.\
 \begin{align}
   \forall l_1, l_2 \in [k]: l_1 \neq l_2 \Rightarrow \theta^*_{l_1} \neq
       \theta^*_{l_2}
 \end{align}
-and as previously mentioned the rewards follow distributions belonging to the
-family of exponential distributions.
+and that the rewards, as previously mentioned, follow distributions belonging to
+the family of exponential distributions.
 %%%%%%
 % Statements
 %How can C be interpreted?
@@ -127,14 +127,14 @@ every pair $(j, i) \in S^* \times {S^*}^c$.
 
 Intuitively, this lemma tells us that for parameters in $\Bar{\Theta}_i$ the
 weighted sum of KL divergences can be by simplified to only two arms. One of
-those arms will be $i$. The other arm has to stem from the true set of arms
-$S^*$ in order to satisfy $\Bar{\Theta}_i$'s requirement of 'disproving' $S^*$.
-This arm $j \in S^*$ is chosen as to seem the 'least distinctive' from $i$ under
-$\psi$. Distinction is made up of two aspects, as seen in the definition of
-$C_{j, i}$ in \eqref{eq:C}: how much this arm $j$ is sampled, i.e. $\psi_j$, and
-how different its true mean $\theta^*_j$ is from the true mean $\theta^*_i$ of
-$i$. The latter difference is captured by the KL divergence between both arms
-and a minimal $x$, individually.
+those arms will be $i$. The other arm has to be an element of the true set of
+arms $S^*$ in order to satisfy $\Bar{\Theta}_i$'s requirement of 'disproving'
+$S^*$. This arm $j \in S^*$ is the one which seems the 'least distinctive' from
+$i$ under $\psi$. Distinction is made up of two aspects, as seen in the
+definition of $C_{j, i}$ in \eqref{eq:C}: how much this arm $j$ is sampled,
+i.e.\ $\psi_j$, and how different its true mean $\theta^*_j$ is from the true
+mean $\theta^*_i$ of $i$. The latter difference is captured by the KL divergence
+between both arms and a minimal $x$, individually.
 
 We can apply those statements to the quantity we care about: the mass the
 posterior puts on the complement of parameters reflecting the true top-$m$ arms,
@@ -187,9 +187,9 @@ constrained setting under which the algorithm performs optimally. By adapting
 Hence we have established the optimal constrained rate of convergence
 $\Gamma^{\frac{1}{2}*}$ of the optimal constrained allocation
 $\psi^{\frac{1}{2}*}$ by making a link to the minimization over $C_{j, i}$ . We
-seek to further characterize $\psi^{\frac{1}{2}*}$ by relying on the same maxim
-as in Russo's scenario: we expect the measurement plan to collect \emph{equal
-evidence}, not \emph{equal measurement} for every arm. Hence in
+seek to further characterize $\psi^{\frac{1}{2}*}$ by relying on the same
+principle as in Russo's scenario: we expect the measurement plan to collect
+\emph{equal evidence}, not \emph{equal measurement} for every arm. Hence in
 \Cref{proposition:characterization} we will show that the optimal measurement
 plan will fulfill \Cref{eq:condition_C}. Before doing so, we set the stage by
 enunciating three properties of $C_{j, i}$: concavity, existence of a unique
@@ -291,7 +291,7 @@ underallocation. We focus on the statement for overallocation, yet an analogous
 statement for underallocation should be possible.
 
 In particular, the statement expresses that if an arm $l$ has been
-over-allocated so far, indicated by a $\bar{\psi}_{n, l}$ larger than
+overallocated so far, indicated by a $\bar{\psi}_{n, l}$ larger than
 $\psi^{\frac{1}{2}*}_l$, this over-allocation will be corrected. In this case,
 correction means that its likelihood of being sampled in the next and round,
 $\psi_{n, l}$ is very low. The intuition of the whole statement being that if
@@ -343,13 +343,14 @@ corrected for as well, by the fact that $\psi$ is a probability distribution.
   $j \in S^*$.
 
   The union from \Cref{lemma:set_relation_S*_i} has an additive effect with
-  respect to the probability distribution $\Pi_n$. There are $k-m$ possible $i$s
+  respect to the probability distribution $\Pi_n$. There are $k-m$ possible $i$
   and each single one leads to a set, whose density is bounded by the maximal
   density of all such sets. This gives us:
   \begin{align}
     \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i) \leq \Pi_n(\Theta_{S^*}^c) \leq (k-m) \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)
   \end{align}
-  We use the definition of $\deq$ to compare lower bound and upper bound.
+  We use the definition of $\deq$ to compare the lower bound and the upper
+  bound.
   \begin{align}
     \lim_{n \rightarrow \infty} \frac{1}{n} \log{\frac{\max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)}{(k-m)\max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)}}
     = \lim_{n \rightarrow \infty} \frac{1}{n} \log{\frac{1}{k-m}} \rightarrow 0
@@ -366,7 +367,7 @@ corrected for as well, by the fact that $\psi$ is a probability distribution.
   a multiplicative effect on the distribution $\Pi_n$ instead of an additive
   one.
   \begin{align}
-    &1 - \min_{j \in S^*} \Pi(\Theta_{m, j}) \leq \Pi(\Theta_{S^*}^c) \leq 1 - \min_{j \in S^*} (\Pi(\Theta_{m, j}))^m \\
+    &1 - \min_{j \in S^*} \Pi(\Theta_{m, j}) \leq \Pi(\Theta_{S^*}^c) \leq 1 - \min_{j \in S^*} (\Pi(\Theta_{m, j}))^m
   \end{align}
   Again, we will compare upper and lower bound in the $\deq$ sense.
   \begin{align}
@@ -405,7 +406,7 @@ corrected for as well, by the fact that $\psi$ is a probability distribution.
   \notin S^* \cup \{i\}$ are zero by the definition of the KL divergence while
   all others terms remain unchanged. Hence the minimum occurs with such a
   $\theta'$. Importantly, $\theta'$ remains feasible according to current
-  definitions of $\bar{\Theta}_i$, i.e. $\theta' \in \bar{\Theta}_i$.
+  definitions of $\bar{\Theta}_i$, i.e.\ $\theta' \in \bar{\Theta}_i$.
 
   \eqref{eq: l2_2} follows from a similar observation: only a single arm from
   $S^*$ needs to be inferior to arm $i$ under $\theta$. Recall that the terms of
@@ -459,8 +460,8 @@ Therefore
 \end{proof}
 
 \begin{proof}[\Cref{lemma:C_strictly_increasing}]
-  We will proceed to show for fixed $j \in S^*$ and $i \notin S^*$, $C_{j, i}$
-  is increasing in its first argument $\psi_j$ as its second argument $\psi_i$
+  We show that for fixed $j \in S^*$ and $i \notin S^*$, $C_{j, i}$ is
+  increasing in its first argument $\psi_j$ as its second argument $\psi_i$
   follows by symmetry.
 
   Let us define $f(x, \psi_j, p) = \psi_j d(\theta_j^*||x) + p d(\theta_i^*||x)$
@@ -484,7 +485,7 @@ Therefore
     &x_2 = \argmin_{x \in \mathbb{R}} f(x, \psi_{j2}, p)
   \end{align}
   Hence our goal is to show that $f(x_1, \psi_{j1}, p) < f(x_2, \psi_{j2}, p)$.
-  By \Cref{lemma:C_unique_solution} both $x_1$ and $x_2$ are unique. Hence
+  By \Cref{lemma:C_unique_solution} both $x_1$ and $x_2$ are unique. Thus
   \begin{align}
     f(x_1, \psi_{j1}, p) &< f(x_2, \psi_{j1}, p) \\
     f(x_2, \psi_{j2}, p) &< f(x_1, \psi_{j2}, p)
@@ -528,8 +529,8 @@ Therefore
     is not optimal, which is a contradiction.
 
     \item \label{itm:p7_ii} Suppose that there are optimal $\psi^1$, $\psi^2$,
-    therefore both satisfying \eqref{eq:condition_C} with the exact same value
-    $C^*$. It follows that there is at least one $l$ s.t. $\psi^1_{l} \neq
+    which therefore both satisfy \eqref{eq:condition_C} with the exact same
+    value $C^*$. It follows that there is at least one $l$ s.t. $\psi^1_{l} \neq
     \psi^2_{l}$. W.l.o.g. assume $l = i_x \notin S^*$ and $\psi^1_{i_x} >
     \psi^2_{i_x}$.
 
@@ -545,7 +546,7 @@ Therefore
         &= C_{j, i_x}(\psi^2_j, \psi^2_{i_x})
       \end{align}
       Which is a contradiction as $\epsilon$ is positive $C_{j, i_x}$ strictly increasing by \Cref{lemma:C_strictly_increasing}.
-      \item More that one arm is distinct, but they all belong to either $S^*$ or $S^{*c}$.
+      \item Multiple arms are distinct, but they all belong to either $S^*$ or $S^{*c}$.
 
       As our distinct value so far comes from $S^{*c}$, let's also assume, w.l.o.g., $i_y \notin S^*$ with $i_y \neq i_x$.
 
@@ -562,7 +563,7 @@ Therefore
       optimal.
 
       Recall our constraint $\frac{1}{2} = \sum_{j \in S^*} \psi_l = \sum_{i \notin S^*} \psi_i$, which has to hold for both $\psi^1$ and $\psi^2$.
-      Hence for $psi^1$'s over-allocation on $i_x$, there has to be an $i_y \notin S^*$ for which $\psi^1$ underallocates, compared to $psi^2$.
+      Hence for $\psi^1$'s over-allocation on $i_x$, there has to be an $i_y \notin S^*$ for which $\psi^1$ underallocates, compared to $\psi^2$.
       Summarizing, we have:
       \begin{itemize}
         \item $\psi^1_{i_x} = \psi^2_{i_x} + \epsilon$
@@ -596,14 +597,15 @@ Therefore
   Second, we will prove that $\limsup_{n \rightarrow \infty} \bar{\psi}_{n, l}
   \leq \psi^*_l$ by contradiction. Assume otherwise. Combined with the previous
   point, this implies that for infinitely many $n$, $\bar{\psi}_{n, l}$ is above
-  and for infinitely many it is below $\psi^*_l$. As $n$ belongs to a countable
-  set, those points below and above have to alternate. This implies that our
-  indicator function is 'triggered' infinitely many times. Observe that if
-  $\psi_{n, l}$ is 0 once, it will never increase again as no posterior updates
-  will be made. Hence every time the indicator function is triggered, $\psi_{n,
-  l}$ has to be stricly positive; otherwise $l$ would never be sampled again and
-  $\bar{\psi}_{n, l}$ monotonically decrease, even though it oscillates. As a
-  consequence, we have an infinite amount of non-zero, positive values and hence
+  $\psi^*_l$ and for infinitely many it is below $\psi^*_l$. As $n$ belongs to a
+  countable set, those points below and above have to alternate. This implies
+  that our indicator function is 'triggered' infinitely many times. Observe that
+  if $\psi_{n, l}$ is 0 once, it will never increase again as no posterior
+  updates will be made. Hence every time the indicator function is triggered,
+  $\psi_{n, l}$ has to be stricly positive; otherwise $l$ would never be sampled
+  again and $\bar{\psi}_{n, l}$ would monotonically decrease, even though it
+  oscillates. As a consequence, we have an infinite amount of non-zero, positive
+  values and thus
   \[\sum_{n \in \mathbb{N}} \psi_{n, l} \mathbb{I}[\bar{\psi}_{n, l} \geq
       \psi^*_l + \delta] = \infty\]
   which violates the assumption of the lemma and thereby is a contradiction.

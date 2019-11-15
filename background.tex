@@ -1,4 +1,4 @@
-\chapter{Background}\label{chapter:background}
+best arm\chapter{Background}\label{chapter:background}
 
 \section{Bandits}
 %What is the scenario/model?
@@ -10,8 +10,8 @@ of arms. The outcome of the selection of an individual arm typically follows a
 fixed but unknown probability distribution.
 %What problems are typically tackled by this scenario?
 Within the bandits model, the concern revolves around which arm to choose next.
-Allocation strategies tackling this question address either of two problems:
-explore-exploit or pure-explore.
+Allocation strategies, also referred to as measurement plans, tackling this
+question address either of two problems: explore-exploit or pure-explore.
 
 More concretely, the former concerns itself with maximizing the \emph{cumulative
 reward}. This means that one attempts to maximize the \emph{sum of the rewards
@@ -29,8 +29,8 @@ with high \emph{confidence}.
 %Why is model and its problems relevant?
 The bandits model can be used for all processes involving sequential decision
 making. Yet, an important simplification is the assumption of the distributions
-being fixed over time. In how far this simplification is representative of the
-to-be-modeled process varies.
+being fixed over time. To what extent this simplification is representative of
+the to-be-modeled process varies.
 
 The explore-exploit problem can be found in Recommender Systems \cite{McInerney:2018:EEE:3240323.3240354}, ad campaigns \cite{5360225},
 in the context of Reinforcement Learning
@@ -67,12 +67,12 @@ in the following way:
     &= \{ \theta \in \Theta| \min_{j_1 \in S}\ \theta_{j_1} > \max_{j_2 \notin
       S}\ \theta_{j_2}\}
 \end{align}
-where top-$m$ returns the $m$ highest values, i.e. means, from its argument
+where top-$m$ returns the $m$ highest values, i.e.\ means, from its argument
 $\theta$.
 
 After having made $n$ observations of rewards, bundled in $D_n$, $\Pi_n$
 expresses a posterior distribution with density $\pi_n$ over elements of
-$\Theta$. E.g. for sets $\Theta_{S}$, we have:
+$\Theta$. e.g.\ for sets $\Theta_{S}$, we have:
 \begin{align}
   \Pi_n(\Theta_{S}) &:= \int_{\theta \in \Theta_{S}} \pi_n(\theta)
       d\theta \\
@@ -84,7 +84,7 @@ Clearly, it holds that $\Pi_n(\Theta) = 1$. As a shorthand for the top-$m$ case,
   \alpha_{n, l} &:= \sum_{S: l \in S} \Pi_n(\Theta_{S}) \\
 \end{align}
 We are mostly interested in strategies that allocate measurement effort over the
-arms in a randomized fashion, i.e. according to a probability distribution. We
+arms in a randomized fashion, i.e.\ according to a probability distribution. We
 refer to such an allocation or measurement plan as $\psi \in [0, 1]^k$, defining
 the probability of each arm being sampled. Naturally, it holds that $\sum_{l \in
 [k]} \psi_l = 1$. We also define the allocation property of a set by the sum of
@@ -93,7 +93,7 @@ its arms: $\psi_S = \sum_{l \in S} \psi_l$.
 The $n$-th sampled arm is denoted as $l_n$. For adaptive strategies, the
 allocation can change after every sample. After $n$ samples we refer to the
 allocation as $\psi_{n}$ and therefore we have $\psi_{n, l} = \Pr[l_n = l]$ for
-arm $l$. We might as well be interested in the average allocation up to a
+arm $l$. We might Also be interested in the average allocation up to a
 certain sample $n$. We write:
 \begin{align}
   \bar{\psi}_{n, l} &:= \frac{\sum_{n' = 1}^{n} \psi_{n', l}}{n}
@@ -141,7 +141,7 @@ dependent of the type of utilized class of distribution for prior and
 posteriors. An example of this can be found in \ref{section:empirical_behavior}.
 
 In contrast to greedily selecting the arm that empirically maximizes the metric
-of desire, e.g. the mean, Thompson sampling suggests to draw from posterior.
+of desire, e.g.\ the mean, Thompson sampling suggests to draw from posterior.
 Note that said posterior distribution is itself a function of the empirical
 means. Subsequently, it selects the arm which maximizes the metric of desire on
 the sampled belief. With many repetitions, this leads to each arm being sampled
@@ -150,7 +150,7 @@ current belief. \Cref{alg:thompson_sampling} illustrates this process more
 explicitly.
 
 \begin{algorithm}[H]
-    \caption{Given a posterior $\Pi_{n-1}$ in step $n$}
+    \caption{Thomson sampling: Given a posterior $\Pi_{n-1}$ in step $n$}
     \label{alg:thompson_sampling}
   \begin{algorithmic}
     \State $\hat{\theta} \sim \Pi_{n-1}$
@@ -170,37 +170,37 @@ creates a natural balance between exploration and exploitation.
 %Why is it relevant?
 %How is performance evaluated? What is 'confidence'?
 
-Best Arm identification implies disregarding the sum of the rewards encountered
-while sampling. Rather, the goal is to efficiently gather information maximizing
-the confidence of the suggestion made \emph{after} the sampling phase. In other
-words, there is a purely explorative phase, also referred to as 'experiment'
-which is then typically followed by a purely exploitative phase, having
-committed to an option. For this reason, Best Arm Identification is closely
-related to Optimal Experiment Design.
+Best arm identification implies disregarding the sum of the rewards encountered
+while sampling. Instead, the goal is to efficiently gather information
+maximizing the confidence of the suggestion made \emph{after} the sampling
+phase. In other words, there is a purely explorative phase, also referred to as
+'experiment' which is then typically followed by a purely exploitative phase,
+having committed to an option. For this reason, best arm identification is
+closely related to Optimal Experiment Design.
 
 Quite naturally, all other aspects being controlled for, requiring fewer samples
 is preferable. Hence one can formulate the goal in two ways: maximize confidence
 for a given amount of samples or minimize amount of samples for a given
 confidence level.
 
-Up to this point we vaguely talked about confidence. As a matter of fact,
-different approaches for best arm identification rely on different approaches to
-express their confidence in the estimation. Herein lies a substantial
-differentiation and therefore, naturally, it is not trivial to compare different
-approaches other than by investigating what their best arm output is, i.e.
-disregarding the confidence. For Bayesian algorithms, it is possible to quantify
-the confidence the model has in the currently most favorable looking candidate.
-This quantity corresponds to the mass a posterior puts on parameters favoring
-said candidate. Another approach to measure confidence stems from the realm of
-Probably Approximately Correct learning, or PAC in short. In the PAC context,
-one desires to make a statement of the sort $\Pr[\text{output of algorithm is
-$\epsilon$-correct}] \geq 1 - \delta$, where $\epsilon$-correctness requires an
-explicit definition. In this case, under the toleration of $\epsilon$, $1 -
-\delta$ can be thought of as confidence.
+Up to this point we only talked about confidence in vague terms. As a matter of
+fact, different approaches for best arm identification rely on different
+approaches to express their confidence in the estimation. Herein lies a
+substantial differentiation and therefore, naturally, it is not trivial to
+compare different approaches other than by investigating what their best arm
+output is, i.e.\ disregarding the confidence. For Bayesian algorithms, it is
+possible to quantify the confidence the model has in the currently most
+favorable looking candidate. This quantity corresponds to the mass a posterior
+puts on parameters favoring said candidate. Another approach to measure
+confidence stems from the realm of Probably Approximately Correct learning, or
+PAC in short. In the PAC context, one desires to make a statement of the sort
+$\Pr[\text{output of algorithm is $\epsilon$-correct}] \geq 1 - \delta$, where
+$\epsilon$-correctness requires an explicit definition. In this case, under the
+toleration of $\epsilon$, $1 - \delta$ can be thought of as confidence.
 
-Real-world applications of Best Arm identification include:
+Real-world applications of best arm identification include:
 \begin{itemize}
-  \item Physical simulations: Given a collection of designs, e.g. the bodywork
+  \item Physical simulations: Given a collection of designs, e.g.\ the bodywork
   of a car, determine aerodynamic properties of the designs. Elaborate
   simulations can come with significant resource demands, such as compute power
   as well as the direct and indirect costs of time. Arriving at the same
@@ -225,9 +225,9 @@ underlying truth. Hence a very desirable statement is to show that a proposed,
 constructive adaptive allocation \emph{converges} to the optimal allocation.
 
 As mentioned in \ref{ss:top-1_model}, the goal consists of maximizing
-confidence, i.e. the mass the posterior lays onto the true best arm. Observe
-that for any allocation sampling each arm with at least some probability, this
-quantity will tend towards 1. What makes the optimal allocation optimal is the
+confidence, i.e.\ the mass the posterior lays onto the true best arm. Observe
+that for any allocation sampling each arm with at least some probability, the
+confidence will tend towards 1. What makes the optimal allocation optimal is the
 rate at which the posterior of the true arm converges towards 1.
 
 Note that the optimal allocation assumes knowledge about the underlying true
@@ -255,10 +255,10 @@ allocation.
 
 \subsubsection{Defining properties}
 Russo's underlying idea is that the optimal allocation gathers equal
-\emph{evidence}, e.g. compared to having equal effort, as  for a uniform
-distribution. This notion of evidence relies on the comparison between the true
-best against all other arms. It takes both their respective true means as well
-as sampling frequencies into consideration. He defines
+\emph{evidence}, e.g.\ compared to having equal measurement effort, as  for a
+uniform distribution. This notion of evidence relies on the comparison between
+the true best against all other arms. It takes both their respective true means
+as well as sampling frequencies into consideration. He defines
 \begin{align}
   C_i(p_1, p_2) := \min_{x \in \mathbb{R}} p_1 d(\theta_{l^*}^*||x) + p_2
       d(\theta_{i}^*||x)
@@ -306,21 +306,21 @@ The optimal convergence exponent under said constraint becomes:
 \subsection{Top-Two Thompson sampling algorithm}
 % What is the algorithm?
 
-Russo proposes different algorithms that satisfy aforementioned theoretical
+Russo proposes different algorithms that satisfy the aforementioned theoretical
 results, yet suggests that one of them outperforms the other empirically:
 Top-Two Thompson sampling (TTTS) algorithm.
 
 The main idea behind TTTS is to repeat obtaining candidates through Thompson
 sampling until two different candidates have been proposed. This illustrates how
-Thompson sampling, most commonly used for exploit-explore settings can be
-used for pure-exploit: some of its focus is shifted towards inferior-looking
-candidates. Among those two candidates, the former is picked with probability
-$\beta$, explaining the provenance of the hyperparameter. Note the difference
-between \Cref{alg:thompson_sampling} and \Cref{alg:TTTS}: an additional level of
-'randomization'.
+Thompson sampling, most commonly used for exploit-explore settings can be used
+for pure-exploit: some of its focus is shifted towards inferior-looking
+candidates. Among those two candidates, the first to have been drawn is picked
+with probability $\beta$, explaining the provenance of the hyperparameter. Note
+the difference between Thompson sampling, in \Cref{alg:thompson_sampling} and
+TTTS, in \Cref{alg:TTTS}: an additional level of 'randomization'.
 
 \begin{algorithm}[H]
-    \caption{Given a posterior $\Pi_{n-1}$ in step $n$}
+    \caption{TTTS: Given a posterior $\Pi_{n-1}$ in step $n$}
     \label{alg:TTTS}
   \begin{algorithmic}
     \State $\hat{\theta} \sim \Pi_{n-1}$
@@ -348,12 +348,12 @@ the posteriors, though does not discuss how to update or sample from them.
 % What is the problem?
 % Why is it relevant compared to Top-1?
 
-Top-$m$ Arm Identification is a generalization of Best Arm Identification. The
+Top-$m$ arm identification is a generalization of best arm identification. The
 objective is to identify the set of arms, with cardinality $m$, which contains
 the $m$ best arms.
 
 Applications of top-$m$ arm identification are similar to those mentioned in
-\ref{ss:top-1_model}. Natural explications for desiring the identification $m$
+\ref{ss:top-1_model}. Natural motivations for the identification $m$
 instead of a single high-quality option can be diversification or regulation.
 
 \subsection{A common approach: LUCB}
@@ -363,16 +363,15 @@ seen in \Cref{alg:LUCB}.
 
 For every arm $l$, an empirical mean $\hat{\mu}_l$ is kept and updated after
 each sample. The overall idea is to compute a confidence bound for every arm, in
-every step. Per round, arms are separated into two sets: the arms with the $m$
-best empirical means, $Top(t)$ and the rest, $Bottom(t)$. The arm with the
+every step. Per round $t$, arms are separated into two sets: the arms with the
+$m$ best empirical means, $Top(t)$ and the rest, $Bottom(t)$. The arm with the
 lowest lower confidence bound from $Top(t)$ and the arm with the hightest upper
 confidence bound from $Bottom(t)$ are sampled and all information updated. We
-refer to those arms as $tl$ and $bu$ respectively. The algorithm stops once
-its stopping criterion is met. The confidence bound of an arm $l$ in a given
-step equals $(\hat{\mu}_l - \beta(l), \hat{\mu}_l + \beta(l))$.
-Kalyanakrishnan et al. \cite{DBLP:conf/icml/KalyanakrishnanTAS12} propose a
-concrete instantiation by defining the estimation of the confidence bound and
-stopping crierion:
+refer to those arms as $tl$ and $bu$ respectively. The algorithm stops once its
+stopping criterion is met. The confidence bound of an arm $l$ in a given step
+equals $(\hat{\mu}_l - \beta(l), \hat{\mu}_l + \beta(l))$. Kalyanakrishnan et
+al. \cite{DBLP:conf/icml/KalyanakrishnanTAS12} propose a concrete instantiation
+by defining the estimation of the confidence bound and stopping crierion:
 \begin{align}
   \beta(l) &= \sqrt{\frac{1}{2c_l}\ln\frac{knt^4}{\delta}} \\
   \xi &= (\hat{\mu}_{bu} + \beta(bu) - (\hat{\mu}_{tl} - \beta(tl))
@@ -380,7 +379,7 @@ stopping crierion:
 with constant $k=\frac{5}{4}$, $c_l$ the number of times arm $l$ has been
 sampled and $t$ the number of steps completed so far.
 \begin{algorithm}[H]
-    \caption{Given prior means}
+    \caption{LUCB: Given prior means}
     \label{alg:LUCB}
   \begin{algorithmic}
     \State Sample each arm once
