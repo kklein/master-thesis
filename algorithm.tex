@@ -145,7 +145,7 @@ inequalities are tight with respect to $n$ as $m$ can be seen as a constant.
         \notin S'} \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}}) \\
     \psi_{n, l} &\geq \frac{1}{m}((1 - \alpha_{n, l}) \sum_{S: l \in S}
         \frac{\alpha_{n, S}}{1 - \alpha_{n, S}} + \alpha_{n, l} \sum_{S': l
-        \notin S'} \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}}) \\
+        \notin S'} \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}})
   \end{align}
 \end{proposition}
 Having established bounds on the measurement plan for individual arms, we
@@ -345,7 +345,22 @@ be given a lot of measurement effort very soon.
 \end{lemma}
 
 \section{Proofs}\label{section:txts_proofs}
-\begin{proof}[\Cref{lemma:finite_measurement}]
+\textbf{\Cref{lemma:finite_measurement}}
+For $\mathcal{I} = \{l: \sum_{n=1}^\infty \psi_{n, l} < \infty\}$ it holds
+    that:
+\begin{itemize}
+  \item $\forall l \notin \mathcal{I}, \forall \epsilon: \Pi_n(\{\theta:
+      \theta_l \in (\theta^*_l - \epsilon, \theta^*_l + \epsilon)\})
+      \rightarrow 1$
+  \item $\mathcal{I} = \emptyset \Rightarrow
+  \alpha_{n, S} \rightarrow \begin{cases}
+    1 & \text{if } S = S^*\\
+    0 & \text{if } S \neq S^*
+  \end{cases}$
+  \item $\forall S \subset \mathcal{I}: \liminf_{n \rightarrow \infty}
+      \alpha_{n, S} > 0$
+\end{itemize}
+\begin{proof}
   \begin{itemize}
   \item Note that this statement is equal for top-1 and top-$m$. Hence we can
   employ \Cref{proposition:russo_4} telling us that if $\sum_{n \in \mathbb{N}}
@@ -383,23 +398,29 @@ be given a lot of measurement effort very soon.
   \subset \mathcal{I}$, we have:
   \begin{align}
     \theta_{S, \epsilon} &= \{\theta|(\min_{l_1 \in S} \theta_{l_1} \geq
-        \max_{l_2 \in \mathcal{I} \setminus S} \theta_{l_1} + \epsilon) \wedge (\min_{l_1 \in S}
-        \theta_{l_1} \geq\ \max_{l_2 \notin \mathcal{I}} \theta_{l_2} + \epsilon)\} \\
-      &= \{\theta | (\forall l_2 \in \mathcal{I} \setminus S: \min_{l_1 \in S} \geq
-          \theta_{l_2} + \epsilon) \wedge (\min_{l_1 \in S} \theta_{l_1} \geq\ \max_{l_2
-          \notin \mathcal{I}} \theta_{l_2} + \epsilon)\} \\
-      & \supseteq \{\theta |(\min_{l_1 \in S} \theta_{l_1} \geq \rho^* + 2 \epsilon)
-          \wedge (\forall {l_2} \in \mathcal{I} \setminus S: \rho^* > \theta_{l_2})
-          \wedge (\min_{l_1 \in S} \theta_{l_1} \geq\ \max_{l_2 \notin \mathcal{I}}
-          \theta_{l_2} + \epsilon)\} \\
-      & \supseteq \{\theta |(\min_{l_1 \in S} \theta_{l_1} \geq \rho^* + 2 \epsilon)
-          \wedge (\forall l_2 \in \mathcal{I} \setminus S: \rho^* > \theta_{l_2})
-          \wedge (\rho^* + \epsilon \geq \max_{l_2 \notin \mathcal{I}}
+        \max_{l_2 \in \mathcal{I} \setminus S} \theta_{l_1} + \epsilon)
+        \nonumber \\
+      & \wedge (\min_{l_1 \in S} \theta_{l_1} \geq\ \max_{l_2 \notin
+          \mathcal{I}} \theta_{l_2} + \epsilon)\} \\
+      =& \{\theta | (\forall l_2 \in \mathcal{I} \setminus S: \min_{l_1 \in S} \geq
+          \theta_{l_2} + \epsilon) \nonumber \\
+      & \wedge (\min_{l_1 \in S} \theta_{l_1} \geq\ \max_{l_2 \notin
+          \mathcal{I}} \theta_{l_2} + \epsilon)\} \\
+      \supseteq &  \{\theta |(\min_{l_1 \in S} \theta_{l_1} \geq \rho^* + 2
+          \epsilon) \wedge (\forall {l_2} \in \mathcal{I} \setminus S: \rho^* >
+          \theta_{l_2}) \nonumber \\
+      & \wedge (\min_{l_1 \in S} \theta_{l_1} \geq\ \max_{l_2 \notin
+          \mathcal{I}} \theta_{l_2} + \epsilon)\} \\
+      \supseteq & \{\theta |(\min_{l_1 \in S} \theta_{l_1} \geq \rho^* + 2
+            \epsilon) \wedge (\forall l_2 \in \mathcal{I} \setminus S: \rho^* >
+            \theta_{l_2}) \nonumber \\
+      & \wedge (\rho^* + \epsilon \geq \max_{l_2 \notin \mathcal{I}}
           \theta_{l_2})\} \\
-      &= \underbrace{\{\theta |(\min_{l_1 \in S} \theta_{l_1} \geq \rho^* + 2
+      = & \underbrace{\{\theta |(\min_{l_1 \in S} \theta_{l_1} \geq \rho^* + 2
           \epsilon) \wedge (\forall l_2 \in \mathcal{I} \setminus S: \rho^* >
-          \theta_{l_2}) \}}_\text{A} \setminus \underbrace{\{\theta| \max_{l_2 \notin
-          \mathcal{I}} \theta_{l_2} > \rho^* + \epsilon\}}_\text{B}
+          \theta_{l_2}) \}}_\text{A} \setminus \nonumber \\
+      & \underbrace{\{\theta| \max_{l_2 \notin \mathcal{I}} \theta_{l_2} >
+          \rho^* + \epsilon\}}_\text{B}
   \end{align}
   Where the last step follows from the fact that $\{x|p(x) \wedge q(x)\} =
   \{x|p(x)\} \setminus \{x|\neg q(x)\}$. By \eqref{eq:concentration}, we know
@@ -421,7 +442,16 @@ be given a lot of measurement effort very soon.
   \end{itemize}
 \end{proof}
 
-\begin{proof}[\Cref{proposition:measurement_plan_arm}]
+\textbf{\Cref{proposition:measurement_plan_arm}}
+\begin{align}
+  \psi_{n, l} &\leq \frac{1}{2}((1 - \alpha_{n, l}) \sum_{S: l \in S}
+      \frac{\alpha_{n, S}}{1 - \alpha_{n, S}} + \alpha_{n, l} \sum_{S': l
+      \notin S'} \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}}) \\
+  \psi_{n, l} &\geq \frac{1}{m}((1 - \alpha_{n, l}) \sum_{S: l \in S}
+      \frac{\alpha_{n, S}}{1 - \alpha_{n, S}} + \alpha_{n, l} \sum_{S': l
+      \notin S'} \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}})
+\end{align}
+\begin{proof}
   It will prove itself useful to first investigate the probability of a given
   arm $l$ belonging to either $S_1$ or $S_2$, yet not both.
   \begin{align}
@@ -472,7 +502,12 @@ be given a lot of measurement effort very soon.
   \end{align}
 \end{proof}
 
-\begin{proof}[\Cref{proposition:measurement_pan_set}]
+\textbf{\Cref{proposition:measurement_pan_set}}
+\begin{align}
+  \psi_{n, S} &= \frac{1}{2} \alpha_{n, S} +  \Pr[I_n \in S | S_1 \neq S] (1 - \alpha_{n, S}) \\
+  \psi_{n, S} &= \frac{\alpha_{n, S}}{2} +  \frac{\alpha_{n, S}}{2} \sum_{S'\neq S} \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}} + \Pr[S_1, S_2 \neq S \wedge I_n \in S]
+\end{align}
+\begin{proof}
   In order to show the first equality, we rely on the idea that we only check
   if the first sampled set $S_1$ is equal to $S$.
   \begin{align}
@@ -503,15 +538,20 @@ be given a lot of measurement effort very soon.
   \end{align}
   \begin{align}
     \psi_{n, S} =& \Pr[I_n \in S] \\
-      =& \Pr[S_1 = S \wedge I_n \in S_1] + \Pr[S_2 = S \wedge I_n \in S_2] +
-          \Pr[S_1, S_2 \neq S \wedge I_n \in S] \\
-      &= \frac{\alpha_{n, S}}{2} +  \frac{\alpha_{n, S}}{2} \sum_{S'\neq S}
+      =& \Pr[S_1 = S \wedge I_n \in S_1] + \Pr[S_2 = S \wedge I_n \in S_2]
+          \nonumber \\
+      &+\Pr[S_1, S_2 \neq S \wedge I_n \in S] \\
+      =& \frac{\alpha_{n, S}}{2} +  \frac{\alpha_{n, S}}{2} \sum_{S'\neq S}
           \frac{\alpha_{n, S'}}{1 - \alpha_{n, S'}} + \Pr[S_1, S_2 \neq S
           \wedge I_n \in S]
     \end{align}
 \end{proof}
 
-\begin{proof}[\Cref{lemma:infinite_measurement}]
+\textbf{\Cref{lemma:infinite_measurement}}
+  \begin{align}
+    \sum_{n \in \mathbb{N}} \psi_{n, S} \rightarrow \infty
+  \end{align}
+\begin{proof}
   \Cref{proposition:measurement_pan_set} tells us that $\psi_{n, S} > \gamma
   \alpha_{n, S}$ for some constant $\gamma > 0$. Thanks to this we have $\sum_{n
   \in \mathbb{N}} \psi_{n, S} > \frac{1}{2} \sum_{n \in \mathbb{N}} \alpha_{n,
@@ -525,12 +565,24 @@ be given a lot of measurement effort very soon.
   contradiction.
 \end{proof}
 
-\begin{proof}[\Cref{lemma:psi_convergence}]
+\textbf{\Cref{lemma:psi_convergence}}
+\begin{align}
+  \alpha_{n, S} \rightarrow 1 \Rightarrow \psi_{n, S} \rightarrow \frac{1}{2}
+\end{align}
+\begin{proof}
   In \Cref{proposition:measurement_pan_set}'s first form,  $\Pr[I_n \in S | S_1
   \neq S]$ is naturally bounded by 1. The desired statement follows immediately.
 \end{proof}
 
-\begin{proof}[\Cref{lemma:measurement_plan_bound_max}]
+\textbf{\Cref{lemma:measurement_plan_bound_max}}
+If $\alpha_{n, S^*} \rightarrow 1$, then for all $i \notin S^*$ and for all
+$j \in S^*$:
+\begin{align}
+  \psi_{n, i} &\leq \frac{\alpha_{n, i}}{\max_{S' \neq S^*} \alpha_{n, S'}} \\
+  \psi_{n, j} &\leq \frac{1 - \alpha_{n, j}}{\max_{S' \neq S^*} \alpha_{n,
+      S'}}
+\end{align}
+\begin{proof}
   \Cref{proposition:measurement_plan_arm} tells us that
   \[\psi_{n, l} \leq \frac{1}{2}((1 - \alpha_{n, l}) \sum_{S: l \in S}
       \frac{\alpha_{n, S}}{1 - \alpha_{n, S}} + \alpha_{n, l}
@@ -559,7 +611,15 @@ be given a lot of measurement effort very soon.
   1$.
 \end{proof}
 
-\begin{proof}[\Cref{lemma:fraction_bound}]
+\textbf{\Cref{lemma:fraction_bound}}
+If $\bar{\psi}_{n, S^*} \rightarrow 1/2$, then there exists a sequence
+$\epsilon_n \rightarrow 0$ such that $\forall i \notin S^*, \forall n \in
+\mathbb{N}$:
+\begin{align}
+  \psi_{n, i} \leq \exp\{-n( \min_{j \in S^*} C_{j, i}(\bar{\psi}_j,
+      \bar{\psi}_i) - \Gamma^{\frac{1}{2}*} - \epsilon_n) \}
+\end{align}
+\begin{proof}
   Relying on \Cref{lemma:measurement_plan_bound_max}, we first want to find a
   lower bound for the denominator and then find an upper bound for the
   numerator.
@@ -608,7 +668,14 @@ be given a lot of measurement effort very soon.
   result.
 \end{proof}
 
-\begin{proof}[\Cref{lemma:if_converged_then_converged}]
+\textbf{\Cref{lemma:if_converged_then_converged}}
+If $\forall j \in S^* \bar{\psi}_{n, j} \rightarrow \psi^{\frac{1}{2}*}_j$
+then $\forall i \in S^* \bar{\psi}_{n, i} \rightarrow \psi^{\frac{1}{2}*}_i$
+and thereby
+\begin{align}
+  \bar{\psi}_n \rightarrow \psi^{\frac{1}{2}*}
+\end{align}
+\begin{proof}
   Let us investigate arbitrary oversampled $i \notin S^*$. More formally this
   means that $\bar{\psi}_{n, i} > \psi^{\frac{1}{2}*}_i$. In
   \Cref{lemma:C_strictly_increasing} we have shown that $C_{j, i}$ is strictly
@@ -635,76 +702,87 @@ be given a lot of measurement effort very soon.
     \sum_{n \in \mathbb{N}} \psi_{n, i}
         \mathbb{I}[\bar{\psi}_{n, i} \geq \psi^*_i + \delta]
       &= \sum_{n \in \mathbb{N}} \exp\{-n(\delta' - \epsilon_n)\}
-          \mathbb{I}[\bar{\psi}_{n, i} \geq \psi^*_i + \delta]
+          \mathbb{I}[\bar{\psi}_{n, i} \geq \psi^*_i + \delta] \\
       &< \infty
   \end{align}
   by the geometric series. For the converged $j \in S^*$ the sum is trivially finite. Hence the sufficient condition of optimality from \Cref{proposition:optimality_sufficient_condition} is satisfied.
 \end{proof}
 
-\begin{proof}[\Cref{lemma:limsup_undersampling}]
-    We first show the first statement and then use it for the second. For the
-    sake of contradiction, assume that $\limsup \bar{\psi}_{n, l} <
-    \psi_l^*$. This implies that there is a $n_0$ from which onward
-    $\bar{\psi}_{n, l} < \psi_l^*$.
-    \begin{align}
-      \sum_n (\frac{1}{2} - \psi_{n, l}) &= \sum_{n=1}^{n_0} (\frac{1}{2} -
-            \psi_{n, l}) + \sum_{n > n_0} (\frac{1}{2} - \psi_{n, l}) \\
-        &= \sum_{n=1}^{n_0} (\frac{1}{2} - \psi_j) + \sum_{n > n_0}
-            (\frac{1}{2} - \psi_{n, l})\mathbb{I}[\bar{\psi}_{n, l} \leq
-            \psi_l^* - \delta] \\
-        &= C
-    \end{align}
-    Where the last line follows from the assumption and the fact that the first
-    sum is a finite amount of individually finite quantities. Hence we can
-    write:
-    \begin{align}
-      \sum_n \psi_{n, l} &= -C + \sum_n \frac{1}{2} \\
-      \bar{\psi}_{n, l} &= \frac{-C}{n} + \frac{1}{2}\sum_n\frac{1}{n} \\
-        &= \frac{-C}{n} + \frac{1}{2} H_n
-    \end{align}
-    We know that $H_n$ is asymptotically equivalent to $\log(n)$. Therefore we
-    arrive at $\bar{\psi}_{n, l} \rightarrow \infty$, which is a contradiction.
-    As a consequence we have $\limsup \bar{\psi}_{n, l} \geq \psi_j^*$.
+\textbf{\Cref{lemma:limsup_undersampling}}
+Given $\sum_n(\frac{1}{2} - \psi_{n, l}) \mathbb{I}[\bar{\psi}_{n, l} \leq
+  \psi_l^* - \delta] < \infty$ we have that
+\[\limsup \bar{\psi}_{n, l} \geq \psi_j^* \text{ and } \liminf \bar{\psi}_{n,
+    l} \geq \psi_j^*\]
+\begin{proof}
+  We first show the first statement and then use it for the second. For the
+  sake of contradiction, assume that $\limsup \bar{\psi}_{n, l} <
+  \psi_l^*$. This implies that there is a $n_0$ from which onward
+  $\bar{\psi}_{n, l} < \psi_l^*$.
+  \begin{align}
+    \sum_n (\frac{1}{2} - \psi_{n, l}) &= \sum_{n=1}^{n_0} (\frac{1}{2} -
+          \psi_{n, l}) + \sum_{n > n_0} (\frac{1}{2} - \psi_{n, l}) \\
+      &= \sum_{n=1}^{n_0} (\frac{1}{2} - \psi_j) + \sum_{n > n_0}
+          (\frac{1}{2} - \psi_{n, l})\mathbb{I}[\bar{\psi}_{n, l} \leq
+          \psi_l^* - \delta] \\
+      &= C
+  \end{align}
+  Where the last line follows from the assumption and the fact that the first
+  sum is a finite amount of individually finite quantities. Hence we can
+  write:
+  \begin{align}
+    \sum_n \psi_{n, l} &= -C + \sum_n \frac{1}{2} \\
+    \bar{\psi}_{n, l} &= \frac{-C}{n} + \frac{1}{2}\sum_n\frac{1}{n} \\
+      &= \frac{-C}{n} + \frac{1}{2} H_n
+  \end{align}
+  We know that $H_n$ is asymptotically equivalent to $\log(n)$. Therefore we
+  arrive at $\bar{\psi}_{n, l} \rightarrow \infty$, which is a contradiction.
+  As a consequence we have $\limsup \bar{\psi}_{n, l} \geq \psi_j^*$.
 
-    The argument from \Cref{proposition:optimality_sufficient_condition} can be
-    mirrored to show the second statement.
-  \end{proof}
+  The argument from \Cref{proposition:optimality_sufficient_condition} can be
+  mirrored to show the second statement.
+\end{proof}
 
-  \begin{proof}[\Cref{lemma:psi_undersampled}]
-    Thanks to $\alpha_{n, S^*} \rightarrow 1$: we can apply
-    \Cref{lemma:measurement_plan_bound_max}, and get for $j \in S^*$:
-    \begin{align}
-      \psi_{n, j} &\leq \frac{1 - \alpha_{n, j}}{1 - \alpha_{n, S^*}}
-    \end{align}
-    Additionally, according to \Cref{lemma:psi_convergence}, $\alpha_{n, S^*}
-    \rightarrow 1$, allows us to assume that $\psi_{n, S^*} \rightarrow
-    \frac{1}{2}$.
+\textbf{\Cref{lemma:psi_undersampled}}
+If $\alpha_{n, S^*} \rightarrow 1$ and $\bar{\psi}_{n, j} <
+\psi^{\frac{1}{2}*}_j$ then there exists $\delta > 0$ with
+\begin{align}
+  \psi_{n, \hat{j}} \geq \frac{1}{2} - m\exp(-n \delta)
+\end{align}
+\begin{proof}
+  Thanks to $\alpha_{n, S^*} \rightarrow 1$: we can apply
+  \Cref{lemma:measurement_plan_bound_max}, and get for $j \in S^*$:
+  \begin{align}
+    \psi_{n, j} &\leq \frac{1 - \alpha_{n, j}}{1 - \alpha_{n, S^*}}
+  \end{align}
+  Additionally, according to \Cref{lemma:psi_convergence}, $\alpha_{n, S^*}
+  \rightarrow 1$, allows us to assume that $\psi_{n, S^*} \rightarrow
+  \frac{1}{2}$.
 
-    Assume for $\hat{j} \in S^*$ it holds that $\bar{\psi}_{\hat{j}, n} <
-    \psi^{\frac{1}{2}*}_{\hat{j}}$
-    \begin{align}
-      \psi_{n, \hat{j}} &= \psi_{n, S^*} - \sum_{j \in S^* \setminus
-          \{\hat{j}\}} \psi_{n, j}\\
-        &\rightarrow \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}}
-            \psi_{n, j}\\
-        &\geq \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}} \frac{1 -
-            \alpha_{n, j}}{1 - \alpha_{n, S^*}} \text{
-            (\Cref{lemma:measurement_plan_bound_max})} \\
-        &= \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}}
-            \frac{\Pi_n(\Theta_{m, j}^c)}{\Pi_n(\Theta_{S^*}^c)} \\
-        &= \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}} \frac{\exp\{-n
-            \min_{i \notin S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) \}}{\exp\{-
-            n \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\bar{\psi}_j,
-            \bar{\psi}_i) \}} \label{eq:like_lemma10}\\
-        &= \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}} \exp\{-
-            n(\min_{i \notin S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) -
-            \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\bar{\psi}_j,
-            \bar{\psi}_i))\} \\
-        &= \frac{1}{2} - m \exp(-n\delta)
-    \end{align}
-    Where \Cref{eq:like_lemma10} relies on a combination of
-    \Cref{proposition:prop5} and \Cref{lemma:kl_to_C}, just as we've done in
-    \Cref{lemma:fraction_bound}. The last step leverages the fact that a
-    minimization over both indices will always yield a value lesser or equal to
-    the minimization over only one of the indices.
-  \end{proof}
+  Assume for $\hat{j} \in S^*$ it holds that $\bar{\psi}_{\hat{j}, n} <
+  \psi^{\frac{1}{2}*}_{\hat{j}}$
+  \begin{align}
+    \psi_{n, \hat{j}} &= \psi_{n, S^*} - \sum_{j \in S^* \setminus
+        \{\hat{j}\}} \psi_{n, j}\\
+      &\rightarrow \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}}
+          \psi_{n, j}\\
+      &\geq \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}} \frac{1 -
+          \alpha_{n, j}}{1 - \alpha_{n, S^*}} \text{
+          (\Cref{lemma:measurement_plan_bound_max})} \\
+      &= \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}}
+          \frac{\Pi_n(\Theta_{m, j}^c)}{\Pi_n(\Theta_{S^*}^c)} \\
+      &= \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}} \frac{\exp\{-n
+          \min_{i \notin S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) \}}{\exp\{-
+          n \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\bar{\psi}_j,
+          \bar{\psi}_i) \}} \label{eq:like_lemma10}\\
+      &= \frac{1}{2} - \sum_{j \in S^* \setminus \{\hat{j}\}} \exp\{-
+          n(\min_{i \notin S^*} C_{j, i}(\bar{\psi}_j, \bar{\psi}_i) -
+          \min_{i \notin S^*} \min_{j \in S^*} C_{j, i}(\bar{\psi}_j,
+          \bar{\psi}_i))\} \\
+      &= \frac{1}{2} - m \exp(-n\delta)
+  \end{align}
+  Where \Cref{eq:like_lemma10} relies on a combination of
+  \Cref{proposition:prop5} and \Cref{lemma:kl_to_C}, just as we've done in
+  \Cref{lemma:fraction_bound}. The last step leverages the fact that a
+  minimization over both indices will always yield a value lesser or equal to
+  the minimization over only one of the indices.
+\end{proof}

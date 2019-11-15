@@ -308,7 +308,12 @@ corrected for as well, by the fact that $\psi$ is a probability distribution.
 \end{proposition}
 
 \section{Proofs}\label{section:optimal_proofs}
-\begin{proof}[\Cref{lemma:set_relation_S*_i}]
+\textbf{\Cref{lemma:set_relation_S*_i}}
+\begin{align}
+  \Theta_{S^*}^c = \bigcup_{i \notin S^*} \bar{\Theta}_i = \Theta -
+      \bigcap_{j \in S^*} \Theta_{m, j}
+\end{align}
+\begin{proof}
   We first show the relationship between $\Theta_{S^*}^c$ and sets
   $\bar{\Theta}_i$ and then show the relationship between $\Theta_{S^*}^c$ and
   $\Theta_{m, j}$.
@@ -338,7 +343,14 @@ corrected for as well, by the fact that $\psi$ is a probability distribution.
   \end{align}
 \end{proof}
 
-\begin{proof}[\Cref{lemma:posterior_S*_i}]
+\textbf{\Cref{lemma:posterior_S*_i}}
+If $\alpha_{n, S^*} \rightarrow 1$, then
+\begin{align}
+  \Pi_n(\Theta_{S^*}^c) \deq \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i) \deq 1
+      - \min_{j \in S^*} \Pi_n(\Theta_{m, j})
+\end{align}
+
+\begin{proof}
   First, we prove the equality for $i \notin S^*$, followed by the equality for
   $j \in S^*$.
 
@@ -356,7 +368,7 @@ corrected for as well, by the fact that $\psi$ is a probability distribution.
     = \lim_{n \rightarrow \infty} \frac{1}{n} \log{\frac{1}{k-m}} \rightarrow 0
   \end{align}
   Thanks to the lower and upper bound being 'equal' in the $\deq$ sense, we can
-  apply the Squeeze theorem\footnote{Also referred to as Sandwich teorem}. We
+  apply the Squeeze theorem\footnote{Also referred to as Sandwich theorem}. We
   obtain the desired result:
   \begin{align}
     \Pi_n(\Theta_{S^*}^c) \deq \max_{i \notin S^*} \Pi_n(\bar{\Theta}_i)
@@ -379,25 +391,32 @@ corrected for as well, by the fact that $\psi$ is a probability distribution.
   \end{align}
 \end{proof}
 
-\begin{proof}[\Cref{lemma:kl_to_C}]
+\textbf{\Cref{lemma:kl_to_C}}
+For any $i \notin S^*$ and any allocation $\psi$,
+\begin{align}
+  \min_{\theta \in \bar{\Theta}_i} \sum_{l \in [k]}\psi_l
+      d(\theta^*_l||\theta_l) = \min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)
+\end{align}
+
+\begin{proof}
   \begin{align}
     \min_{\theta \in \bar{\Theta}_i} \sum_{j=1}^k \psi_j d(\theta^*_j||\theta_j)
-      &= \min_{\theta \in \bar{\Theta}_i} \sum_{j\in S^*}
+      =& \min_{\theta \in \bar{\Theta}_i} \sum_{j\in S^*}
           \psi_{j}d(\theta^*_{j} || \theta_{j}) + \psi_{i}d(\theta_{i}^* ||
-          \theta_{i}) + \sum_{j \notin S^* \cup \{i\}} \psi_j
-          d(\theta^*_j||\theta_j) \\
-      &= \min_{\theta \in \bar{\Theta}_i} \sum_{j\in S^*}
+          \theta_{i}) \nonumber \\
+      & \sum_{j \notin S^* \cup \{i\}} \psi_j d(\theta^*_j||\theta_j) \\
+      =& \min_{\theta \in \bar{\Theta}_i} \sum_{j\in S^*}
           \psi_{j}d(\theta^*_{j} || \theta_{j}) + \psi_{i}d(\theta_{i}^* ||
           \theta_{i}) \label{eq: l2_1}\\
-      &= \min_{j\in S^*} \min_{\theta \in \bar{\Theta}_i}
+      =& \min_{j\in S^*} \min_{\theta \in \bar{\Theta}_i}
           \psi_{j}d(\theta^*_{j} || \theta_{j}) + \psi_{i}d(\theta_{i}^* ||
           \theta_{i}) \label{eq: l2_2}\\
-      &= \min_{j\in S^*} \min_{\theta \in \bar{\Theta}_i}
+      =& \min_{j\in S^*} \min_{\theta \in \bar{\Theta}_i}
           \psi_{j}d(\theta^*_{j} || \theta_{j}) + \psi_{i}d(\theta_{i}^* ||
           \theta_{j}) \label{eq: l2_3}\\
-      &= \min_{j\in S^*} \min_{x \in \mathbb{R}} \psi_{j}d(\theta^*_{j} || x) +
+      =& \min_{j\in S^*} \min_{x \in \mathbb{R}} \psi_{j}d(\theta^*_{j} || x) +
           \psi_{i}d(\theta_{i}^* ||x) \label{eq: l2_4}\\
-      &= \min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)
+      =& \min_{j \in S^*} C_{j, i}(\psi_j, \psi_i)
   \end{align}
   \eqref{eq: l2_1} follows from the fact that for any feasible $\theta$, we can
   define an alternative $\theta'$ s.t. $\theta'_i = \theta_i$, $\theta'_j =
@@ -427,7 +446,7 @@ corrected for as well, by the fact that $\psi$ is a probability distribution.
   real as we are in the case of distributions belonging to the one-dimensional exponential family.
 \end{proof}
 
-\begin{proof}[\Cref{lemma:C_concave}]
+\begin{proof}
   For the sake of clarity, let us define
   \begin{align}
     f(x, (\psi_j, \psi_i)) = \psi_j d(\theta_j^*||x) + \psi_i d(\theta_i^* || x)
@@ -446,20 +465,26 @@ Therefore
   C_{j, i}(\psi_j, \psi_i) = \psi_j d(\theta^*_j || \bar{\theta}) + \psi_i
       d(\theta^*_i || \bar{\theta})
 \end{align}
-\begin{proof}[\Cref{lemma:C_unique_solution}]
+\begin{proof}
   By \Cref{eq:exponential_kl} we know that for the exponential family of probability distributions it holds that:
   \[d(\theta||\theta') = (\theta - \theta')A'(\theta) - A(\theta) + A(\theta')\]
   Applying this identity to the definition of $C_{j, i}$ \Cref{eq:C} for given $j$, $i$, $\psi_j$, $\psi_i$ gives us:
   \begin{align}
     &\psi_{j}d(\theta^*_{j} || x) + \psi_{i}d(\theta_{i}^* ||x) \\
-    &=\psi_j ((\theta_j^* - x)A'(\theta_j^*) - A(\theta_j^*) + A(x)) + \psi_i((\theta_i^* - x)A'(\theta_i^*) - A(\theta_i^*) + A(x))\\
-    &= -x(\psi_j A'(\theta_j^*) + \psi_i A'(\theta_i^*)) + A(x)(\psi_j + \psi_i) + c
+    =&\psi_j ((\theta_j^* - x)A'(\theta_j^*) - A(\theta_j^*) + A(x)) +
+        \nonumber \\
+    &\psi_i((\theta_i^* - x)A'(\theta_i^*) - A(\theta_i^*) + A(x))\\
+    =& -x(\psi_j A'(\theta_j^*) + \psi_i A'(\theta_i^*)) + A(x)(\psi_j + \psi_i) + c
   \end{align}
   Where $c$ is independent of $x$. As we seeks to minimize this quantity with respect to $x$, we differentiate it with respect to $x$ and set it to 0. This yields:
   \[A'(x) = \frac{\psi_j A'(\theta_j^*) + \psi_i A'(\theta_i^*)}{\psi_j + \psi_i}\]
 \end{proof}
 
-\begin{proof}[\Cref{lemma:C_strictly_increasing}]
+
+\textbf{\Cref{lemma:C_strictly_increasing}}
+For fixed $i \notin S^*$ and $j \in S^*$, $C_{j, i}$ is strictly increasing
+in both of its arguments.
+\begin{proof}
   We show that for fixed $j \in S^*$ and $i \notin S^*$, $C_{j, i}$ is
   increasing in its first argument $\psi_j$ as its second argument $\psi_i$
   follows by symmetry.
@@ -499,7 +524,22 @@ Therefore
   \end{align}
 \end{proof}
 
-\begin{proof}[\Cref{proposition:characterization}]
+\textbf{\Cref{proposition:characterization}}
+The solution to the optimization problem \ref{eq:constrained_optimal_psi} is
+the allocation $\psi^{\frac{1}{2}*}$, which is unique and satisfies
+\begin{align}
+  \forall j_1, j_2 \in S^*, \forall i_1, i_2 \notin S^*:
+  C_{j, i}(\psi^{\frac{1}{2}*}_{j_1}, \psi^{\frac{1}{2}*}_{i_1})
+  = C_{j, i}(\psi^{\frac{1}{2}*}_{j_2}, \psi^{\frac{1}{2}*}_{i_2})
+\end{align}
+If $\psi_n = \psi^{\frac{1}{2}*}$ for all $n$, then
+\[\Pi_n(\Theta_{S^*}^c) \deq \exp \{-n\Gamma^{\frac{1}{2}*}\}.\]
+Moreover, under any other adaptive allocation rule, if $\bar{\psi}_{n, S^*}
+\rightarrow \frac{1}{2}$ then
+\[\lim_{n \rightarrow \infty} \sup - \frac{1}{n} \log \Pi_n(\Theta^c_{S^*})
+    \leq \Gamma^{\frac{1}{2}*}\]
+almost surely.
+\begin{proof}
   We prove in the following order: \eqref{itm:p7_i} \eqref{eq:condition_C} must
   hold for an optimal allocation, \eqref{itm:p7_ii} an optimal allocation is
   unique. After this, the remaining claim, namely that no other constrained
@@ -581,7 +621,15 @@ Therefore
   \end{enumerate}
 \end{proof}
 
-\begin{proof}[\Cref{proposition:optimality_sufficient_condition}]
+\textbf{\Cref{proposition:optimality_sufficient_condition}}
+  If
+  \begin{align}
+    \forall l \in [k], \delta > 0: \sum_{n \in \mathbb{N}} \psi_{n, l}
+        \mathbb{I}[\bar{\psi}_{n, l} \geq \psi^*_l + \delta] < \infty
+  \end{align}
+  then $\bar{\psi}_{n} \rightarrow \psi^*$.
+
+\begin{proof}
   First, we prove that $\liminf_{n \rightarrow \infty} \bar{\psi}_{n, l} \leq \psi^*_l$ by contradiction.
   Assume otherwise. Then there are $n_0$ and $\delta$ such that for all $n > n_0:$ $\bar{\psi}_{n, l} \geq \psi^*_l + \delta$.
   \begin{align}
